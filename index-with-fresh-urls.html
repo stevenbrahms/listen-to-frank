@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Tell Frank what you're looking at. Listen to his honest take on art.">
+  
+  <title>Listen to Frank</title>
+  
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    button:focus,
+    input:focus {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+    
+    #root {
+      width: 100%;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const ARTWORKS_DATA = [
+      {
+        id: "starry-night-1889",
+        title: "THE STARRY NIGHT",
+        artist: "VINCENT VAN GOGH",
+        year: "1889",
+        color: "#2563EB",
+        audioUrl: "https://prod-files-secure.s3.us-west-2.amazonaws.com/ef34350b-65d8-817e-a5ab-0003982a9952/d673ba19-a752-4356-a5c5-bbeec9672649/FR_Vincent_VanGogh_StarryNight_1889_v1.mp3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466R3UCPAV6%2F20260114%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260114T011038Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEEkaCXVzLXdlc3QtMiJGMEQCIHiRM6x4O%2BE%2FNLWkslw5Z0kHpm7MMWh9vD3NuTHaViWhAiAEMF7fUEAi%2B9D2XNqtCGuXWqZrkXxhDrC1shw8LqfKcSr%2FAwgSEAAaDDYzNzQyMzE4MzgwNSIMkwLQQhKZQm7sTicNKtwDB0hpgtpc6IX5iaplQrRB3cbUEErwx6cDfP7%2BwYtIakt17R8fBOmzTyeap6%2F1of1IgX5IhnQBL5MlOPtchO9p8cXuaUoJkJclCZgpNLQn%2FL8VARVOdC%2BaQ3Bguk11gvH3XR1Qpg3OMotrCJ%2F25cxMMpLG6TuYJZB0ZsWYdda2GqDvRglux32M%2B%2FTbB3DTUJ8LiVyy7Y4yFEWIrqsr1VJkQ7h8J3%2F4DgGcmvrtV59p%2BPWSygrGEqpDLu20HoXsVmFLFrZ%2BgiuedM6T%2BatGm7vcBhZ47YieJB%2Bdhji7yNUq6oMptCtDU%2FNbenjCB8K9MLgx%2B6PiDOJZdHC0YmidhSibY5Kvr2Wgu26nW4SGagGLBX8UMmfx9B11bXZ0G3hu3Vi8nwDN7Zu3U6ySjTfdsjFvU3zbqKyCfI4CAQTbJVrzmIvRiLWxk2EUZd6Ti%2B6mx8k0WorPoWkLfnpqTeAG298h2fHnUOldMvL1b%2BbMumzFMcuxquMMIqbCVkaKZP04FbHPyiZ%2BiMWla0%2BQodgfLGXgMvWdD8OuKmiEj3z6cY0LZwS2l2KTKbDcBwRVpAsRA9bFGzk%2Ft3Ppk1spZjy9NLtuJtz%2BvoEOZuiyzc6iVjj6yaCSSFGFQPch9L5lVIYwvtCbywY6pgHrKmoDVmoo%2FzHkSAJI3jLq3qCeIIs9j5GhcC%2BDfCb79h1ycyxmRE2Fof1NYJWI%2FhpYRrClidxSxmm7Lyr2f4cnJriV%2FKFV7RRA%2BkMgn6mnCMayxejVtx91RbtRC3KnZzZH04Nr63fGkhvQPiUbbtJ87C0zhQ3C2uS1JZjk1G2kKG53CCxy34kzUGlYA3kuvBa6QqCGb4Lh6ah1tvgZYlmhk%2FbVKbnD&X-Amz-Signature=3be4f1d2ba2d0dccc28e52f578fd1e7efdbf67157691e5e72e40d5932bf20cfc&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        transcript: `Ok, So…
+This one's famous in a way that's almost suspicious.
+
+You see it everywhere.
+Posters.
+Mugs.
+Phone cases.
+It's basically a logo for "art."
+
+Which is strange,
+because this painting is not calm.
+It's not decorative.
+And it's definitely not stable.
+
+Van Gogh paints this in 1889,
+from inside a psychiatric hospital.
+Not as a metaphor.
+Literally inside.
+
+And that matters.
+
+Because this isn't a peaceful night sky.
+It's a nervous system.
+Spinning.
+Overactive.
+Unable to shut off.
+
+The stars don't sit still.
+The sky doesn't behave.
+Everything is moving too much,
+all at once.
+
+People love to say this is about beauty.
+Or wonder.
+Or the cosmos.
+
+Sure.
+But it's also a portrait.
+Just not of a face.
+
+It's a portrait of what it feels like
+when your mind won't slow down.
+When the world won't stop vibrating.
+When even the night is loud.
+
+And here's the uncomfortable part:
+that intensity —
+that agitation —
+that's exactly what we respond to.
+
+The thing that made his life unmanageable
+is what made the painting unforgettable.
+
+That's a weird exchange.
+And we don't talk about it much.
+
+Because now this image is comforting.
+Familiar.
+Reassuring.
+
+But when it was made,
+it wasn't reassurance.
+It was evidence.
+
+Evidence of someone trying to organize chaos
+with paint.
+Trying to give structure
+to something that wouldn't cooperate.
+
+That swirling sky?
+That's effort.
+That's labor.
+Not romantic suffering —
+work.
+
+Which is maybe why it lasts.
+
+Not because it's pretty.
+Because it's honest about how overwhelming
+being alive can feel,
+and still insists on making something.
+
+Alright.
+You've seen this a hundred times.
+
+But maybe this time,
+notice how tense it actually is.
+
+Then we can move on.`
+      },
+      {
+        id: "campbells-soup-cans-1962",
+        title: "CAMPBELL'S SOUP CANS",
+        artist: "ANDY WARHOL",
+        year: "1962",
+        color: "#DC2626",
+        audioUrl: "https://prod-files-secure.s3.us-west-2.amazonaws.com/ef34350b-65d8-817e-a5ab-0003982a9952/9595328e-56fd-4e06-8c1b-59a1bee413d9/FR_476.1996.1-32_AndyWarhol_Cambells_Soup_Cans1962_v1.mp3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466XLEMUKNV%2F20260114%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260114T011044Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEEkaCXVzLXdlc3QtMiJHMEUCIEDzIaf8Amuxjf%2FdIpY1TVukZVsuP%2BGrhoRgREE1Cr0OAiEA%2BEDkFQ3LEHaqt44FOXZcD9XTbPABop1jMFKSFmyD89Yq%2FwMIEhAAGgw2Mzc0MjMxODM4MDUiDBmWkun%2FQHXwiwBobSrcAwkL9jlbUtNbUAYipwrpBBzkvumd1uVj1Y2baypNO9AKRwoSsUDFi2Nao4i7KOzHSvG41ioB34czTgWE3MeRDG85mtjEQ83uuGvQuLqDaaQOQ%2FrGeoxoGSiYVe61IKKkZ0lfwxsCr%2F%2BGJJjqPOQDJMNLKajK6Ql8F%2FtXNE65R%2F22dCaaVK59Lj0fuEkmEB1UKfSO7dLjeyanBgYL4aBN2KUpVi4HZXp52jtI%2BnBVJA%2FbZR6iBmD6ssA3Lg6WmMxWrOtcmKAnr64GhSj%2FuUf7goS%2FwJqwSV0kUH65C6CQhC6klNSHrNwZZ4avNljhwzKWRmJaAzMJ6jD7qIb9momPZP5CCgHF%2F9pQOp%2FyFLTw%2B4fikpuUezJMw9IuT%2Bv%2BxH7usLlMjj2kZal5JtAxjQ61C84tVK31AtMzT02N0vhWmdwneQSbGtTR3wofcuq4%2BqRueHGXz8%2BSQN5o1W%2FwovTWT6mtM5jEs7deHMYB%2FWIIdOpb9xT%2FA8t6TsZ9VbCWi6SxTIDYrPSyqvLn0bLneKb68V2Cqpv5dfdGpQovhyNOye7JuhZYuEsZcOnlhzA2qfQvNx5Sz4cxQrc4rAWOlr0dAPJq8IHsE3307BOvq7HBblBrNrsXieF3hnZnYiFKML3Qm8sGOqUB6oEk6SmkvgvhL1%2FJXcrs%2BUzRfHmXbNKoLar7dsOBU5k0RoTe4O0QCHRwSqfDDvKCov%2F5Dc2wzBETx%2B%2BAAxvkLBK%2BqN17nMCFdBA5ilEZPmW8zrrcxzmOGnnlXbThFIpGMu6sLrQpoN3FJ%2F6K8D7vqnpmbMbzPjuSg%2BD8k%2Bnz4ysSG5OrsfWjr5vpNTeo8WbxXaD8A%2BI9DuWrS%2FEq5A%2FeFCn5YgNG&X-Amz-Signature=750a710f112783af9a8a47974e28b63b87833ee21d8c79f3324a9557ef69123f&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        transcript: `Soup.
+
+Just soup.
+No garnish.
+No story.
+No emotional arc.
+
+Which, honestly,
+is already kind of funny.
+
+Warhol looks at this
+and doesn't ask,
+"Is this art?"
+He asks,
+"Why not?"
+
+It's 1962.
+America is obsessed with convenience.
+With sameness.
+With the quiet relief of knowing
+exactly what something will taste like
+every single time.
+
+Soup as emotional insurance.
+
+And Warhol —
+deeply awkward,
+soft-spoken,
+strangely magnetic —
+looks at that and thinks:
+yeah.
+That's the portrait.
+
+You can practically hear him explaining it.
+Totally flat.
+Totally sincere.
+
+"Oh, I just like it.
+I have it every day.
+Why wouldn't you paint it?"
+
+That's not a punchline.
+That's the thesis.
+
+People want this to be ironic.
+Like he's making fun of you.
+But Warhol wasn't a jokester —
+he was a recorder.
+
+He understood that popular culture
+isn't shallow.
+It's intimate.
+It's what people actually live with.
+
+What they buy.
+What they repeat.
+What quietly organizes their days.
+
+So he paints the soup
+the way it already exists —
+without commentary.
+No drama.
+No confession.
+Just repetition.
+
+Which was radical.
+
+Everyone else is still insisting
+that art has to bleed a little.
+Warhol shows up blank.
+Deadpan.
+Almost polite.
+
+And somehow,
+that restraint becomes the loudest move in the room.
+
+This isn't really about soup.
+It's about attention.
+About how repetition turns objects
+into companions.
+About how icons slip into your life
+before you realize you're attached.
+
+Swap soup for a screen.
+Or a logo.
+Or a feed you check
+without remembering why.
+
+Same structure.
+Same comfort.
+Same quiet power.
+
+Warhol didn't mock popular culture.
+He loved it
+the way you love something
+by looking at it
+long enough
+to stop judging it.
+
+Alright.
+You've seen this a thousand times.
+
+But maybe notice —
+it's not loud.
+It's not clever.
+
+It's just very,
+very sure of itself.
+
+And that's why it worked.`
+      }
+    ];
+
+    const Play = ({ size = 24, fill, style }) => React.createElement('svg', {
+      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
+      fill: fill || 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
+      strokeLinejoin: 'round', style
+    }, React.createElement('polygon', { points: '5 3 19 12 5 21 5 3' }));
+    
+    const Pause = ({ size = 24, fill }) => React.createElement('svg', {
+      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
+      fill: fill || 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
+      strokeLinejoin: 'round'
+    }, 
+    React.createElement('rect', { x: 6, y: 4, width: 4, height: 16 }),
+    React.createElement('rect', { x: 14, y: 4, width: 4, height: 16 }));
+    
+    const ArrowLeft = ({ size = 24 }) => React.createElement('svg', {
+      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
+      fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
+      strokeLinejoin: 'round'
+    }, 
+    React.createElement('line', { x1: 19, y1: 12, x2: 5, y2: 12 }),
+    React.createElement('polyline', { points: '12 19 5 12 12 5' }));
+    
+    const Share2 = ({ size = 24 }) => React.createElement('svg', {
+      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
+      fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
+      strokeLinejoin: 'round'
+    }, 
+    React.createElement('circle', { cx: 18, cy: 5, r: 3 }),
+    React.createElement('circle', { cx: 6, cy: 12, r: 3 }),
+    React.createElement('circle', { cx: 18, cy: 19, r: 3 }),
+    React.createElement('line', { x1: 8.59, y1: 13.51, x2: 15.42, y2: 17.49 }),
+    React.createElement('line', { x1: 15.41, y1: 6.51, x2: 8.59, y2: 10.49 }));
+
+    function App() {
+      const [view, setView] = useState('search');
+      const [selectedArtwork, setSelectedArtwork] = useState(null);
+      const [searchQuery, setSearchQuery] = useState('');
+      const [isPlaying, setIsPlaying] = useState(false);
+      const [progress, setProgress] = useState(0);
+      const [currentTime, setCurrentTime] = useState(0);
+      const [duration, setDuration] = useState(85);
+      const [showTranscript, setShowTranscript] = useState(false);
+      const audioRef = useRef(null);
+
+      useEffect(() => {
+        const handleHashChange = () => {
+          const hash = window.location.hash.slice(1);
+          if (hash) {
+            const artwork = ARTWORKS_DATA.find(a => a.id === hash);
+            if (artwork) {
+              setSelectedArtwork(artwork);
+              setView('player');
+              setShowTranscript(false);
+              setIsPlaying(false);
+              setProgress(0);
+              setCurrentTime(0);
+            } else {
+              setView('search');
+              setSelectedArtwork(null);
+            }
+          } else {
+            setView('search');
+            setSelectedArtwork(null);
+          }
+        };
+
+        handleHashChange();
+        window.addEventListener('hashchange', handleHashChange);
+        return () => window.removeEventListener('hashchange', handleHashChange);
+      }, []);
+
+      useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio || !selectedArtwork) return;
+
+        const updateProgress = () => {
+          if (audio.duration) {
+            setProgress((audio.currentTime / audio.duration) * 100);
+            setCurrentTime(audio.currentTime);
+            setDuration(audio.duration);
+          }
+        };
+
+        const handleEnded = () => {
+          setIsPlaying(false);
+          setProgress(0);
+          setCurrentTime(0);
+        };
+
+        const handleLoadedMetadata = () => {
+          setDuration(audio.duration);
+        };
+
+        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('ended', handleEnded);
+        audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+        return () => {
+          audio.removeEventListener('timeupdate', updateProgress);
+          audio.removeEventListener('ended', handleEnded);
+          audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        };
+      }, [selectedArtwork]);
+
+      const filteredArtworks = ARTWORKS_DATA.filter(art => 
+        art.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        art.artist.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      const handleArtworkClick = (artwork) => {
+        window.location.hash = artwork.id;
+      };
+
+      const handleBack = () => {
+        window.location.hash = '';
+      };
+
+      const togglePlay = () => {
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        if (isPlaying) {
+          audio.pause();
+        } else {
+          audio.play().catch(err => console.error('Audio playback failed:', err));
+        }
+        setIsPlaying(!isPlaying);
+      };
+
+      const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+      };
+
+      if (view === 'player' && selectedArtwork) {
+        return (
+          <div style={{
+            width: '100%',
+            height: '100vh',
+            backgroundColor: selectedArtwork.color,
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+            fontFamily: 'Helvetica, Arial, sans-serif'
+          }}>
+            <audio
+              ref={audioRef}
+              src={selectedArtwork.audioUrl}
+              preload="auto"
+            />
+            
+            <button
+              onClick={handleBack}
+              style={{
+                position: 'absolute',
+                top: '24px',
+                left: '24px',
+                background: 'none',
+                border: 'none',
+                color: 'white',
+                cursor: 'pointer',
+                padding: '8px',
+                zIndex: 10
+              }}
+            >
+              <ArrowLeft size={32} />
+            </button>
+
+            <div style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: showTranscript ? 'flex-start' : 'center',
+              alignItems: showTranscript ? 'stretch' : 'center',
+              padding: '80px 32px 32px 32px',
+              color: 'white',
+              overflowY: showTranscript ? 'auto' : 'visible'
+            }}>
+              {!showTranscript ? (
+                <>
+                  <h1 style={{
+                    fontSize: 'clamp(32px, 8vw, 64px)',
+                    fontWeight: 'bold',
+                    margin: 0,
+                    textAlign: 'center',
+                    lineHeight: 1,
+                    letterSpacing: '-0.02em',
+                    marginBottom: '16px'
+                  }}>
+                    {selectedArtwork.title}
+                  </h1>
+                  <p style={{
+                    fontSize: 'clamp(20px, 4vw, 32px)',
+                    fontWeight: 'bold',
+                    margin: 0,
+                    opacity: 0.9,
+                    textAlign: 'center'
+                  }}>
+                    {selectedArtwork.artist}
+                  </p>
+                  <p style={{
+                    fontSize: 'clamp(16px, 3vw, 24px)',
+                    margin: '8px 0 0 0',
+                    opacity: 0.8,
+                    textAlign: 'center'
+                  }}>
+                    {selectedArtwork.year}
+                  </p>
+                </>
+              ) : (
+                <div style={{
+                  maxWidth: '700px',
+                  margin: '0 auto',
+                  width: '100%'
+                }}>
+                  <div style={{
+                    marginBottom: '32px',
+                    paddingBottom: '24px',
+                    borderBottom: '2px solid rgba(255, 255, 255, 0.3)'
+                  }}>
+                    <h2 style={{
+                      fontSize: 'clamp(24px, 5vw, 36px)',
+                      fontWeight: 'bold',
+                      margin: '0 0 8px 0',
+                      lineHeight: 1.2
+                    }}>
+                      {selectedArtwork.title}
+                    </h2>
+                    <p style={{
+                      fontSize: 'clamp(16px, 3.5vw, 22px)',
+                      fontWeight: 'bold',
+                      margin: 0,
+                      opacity: 0.9
+                    }}>
+                      {selectedArtwork.artist}, {selectedArtwork.year}
+                    </p>
+                  </div>
+                  {selectedArtwork.transcript.split('\n\n').map((paragraph, idx) => (
+                    <p key={idx} style={{
+                      fontSize: 'clamp(16px, 3.5vw, 20px)',
+                      lineHeight: 1.7,
+                      marginBottom: '24px',
+                      fontWeight: '400'
+                    }}>
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div style={{
+              padding: '32px',
+              backgroundColor: 'rgba(0, 0, 0, 0.2)'
+            }}>
+              <div style={{ marginBottom: '24px' }}>
+                <div style={{
+                  width: '100%',
+                  height: '4px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                  borderRadius: '2px',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{
+                    width: `${progress}%`,
+                    height: '100%',
+                    backgroundColor: 'white',
+                    transition: 'width 0.1s linear'
+                  }} />
+                </div>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  marginTop: '8px',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }}>
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
+              </div>
+
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '16px'
+              }}>
+                <button
+                  onClick={togglePlay}
+                  style={{
+                    width: '72px',
+                    height: '72px',
+                    borderRadius: '50%',
+                    backgroundColor: 'white',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: selectedArtwork.color,
+                    transition: 'transform 0.2s',
+                    flexShrink: 0
+                  }}
+                >
+                  {isPlaying ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor" style={{ marginLeft: '4px' }} />}
+                </button>
+
+                <button
+                  onClick={() => setShowTranscript(!showTranscript)}
+                  style={{
+                    padding: '12px 20px',
+                    backgroundColor: 'transparent',
+                    border: '3px solid white',
+                    color: 'white',
+                    fontFamily: 'Helvetica, Arial, sans-serif',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {showTranscript ? 'HIDE' : 'SHOW'} TRANSCRIPT
+                </button>
+
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexShrink: 0 }}>
+                  <button
+                    onClick={async () => {
+                      const shareData = {
+                        title: `${selectedArtwork.title} by ${selectedArtwork.artist}`,
+                        text: `Listen to Frank talk about "${selectedArtwork.title}"`,
+                        url: window.location.href
+                      };
+                      try {
+                        if (navigator.share) {
+                          await navigator.share(shareData);
+                        } else {
+                          await navigator.clipboard.writeText(window.location.href);
+                          alert('Link copied!');
+                        }
+                      } catch (err) {}
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'white',
+                      cursor: 'pointer',
+                      padding: '8px'
+                    }}
+                  >
+                    <Share2 size={24} />
+                  </button>
+
+                  <div style={{ color: 'white', textAlign: 'right' }}>
+                    <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '4px', letterSpacing: '0.05em' }}>LISTEN TO FRANK</div>
+                    <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{selectedArtwork.id}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div style={{
+          width: '100%',
+          minHeight: '100vh',
+          backgroundColor: 'black',
+          fontFamily: 'Helvetica, Arial, sans-serif',
+          color: 'white'
+        }}>
+          <div style={{
+            padding: '48px 24px 32px 24px',
+            borderBottom: '4px solid white'
+          }}>
+            <h1 style={{
+              fontSize: 'clamp(24px, 6vw, 36px)',
+              fontWeight: 'bold',
+              margin: 0,
+              lineHeight: 1.2,
+              letterSpacing: '-0.02em'
+            }}>
+              TELL FRANK WHAT YOU'RE LOOKING AT
+            </h1>
+          </div>
+
+          <div style={{ padding: '24px' }}>
+            <input
+              type="text"
+              placeholder="SEARCH ARTWORKS..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '16px',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                border: '3px solid white',
+                backgroundColor: 'black',
+                color: 'white',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                textTransform: 'uppercase'
+              }}
+            />
+          </div>
+
+          <div style={{ padding: '0 24px 24px 24px' }}>
+            {filteredArtworks.map((artwork) => (
+              <div
+                key={artwork.id}
+                onClick={() => handleArtworkClick(artwork)}
+                style={{
+                  border: '3px solid white',
+                  marginBottom: '16px',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s',
+                  padding: '20px'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateX(4px)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateX(0)'}
+              >
+                <h3 style={{
+                  fontSize: 'clamp(18px, 4vw, 24px)',
+                  fontWeight: 'bold',
+                  margin: '0 0 8px 0',
+                  lineHeight: 1.2
+                }}>
+                  {artwork.title}
+                </h3>
+                <p style={{
+                  fontSize: 'clamp(14px, 3vw, 18px)',
+                  margin: '0 0 4px 0',
+                  opacity: 0.8,
+                  fontWeight: 'bold'
+                }}>
+                  {artwork.artist}
+                </p>
+                <p style={{
+                  fontSize: 'clamp(12px, 2.5vw, 16px)',
+                  margin: 0,
+                  opacity: 0.6,
+                  fontWeight: 'bold'
+                }}>
+                  {artwork.year}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{
+            padding: '24px',
+            borderTop: '4px solid white',
+            textAlign: 'center'
+          }}>
+            <p style={{
+              fontSize: '14px',
+              fontWeight: 'bold',
+              margin: 0,
+              opacity: 0.6
+            }}>
+              {filteredArtworks.length} ARTWORKS
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+  
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>
