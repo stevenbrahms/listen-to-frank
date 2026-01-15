@@ -1,12 +1,12 @@
 # Listen to Frank - Project Status
 
-**Last Updated:** January 14, 2026
+**Last Updated:** January 15, 2026
 
 ## Current State
 
 ✅ **LIVE SITE with Landing Page**
 - Landing page with description
-- 8 artworks with audio files included
+- **13 artworks with audio files included** (updated from 8)
 - Full React-based player
 - PWA (works offline)
 - Ready to deploy to listentofrank.art
@@ -32,9 +32,11 @@
 - Share button
 - Back button to return to search
 
-## Current Artworks (8 total)
+## Current Artworks (13 total)
 
 All with MP3 files included:
+
+### Original 8 Artworks:
 
 1. **Vincent van Gogh** - The Starry Night (1889)
    - File: starry-night-1889.mp3
@@ -42,7 +44,7 @@ All with MP3 files included:
 
 2. **Andy Warhol** - Campbell's Soup Cans (1962)
    - File: campbells-soup-cans-1962.mp3
-   - Color: (in artworks.json)
+   - Color: #DC2626 (red)
 
 3. **Pablo Picasso** - Les Demoiselles d'Avignon (1907)
    - File: les-demoiselles-davignon-1907.mp3
@@ -58,6 +60,35 @@ All with MP3 files included:
 
 7. **Diane Arbus** - Identical Twins (1967)
    - File: identical-twins-1967.mp3
+
+8. (8th original artwork)
+
+### New Artworks (Added January 15, 2026):
+
+9. **Cameron Rowland** - Attica Series Desk (2016)
+   - File: Attica_Series_Desk_Cameron_Rowland_2016.mp3
+   - Color: #6B7280 (gray)
+   - ID: attica-series-desk-2016
+
+10. **Antonio Caro** - Colombia (2010, after 1976 original)
+    - File: Colombia_Antonia_Caro_2010_1976.mp3
+    - Color: #DC2626 (red)
+    - ID: colombia-2010
+
+11. **Josef Albers** - Homage to the Square (1950s)
+    - File: Homage_to_the_Square_Joseph_Albers_1950s.mp3
+    - Color: #F59E0B (orange)
+    - ID: homage-to-the-square-1950s
+
+12. **Edward Hopper** - House by the Railroad (1925)
+    - File: House_by_the_Railroad_Edward_Hopper_1925.mp3
+    - Color: #7C2D12 (brown)
+    - ID: house-by-the-railroad-1925
+
+13. **René Magritte** - The Treachery of Images (1929)
+    - File: The_Treachery_of_Images_Rene__Magritte_1929.mp3
+    - Color: #1E3A8A (dark blue)
+    - ID: the-treachery-of-images-1929
 
 ## Notion Database
 
