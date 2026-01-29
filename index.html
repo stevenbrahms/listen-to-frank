@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Tell Frank what you're looking at. Listen to his honest take on art.">
+  
+  <title>Listen to Frank</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    button:focus,
+    input:focus {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+    
+    #root {
+      width: 100%;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    let ARTWORKS_DATA = [];
+
+    // Load artworks data from external JSON file
+    const loadArtworksData = async () => {
+      try {
+        const response = await fetch('artworks.json');
+        if (!response.ok) throw new Error('Failed to load artworks');
+        return await response.json();
+      } catch (error) {
+        console.error('Error loading artworks:', error);
+        return [];
+      }
+    };
+
+    const Play = ({ size = 24, fill, style }) => React.createElement('svg', {
+      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
+      fill: fill || 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
+      strokeLinejoin: 'round', style
+    }, React.createElement('polygon', { points: '5 3 19 12 5 21 5 3' }));
+    
+    const Pause = ({ size = 24, fill }) => React.createElement('svg', {
+      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
+      fill: fill || 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
+      strokeLinejoin: 'round'
+    }, 
+    React.createElement('rect', { x: 6, y: 4, width: 4, height: 16 }),
+    React.createElement('rect', { x: 14, y: 4, width: 4, height: 16 }));
+    
+    const ArrowLeft = ({ size = 24 }) => React.createElement('svg', {
+      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
+      fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
+      strokeLinejoin: 'round'
+    }, 
+    React.createElement('line', { x1: 19, y1: 12, x2: 5, y2: 12 }),
+    React.createElement('polyline', { points: '12 19 5 12 12 5' }));
+    
+    const Share2 = ({ size = 24 }) => React.createElement('svg', {
+      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
+      fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
+      strokeLinejoin: 'round'
+    }, 
+    React.createElement('circle', { cx: 18, cy: 5, r: 3 }),
+    React.createElement('circle', { cx: 6, cy: 12, r: 3 }),
+    React.createElement('circle', { cx: 18, cy: 19, r: 3 }),
+    React.createElement('line', { x1: 8.59, y1: 13.51, x2: 15.42, y2: 17.49 }),
+    React.createElement('line', { x1: 15.41, y1: 6.51, x2: 8.59, y2: 10.49 }));
+
+    function App() {
+      const [view, setView] = useState('landing');
+      const [artworks, setArtworks] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const [selectedArtwork, setSelectedArtwork] = useState(null);
+      const [searchQuery, setSearchQuery] = useState('');
+      const [isPlaying, setIsPlaying] = useState(false);
+      const [progress, setProgress] = useState(0);
+      const [currentTime, setCurrentTime] = useState(0);
+      const [duration, setDuration] = useState(0);
+      const [showTranscript, setShowTranscript] = useState(false);
+      const audioRef = useRef(null);
+
+      
+      // Load artworks data on mount
+      useEffect(() => {
+        const fetchData = async () => {
+          const data = await loadArtworksData();
+          setArtworks(data);
+          ARTWORKS_DATA = data;
+          setLoading(false);
+        };
+        fetchData();
+      }, []);
+
+      useEffect(() => {
+        if (loading || artworks.length === 0) return;
+        
+        const handleHashChange = () => {
+          const hash = window.location.hash.slice(1);
+          if (hash) {
+            const artwork = artworks.find(a => a.id === hash);
+            if (artwork) {
+              setSelectedArtwork(artwork);
+              setView('player');
+              setShowTranscript(false);
+              setIsPlaying(false);
+              setProgress(0);
+              setCurrentTime(0);
+            } else {
+              setView('search');
+              setSelectedArtwork(null);
+            }
+          } else if (view !== 'landing') {
+            // Only go to search if we're not on the landing page
+            setView('search');
+            setSelectedArtwork(null);
+          }
+        };
+
+        // Don't run on initial mount - let landing page show
+        window.addEventListener('hashchange', handleHashChange);
+        
+        // Only check hash if there is one on initial load
+        if (window.location.hash) {
+          handleHashChange();
+        }
+        
+        return () => window.removeEventListener('hashchange', handleHashChange);
+      }, [view, loading, artworks]);
+
+      useEffect(() => {
+        // Reset state when artwork changes
+        setProgress(0);
+        setCurrentTime(0);
+        setDuration(0);
+        setIsPlaying(false);
+      }, [selectedArtwork]);
+
+      const filteredArtworks = artworks.filter(art => 
+        art.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        art.artist.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      const handleArtworkClick = (artwork) => {
+        window.location.hash = artwork.id;
+      };
+
+      const handleBack = () => {
+        window.location.hash = '';
+      };
+
+      const togglePlay = () => {
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        if (isPlaying) {
+          audio.pause();
+        } else {
+          audio.play().catch(err => console.error('Audio playback failed:', err));
+        }
+      };
+
+      const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+      };
+
+      
+      // Show loading screen while data loads
+      if (loading) {
+        return React.createElement('div', {
+          style: {
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#000',
+            color: '#fff',
+            fontSize: '18px',
+            fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
+          }
+        }, 'Loading artworks...');
+      }
+
+      if (view === 'landing') {
+        return (
+          <div style={{
+            width: '100%',
+            minHeight: '100vh',
+            backgroundColor: 'black',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            color: 'white'
+          }}>
+            <div style={{
+              padding: '48px 24px 32px 24px',
+              borderBottom: '4px solid white'
+            }}>
+              <h1 style={{
+                fontSize: 'clamp(24px, 6vw, 36px)',
+                fontWeight: 'bold',
+                margin: 0,
+                lineHeight: 1.2,
+                letterSpacing: '-0.02em',
+                textAlign: 'center'
+              }}>
+                LISTEN TO FRANK
+              </h1>
+            </div>
+
+            <div style={{
+              padding: '48px 24px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '32px'
+            }}>
+              <div style={{
+                border: '3px solid white',
+                padding: '40px',
+                maxWidth: '600px',
+                width: '100%'
+              }}>
+                <p style={{
+                  fontSize: 'clamp(18px, 4vw, 20px)',
+                  lineHeight: 1.7,
+                  margin: 0,
+                  fontWeight: '700',
+                  textAlign: 'center'
+                }}>
+                  Frank is that friend you go to the gallery with—he knows the history, the context, a few rumors—but moves through it all a little sideways. Go ahead. Listen to Frank while you look at the art.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setView('search')}
+                style={{
+                  background: '#fff',
+                  color: '#000',
+                  border: 'none',
+                  padding: '18px 60px',
+                  fontSize: '16px',
+                  fontWeight: '700',
+                  letterSpacing: '0.05em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  fontFamily: 'Helvetica, Arial, sans-serif',
+                  transition: 'transform 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
+                ENTER
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      if (view === 'player' && selectedArtwork) {
+        return (
+          <div style={{
+            width: '100%',
+            height: '100vh',
+            backgroundColor: selectedArtwork.color,
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+            fontFamily: 'Helvetica, Arial, sans-serif'
+          }}>
+            <audio
+              key={selectedArtwork.id}
+              ref={audioRef}
+              src={selectedArtwork.audioUrl}
+              preload="metadata"
+              onLoadedMetadata={(e) => {
+                if (e.target.duration && !isNaN(e.target.duration)) {
+                  setDuration(e.target.duration);
+                }
+              }}
+              onTimeUpdate={(e) => {
+                setCurrentTime(e.target.currentTime);
+                if (e.target.duration && !isNaN(e.target.duration)) {
+                  setProgress((e.target.currentTime / e.target.duration) * 100);
+                }
+              }}
+              onEnded={() => {
+                setIsPlaying(false);
+                setProgress(0);
+                setCurrentTime(0);
+              }}
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+            />
+            
+            <button
+              onClick={handleBack}
+              style={{
+                position: 'absolute',
+                top: '24px',
+                left: '24px',
+                background: 'none',
+                border: 'none',
+                color: 'white',
+                cursor: 'pointer',
+                padding: '8px',
+                zIndex: 10
+              }}
+            >
+              <ArrowLeft size={32} />
+            </button>
+
+            <div style={{
+              position: 'absolute',
+              top: '24px',
+              right: '24px',
+              color: 'white',
+              fontSize: '11px',
+              fontWeight: '400',
+              opacity: 0.6,
+              letterSpacing: '0.1em',
+              zIndex: 10
+            }}>
+              LISTEN TO FRANK
+            </div>
+
+            <div style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: showTranscript ? 'flex-start' : 'center',
+              alignItems: showTranscript ? 'stretch' : 'center',
+              padding: '80px 32px 32px 32px',
+              color: 'white',
+              overflowY: showTranscript ? 'auto' : 'visible'
+            }}>
+              {!showTranscript ? (
+                <>
+                  <h1 style={{
+                    fontSize: 'clamp(32px, 8vw, 64px)',
+                    fontWeight: 'bold',
+                    margin: 0,
+                    textAlign: 'center',
+                    lineHeight: 1,
+                    letterSpacing: '-0.02em',
+                    marginBottom: '16px'
+                  }}>
+                    {selectedArtwork.title}
+                  </h1>
+                  <p style={{
+                    fontSize: 'clamp(20px, 4vw, 32px)',
+                    fontWeight: 'bold',
+                    margin: 0,
+                    opacity: 0.9,
+                    textAlign: 'center'
+                  }}>
+                    {selectedArtwork.artist}
+                  </p>
+                  <p style={{
+                    fontSize: 'clamp(16px, 3vw, 24px)',
+                    margin: '8px 0 0 0',
+                    opacity: 0.8,
+                    textAlign: 'center'
+                  }}>
+                    {selectedArtwork.year}
+                  </p>
+                </>
+              ) : (
+                <div style={{
+                  maxWidth: '700px',
+                  margin: '0 auto',
+                  width: '100%'
+                }}>
+                  <div style={{
+                    marginBottom: '32px',
+                    paddingBottom: '24px',
+                    borderBottom: '2px solid rgba(255, 255, 255, 0.3)'
+                  }}>
+                    <h2 style={{
+                      fontSize: 'clamp(24px, 5vw, 36px)',
+                      fontWeight: 'bold',
+                      margin: '0 0 8px 0',
+                      lineHeight: 1.2
+                    }}>
+                      {selectedArtwork.title}
+                    </h2>
+                    <p style={{
+                      fontSize: 'clamp(16px, 3.5vw, 22px)',
+                      fontWeight: 'bold',
+                      margin: 0,
+                      opacity: 0.9
+                    }}>
+                      {selectedArtwork.artist}, {selectedArtwork.year}
+                    </p>
+                  </div>
+                  {selectedArtwork.transcript.split('\n\n').map((paragraph, idx) => (
+                    <p key={idx} style={{
+                      fontSize: 'clamp(16px, 3.5vw, 20px)',
+                      lineHeight: 1.7,
+                      marginBottom: '24px',
+                      fontWeight: '400'
+                    }}>
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div style={{
+              padding: '32px',
+              backgroundColor: 'rgba(0, 0, 0, 0.2)'
+            }}>
+              <div style={{ marginBottom: '24px' }}>
+                <div 
+                  onClick={(e) => {
+                    const audio = audioRef.current;
+                    if (!audio || !audio.duration) return;
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    const percentage = clickX / rect.width;
+                    audio.currentTime = percentage * audio.duration;
+                  }}
+                  style={{
+                  width: '100%',
+                  height: '4px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                  borderRadius: '2px',
+                  overflow: 'hidden',
+                  cursor: 'pointer'
+                }}>
+                  <div style={{
+                    width: `${progress}%`,
+                    height: '100%',
+                    backgroundColor: 'white',
+                    transition: 'width 0.1s linear'
+                  }} />
+                </div>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  marginTop: '8px',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }}>
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
+              </div>
+
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '16px'
+              }}>
+                <button
+                  onClick={togglePlay}
+                  style={{
+                    width: '72px',
+                    height: '72px',
+                    borderRadius: '50%',
+                    backgroundColor: 'white',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: selectedArtwork.color,
+                    transition: 'transform 0.2s',
+                    flexShrink: 0
+                  }}
+                >
+                  {isPlaying ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor" style={{ marginLeft: '4px' }} />}
+                </button>
+
+                <button
+                  onClick={() => setShowTranscript(!showTranscript)}
+                  style={{
+                    padding: '12px 20px',
+                    backgroundColor: 'transparent',
+                    border: '3px solid white',
+                    color: 'white',
+                    fontFamily: 'Helvetica, Arial, sans-serif',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {showTranscript ? 'HIDE' : 'SHOW'} TRANSCRIPT
+                </button>
+
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexShrink: 0 }}>
+                  <button
+                    onClick={async () => {
+                      const shareData = {
+                        title: `${selectedArtwork.title} by ${selectedArtwork.artist}`,
+                        text: `Listen to Frank talk about "${selectedArtwork.title}"`,
+                        url: window.location.href
+                      };
+                      try {
+                        if (navigator.share) {
+                          await navigator.share(shareData);
+                        } else {
+                          await navigator.clipboard.writeText(window.location.href);
+                          alert('Link copied!');
+                        }
+                      } catch (err) {}
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'white',
+                      cursor: 'pointer',
+                      padding: '8px'
+                    }}
+                  >
+                    <Share2 size={24} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div style={{
+          width: '100%',
+          minHeight: '100vh',
+          backgroundColor: 'black',
+          fontFamily: 'Helvetica, Arial, sans-serif',
+          color: 'white'
+        }}>
+          <div style={{
+            padding: '48px 24px 32px 24px',
+            borderBottom: '4px solid white'
+          }}>
+            <h1 style={{
+              fontSize: 'clamp(24px, 6vw, 36px)',
+              fontWeight: 'bold',
+              margin: 0,
+              lineHeight: 1.2,
+              letterSpacing: '-0.02em'
+            }}>
+              TELL FRANK WHAT YOU'RE LOOKING AT
+            </h1>
+          </div>
+
+          <div style={{ padding: '24px' }}>
+            <input
+              type="text"
+              placeholder="SEARCH ARTWORKS..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '16px',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                border: '3px solid white',
+                backgroundColor: 'black',
+                color: 'white',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                textTransform: 'uppercase'
+              }}
+            />
+          </div>
+
+          <div style={{ padding: '0 24px 24px 24px' }}>
+            {filteredArtworks.map((artwork) => (
+              <div
+                key={artwork.id}
+                onClick={() => handleArtworkClick(artwork)}
+                style={{
+                  border: '3px solid white',
+                  marginBottom: '16px',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s',
+                  padding: '20px'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateX(4px)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateX(0)'}
+              >
+                <h3 style={{
+                  fontSize: 'clamp(18px, 4vw, 24px)',
+                  fontWeight: 'bold',
+                  margin: '0 0 8px 0',
+                  lineHeight: 1.2
+                }}>
+                  {artwork.title}
+                </h3>
+                <p style={{
+                  fontSize: 'clamp(14px, 3vw, 18px)',
+                  margin: '0 0 4px 0',
+                  opacity: 0.8,
+                  fontWeight: 'bold'
+                }}>
+                  {artwork.artist}
+                </p>
+                <p style={{
+                  fontSize: 'clamp(12px, 2.5vw, 16px)',
+                  margin: 0,
+                  opacity: 0.6,
+                  fontWeight: 'bold'
+                }}>
+                  {artwork.year}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{
+            padding: '24px',
+            borderTop: '4px solid white',
+            textAlign: 'center'
+          }}>
+            <p style={{
+              fontSize: '14px',
+              fontWeight: 'bold',
+              margin: 0,
+              opacity: 0.6
+            }}>
+              {filteredArtworks.length} ARTWORKS
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+  
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>
