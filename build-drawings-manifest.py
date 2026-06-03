@@ -37,6 +37,8 @@ ALIASES = {
     "starry night.png": "starry-night",
     "seurat.png": "seurat",      # Evening, Honfleur
     "signac.png": "signac",      # Opus 217 (Fénéon)
+    # Standard-named drawing whose artwork uses a legacy audio id (no artist/year).
+    "identical-twins_diane-arbus_1967.png": "identical-twins",
 }
 
 def strip_acc(s):
