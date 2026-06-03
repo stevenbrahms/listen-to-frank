@@ -125,6 +125,8 @@
     #np-title { color: rgba(255,255,255,.98); font-size: 14px; letter-spacing: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #np-artist { color: rgba(255,255,255,.62); font-size: 12px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #np-toggle { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(255,255,255,.55); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    #np-close { flex-shrink: 0; width: 34px; height: 34px; margin-left: -2px; border: none; background: transparent; color: rgba(255,255,255,.6); font-size: 26px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
+    #np-close:active { opacity: .5; }
     #app.np-on .scrollpad { padding-bottom: 108px !important; }
     @media (min-width: 720px) {
       #now-playing { padding: 20px 22px; gap: 18px; }
@@ -329,6 +331,7 @@
         <div id="np-artist"></div>
       </div>
       <button id="np-toggle" type="button" aria-label="Play or pause"></button>
+      <button id="np-close" type="button" aria-label="Dismiss" title="Dismiss">&times;</button>
     </div>
 
     <div id="offline-bar"></div>
@@ -734,6 +737,18 @@
       if (url) { var im = document.createElement('img'); im.alt = ''; im.onerror = function () { im.replaceWith(makeSwatch(current)); }; im.src = url; tb.appendChild(im); }
       else tb.appendChild(makeSwatch(current));
       setNpIcon();
+    }
+    // Dismiss the Now Playing bar entirely — stop playback and start fresh.
+    function dismissNowPlaying() {
+      try { audio.pause(); } catch (e) {}
+      try { audio.removeAttribute('src'); audio.load(); } catch (e) {}  // error handler ignores empty src
+      current = null;
+      trackEnded = false;
+      ARTS.forEach(function (x) { var r = ROW_OF[x.id]; if (r) r.classList.remove('playing'); });
+      if ('mediaSession' in navigator) {
+        try { navigator.mediaSession.metadata = null; navigator.mediaSession.playbackState = 'none'; } catch (e) {}
+      }
+      updateNowPlaying();
     }
     function togglePlay() {
       if (audio.paused) {
@@ -1152,6 +1167,7 @@
       $('player-back').addEventListener('click', function () { window.location.hash = ''; });
       $('now-playing').addEventListener('click', function () { if (current) openArtwork(current.id); });
       $('np-toggle').addEventListener('click', function (e) { e.stopPropagation(); togglePlay(); });
+      $('np-close').addEventListener('click', function (e) { e.stopPropagation(); dismissNowPlaying(); });
       $('btn-play').addEventListener('click', togglePlay);
       $('btn-back10').addEventListener('click', function () { skipBackSeconds(10); });
       $('btn-fwd30').addEventListener('click', function () { skipForwardSeconds(30); });
