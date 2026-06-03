@@ -2,946 +2,1104 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
-  <meta name="description" content="Tell Frank what you're looking at. Listen to his honest take on art.">
-  
+  <meta name="description" content="A little history. A little gossip. A few sideways theories. Frank's audio guide to MoMA.">
   <title>Listen to Frank</title>
-  
+
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="canonical" href="https://listentofrank.art/" />
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    @font-face {
+      font-family: 'KawaraCaps';
+      src: url('kawaracaps.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
     }
-    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
     body {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      background: #000;
-      color: #fff;
-      overflow-x: hidden;
+      background: #000; color: #fff;
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
     }
-    
-    input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
+
+    /* App stage — phone-width column, centered on desktop */
+    #app {
+      position: relative;
+      width: 100%; max-width: 480px;
+      height: 100vh; height: 100dvh;
+      margin: 0 auto; overflow: hidden; background: #000;
     }
-    
-    button:focus,
-    input:focus {
-      outline: 3px solid #fff;
-      outline-offset: 2px;
+    .screen {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; overflow: hidden;
+      opacity: 0; visibility: hidden; z-index: 1;
+      transition: opacity .18s ease, visibility .18s ease;
     }
-    
-    #root {
-      width: 100%;
-      min-height: 100vh;
+    .screen.on { opacity: 1; visibility: visible; z-index: 2; }
+
+    /* Kawara logo */
+    .kawara-logo {
+      font-family: 'KawaraCaps', sans-serif;
+      font-size: 18px; letter-spacing: 4px; white-space: nowrap;
+      font-weight: normal; -webkit-text-stroke: 0.4px white;
+      text-rendering: optimizeLegibility; font-kerning: normal;
     }
+    .home-logo { cursor: pointer; }
+    .home-logo:active { opacity: .5 !important; }
+
+    /* Gallery rows */
+    .row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 0.5px solid #0e0e0e; cursor: pointer; transition: opacity .12s; position: relative; }
+    .row:active { opacity: .4; transform: scale(0.985); }
+    .row.hidden { display: none; }
+    .thumb { flex-shrink: 0; width: 52px; height: 76px; display: flex; align-items: flex-end; justify-content: center; }
+    .thumb img { max-width: 52px; max-height: 76px; object-fit: contain; object-position: bottom center; display: block; transition: opacity .3s; }
+    .thumb .swatch { width: 38px; height: 52px; align-self: flex-end; opacity: .82; }
+    .row-text { flex: 1; padding-top: 2px; min-width: 0; }
+    .row-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; gap: 8px; }
+    .row-title { color: rgba(255,255,255,.85); font-size: 10px; letter-spacing: 1.5px; font-weight: 500; transition: color .3s; }
+    .row-gallery { color: rgba(255,255,255,.18); font-size: 9px; letter-spacing: .5px; flex-shrink: 0; white-space: nowrap; }
+    .row-artist { color: rgba(255,255,255,.2); font-size: 9px; margin: 0 0 6px; letter-spacing: .5px; }
+    .row-hook { color: rgba(255,255,255,.42); font-size: 11.5px; margin: 0; line-height: 1.65; font-style: italic; font-weight: 300; }
+    @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+    .playing-dot { display: none; width: 5px; height: 5px; border-radius: 50%; background: #fff; position: absolute; right: 0; top: 50%; transform: translateY(-50%); animation: pulse 1.8s ease-in-out infinite; }
+    .row.playing .playing-dot { display: block; }
+    .row.playing .row-title { color: rgba(255,255,255,1) !important; }
+    .row.playing .row-artist { color: rgba(255,255,255,.38) !important; }
+    .row.playing .row-hook { color: rgba(255,255,255,.62) !important; }
+    .row.playing .thumb img { opacity: 1 !important; }
+
+    /* Heard state */
+    .row.heard .row-title { color: rgba(255,255,255,.28); }
+    .row.heard .row-artist { color: rgba(255,255,255,.14); }
+    .row.heard .row-hook { color: rgba(255,255,255,.22); }
+    .row.heard .thumb img { opacity: .3; }
+    .row.heard .thumb .swatch { opacity: .25; }
+
+    /* Audio loading pulse */
+    @keyframes pulse-ring {
+      0%,100% { border-color: rgba(255,255,255,.2); box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+      50%      { border-color: rgba(255,255,255,.6); box-shadow: 0 0 0 4px rgba(255,255,255,.08); }
+    }
+    .loading-pulse { animation: pulse-ring 0.9s ease-in-out infinite !important; }
+
+    /* Search */
+    .search-wrap { padding: 10px 16px 9px; background: #000; }
+    .search-row { display: flex; gap: 8px; align-items: stretch; }
+    .search-input { flex: 1; min-width: 0; background: #080808; border: 0.5px solid #1c1c1c; color: rgba(255,255,255,.7); font-size: 12px; font-family: 'Inter', sans-serif; padding: 9px 11px; outline: none; border-radius: 2px; }
+    .search-input::placeholder { color: rgba(255,255,255,.16); }
+    .search-input:focus { border-color: #333; }
+    .mic-btn { flex-shrink: 0; width: 38px; background: #080808; border: 0.5px solid #1c1c1c; color: rgba(255,255,255,.45); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 2px; }
+    .mic-btn.listening { background: #fff; color: #000; border-color: #fff; }
+    .voice-msg { color: rgba(255,255,255,.5); font-size: 10px; letter-spacing: .5px; padding: 7px 2px 0; font-style: italic; }
+    .chips { display: flex; gap: 5px; padding: 8px 0 1px; justify-content: space-between; }
+    .chip { background: transparent; border: 0.5px solid #1a1a1a; color: rgba(255,255,255,.2); font-size: 9px; letter-spacing: 1px; padding: 4px 11px; cursor: pointer; font-family: 'Inter', sans-serif; border-radius: 2px; transition: all .12s; white-space: nowrap; }
+    .chip.active { border-color: rgba(255,255,255,.28); color: rgba(255,255,255,.65); background: rgba(255,255,255,.04); }
+
+    .icon-btn { background: transparent; border: none; cursor: pointer; padding: 0; color: #383838; display: flex; align-items: center; }
+    .rule { height: 0.5px; background: rgba(255,255,255,.1); margin: 0 16px; }
+
+    /* Offline saving bar */
+    #offline-bar { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.88); color: #fff; padding: 8px 16px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; text-align: center; z-index: 50; border-top: 1px solid rgba(255,255,255,.2); pointer-events: none; display: none; }
   </style>
 </head>
 <body>
-  <div id="root"></div>
-  
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  
+  <div id="app">
+
+    <!-- ── SCREEN 0: ENTRY ── -->
+    <div class="screen on" id="S0" style="background:#000;cursor:pointer;">
+      <div style="position:absolute;inset:0;">
+        <img id="entry-hero" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center top;">
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,.38);"></div>
+      </div>
+      <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 22px;">
+        <div style="background:#000;padding:30px 28px 28px;margin-bottom:20px;width:100%;max-width:360px;">
+          <p class="kawara-logo" style="color:#fff;text-align:center;opacity:.95;font-size:20px;">LISTEN TO FRANK</p>
+        </div>
+        <p style="color:rgba(255,255,255,.62);font-size:12px;line-height:2.1;text-align:center;font-weight:300;letter-spacing:.3px;">A little history.&nbsp; A little gossip.<br>A few sideways theories.</p>
+      </div>
+      <div style="position:relative;z-index:1;padding:0 0 40px;text-align:center;">
+        <p style="color:rgba(255,255,255,.18);font-size:10px;letter-spacing:2px;">tap anywhere</p>
+      </div>
+    </div>
+
+    <!-- ── SCREEN 1: GALLERY ── -->
+    <div class="screen" id="S1" style="background:#000;">
+      <div style="flex-shrink:0;padding:max(28px,env(safe-area-inset-top)) 0 0;background:#000;">
+        <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:18px 16px 0;margin-bottom:16px;">
+          <p class="kawara-logo home-logo" style="color:#fff;opacity:.7;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
+          <div style="position:absolute;right:16px;top:18px;display:flex;align-items:center;gap:14px;">
+            <button class="icon-btn" id="map-btn" title="Map">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 7 9 4 15 7 21 4 21 17 15 20 9 17 3 20 3 7"/><line x1="9" y1="4" x2="9" y2="17"/><line x1="15" y1="7" x2="15" y2="20"/></svg>
+            </button>
+            <button class="icon-btn" id="about-btn" title="About">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="rule"></div>
+        <div class="search-wrap">
+          <div class="search-row">
+            <input class="search-input" id="search-input" type="text" placeholder="gallery · artist · title" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+            <button class="mic-btn" id="mic-btn" type="button" title="Search by voice" aria-label="Search by voice">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+          </div>
+          <div id="voice-msg" class="voice-msg" style="display:none;"></div>
+          <div class="chips">
+            <div style="display:flex;gap:5px;">
+              <button class="chip" data-floor="1">1</button>
+              <button class="chip" data-floor="2">2</button>
+              <button class="chip" data-floor="3">3</button>
+              <button class="chip" data-floor="4">4</button>
+              <button class="chip" data-floor="5">5</button>
+              <button class="chip" data-floor="6">6</button>
+            </div>
+            <button class="chip" id="chip-map">MAP</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
+        <div id="play-something" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:0.5px solid #141414;cursor:pointer;">
+          <span style="color:rgba(255,255,255,.18);font-size:10px;letter-spacing:2px;">PLAY SOMETHING</span>
+          <span style="color:rgba(255,255,255,.12);font-size:11px;">→</span>
+        </div>
+        <div id="gallery-list"></div>
+        <p id="no-results" style="display:none;color:rgba(255,255,255,.18);font-size:11px;padding:20px 0;font-style:italic;">nothing here yet — try a gallery number, a floor, or a title.</p>
+        <p id="count-line" style="color:rgba(255,255,255,.12);font-size:9px;letter-spacing:1.5px;padding:18px 0 0;text-transform:uppercase;"></p>
+      </div>
+    </div>
+
+    <!-- ── SCREEN 2: PLAYER ── -->
+    <div class="screen" id="S2">
+      <div id="player-bg" style="background:#1A2F4E;position:relative;height:100%;display:flex;flex-direction:column;">
+        <img id="player-ghost" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:.09;pointer-events:none;z-index:0;" />
+        <div style="padding:max(40px,env(safe-area-inset-top)) 16px 0;flex-shrink:0;position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;">
+          <button id="player-back" style="background:transparent;border:none;color:rgba(255,255,255,.4);font-size:10px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;">← back</button>
+          <span class="home-logo" style="color:rgba(255,255,255,.34);font-size:9px;letter-spacing:1.5px;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</span>
+        </div>
+        <div style="flex:1;padding:18px 16px 0;position:relative;z-index:2;display:flex;flex-direction:column;overflow:hidden;">
+          <div style="flex-shrink:0;">
+            <p id="player-title" style="color:#fff;font-size:22px;line-height:1.22;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
+            <p id="player-artist" style="color:rgba(255,255,255,.34);font-size:11px;margin:10px 0 0;letter-spacing:1px;"></p>
+            <p id="player-hook" style="color:rgba(255,255,255,.48);font-size:12.5px;margin:18px 0 0;line-height:1.8;font-weight:300;font-style:italic;display:none;"></p>
+          </div>
+          <div id="tx-area" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-top:16px;display:none;">
+            <p id="tx-text" style="color:rgba(255,255,255,.72);font-size:13px;line-height:1.9;margin:0;font-weight:300;"></p>
+          </div>
+          <div id="player-spacer" style="flex:1;"></div>
+        </div>
+        <div style="background:rgba(0,0,0,.52);padding:14px 16px max(28px,env(safe-area-inset-bottom));flex-shrink:0;position:relative;z-index:2;">
+          <div id="prog-track" style="height:3px;background:rgba(255,255,255,.14);margin-bottom:8px;overflow:hidden;cursor:pointer;border-radius:2px;">
+            <div id="prog-bar" style="height:100%;width:0%;background:rgba(255,255,255,.8);"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:14px;">
+            <span id="prog-cur" style="color:rgba(255,255,255,.3);font-size:9px;">0:00</span>
+            <span id="prog-dur" style="color:rgba(255,255,255,.3);font-size:9px;">0:00</span>
+          </div>
+          <div id="audio-error" style="display:none;color:#fff;font-size:11px;text-align:center;border:1px solid rgba(255,255,255,.4);padding:7px;margin-bottom:12px;letter-spacing:.03em;"></div>
+          <div style="display:flex;justify-content:center;align-items:center;gap:34px;margin-bottom:16px;">
+            <button id="btn-back10" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.6;position:relative;" title="back 10s">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+              <span style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:7px;color:rgba(255,255,255,.45);">10</span>
+            </button>
+            <button id="btn-play" style="width:56px;height:56px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+              <svg id="play-ico" width="17" height="17" viewBox="0 0 24 24"><polygon points="8 5 19 12 8 19 8 5" fill="white"/></svg>
+            </button>
+            <button id="btn-fwd30" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.6;position:relative;" title="forward 30s">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+              <span style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:7px;color:rgba(255,255,255,.45);">30</span>
+            </button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <button id="tx-btn" style="background:transparent;border:0.5px solid rgba(255,255,255,.18);border-radius:2px;color:rgba(255,255,255,.5);font-size:10px;letter-spacing:1.5px;cursor:pointer;padding:6px 12px;font-family:'Inter',sans-serif;">read along</button>
+            <button id="share-btn" style="background:transparent;border:none;color:rgba(255,255,255,.32);cursor:pointer;padding:4px;" title="Share">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SCREEN 3: ABOUT ── -->
+    <div class="screen" id="S3" style="background:#000;">
+      <div style="flex-shrink:0;padding:max(40px,env(safe-area-inset-top)) 0 0;">
+        <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px;margin-bottom:20px;">
+          <p class="kawara-logo home-logo" style="color:#fff;opacity:.7;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
+          <button id="about-close" style="position:absolute;right:16px;background:transparent;border:none;color:#383838;font-size:22px;cursor:pointer;padding:0;line-height:1;">×</button>
+        </div>
+        <div class="rule" style="margin-bottom:26px;"></div>
+      </div>
+      <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
+        <p style="color:rgba(255,255,255,.55);font-size:14px;line-height:1.85;margin:0 0 14px;font-weight:300;">This is Listen to Frank.</p>
+        <p style="color:rgba(255,255,255,.55);font-size:13px;line-height:1.9;margin:0 0 14px;font-weight:300;">Go find something on a wall. Or just start somewhere. Frank talks — a little history, a little gossip, a few sideways theories. None of it precious.</p>
+        <p style="color:rgba(255,255,255,.55);font-size:13px;line-height:1.9;margin:0 0 36px;font-weight:300;">You don't need to know anything going in. That's the whole point.</p>
+        <div style="border-top:0.5px solid #111;padding-top:20px;margin-bottom:28px;">
+          <p style="color:rgba(255,255,255,.55);font-size:13px;line-height:1.9;margin:0;font-weight:300;">Enjoy full access. We're in preview — everything is free while we're getting started.</p>
+        </div>
+        <div style="border-top:0.5px solid #111;padding-top:20px;">
+          <p style="color:rgba(255,255,255,.18);font-size:10px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
+          <a href="mailto:hello@listentofrank.art" style="color:rgba(255,255,255,.28);font-size:11px;text-decoration:none;border:0.5px solid rgba(255,255,255,.1);padding:7px 14px;display:inline-block;">hello@listentofrank.art →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SCREEN 4: MAP ── -->
+    <div class="screen" id="S4" style="background:#000;">
+      <div style="flex-shrink:0;padding:max(40px,env(safe-area-inset-top)) 0 0;background:#000;">
+        <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px;margin-bottom:16px;">
+          <p class="kawara-logo home-logo" style="color:#fff;opacity:.7;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
+          <button id="map-close" style="position:absolute;right:16px;background:transparent;border:none;color:#383838;font-size:22px;cursor:pointer;padding:0;line-height:1;">×</button>
+        </div>
+        <div class="rule"></div>
+        <div id="floor-tabs" style="display:flex;border-bottom:1px solid #151515;"></div>
+        <div id="floor-theme-label" style="padding:5px 14px;font-size:8px;color:#2a2a2a;letter-spacing:.2em;text-transform:uppercase;border-bottom:1px solid #0d0d0d;"></div>
+      </div>
+      <div id="map-container" style="flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:8px 10px 0;"></div>
+      <div id="map-info" style="display:none;padding:12px 16px max(16px,env(safe-area-inset-bottom));border-top:1px solid #151515;flex-shrink:0;background:#000;">
+        <div id="map-room-floor" style="font-size:8px;color:#333;letter-spacing:.2em;text-transform:uppercase;margin-bottom:4px;"></div>
+        <div id="map-room-name" style="font-size:13px;color:#fff;font-weight:400;line-height:1.3;margin-bottom:4px;"></div>
+        <div id="map-room-note" style="font-size:10px;color:#666;line-height:1.6;margin-bottom:10px;"></div>
+        <button id="map-filter-btn" style="background:transparent;border:0.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.55);font-size:10px;letter-spacing:1px;padding:6px 14px;cursor:pointer;font-family:'Inter',sans-serif;">SEE FRANK'S PICKS HERE →</button>
+      </div>
+    </div>
+
+    <div id="offline-bar"></div>
+    <audio id="audio" preload="auto" playsinline></audio>
+  </div>
+
   <script>
-    const { useState, useEffect, useRef } = React;
+  (function () {
+    'use strict';
 
-    let ARTWORKS_DATA = [];
+    // ── State ─────────────────────────────────────────────────────────────
+    var ALL = [];          // every entry from artworks.json
+    var ARTS = [];         // display entries (no isAbout)
+    var BY_ID = {};        // id -> artwork
+    var ROW_OF = {};       // id -> row element
+    var aboutArt = null;
+    var DRAWINGS = {};       // artwork id -> drawing url (from drawings/manifest.json)
+    var current = null;
+    var activeFloor = null;
+    var currentScreen = 0;
+    var txOpen = false;
+    var booted = false;
 
-    // Load artworks data from external JSON file
-    const loadArtworksData = async () => {
-      try {
-        const response = await fetch('artworks.json');
-        if (!response.ok) throw new Error('Failed to load artworks');
-        return await response.json();
-      } catch (error) {
-        console.error('Error loading artworks:', error);
-        return [];
-      }
-    };
+    var audio = document.getElementById('audio');
+    var $ = function (id) { return document.getElementById(id); };
 
-    const Play = ({ size = 24, fill, style }) => React.createElement('svg', {
-      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
-      fill: fill || 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
-      strokeLinejoin: 'round', style
-    }, React.createElement('polygon', { points: '5 3 19 12 5 21 5 3' }));
-    
-    const Pause = ({ size = 24, fill }) => React.createElement('svg', {
-      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
-      fill: fill || 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
-      strokeLinejoin: 'round'
-    }, 
-    React.createElement('rect', { x: 6, y: 4, width: 4, height: 16 }),
-    React.createElement('rect', { x: 14, y: 4, width: 4, height: 16 }));
-    
-    const ArrowLeft = ({ size = 24 }) => React.createElement('svg', {
-      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
-      fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
-      strokeLinejoin: 'round'
-    }, 
-    React.createElement('line', { x1: 19, y1: 12, x2: 5, y2: 12 }),
-    React.createElement('polyline', { points: '12 19 5 12 12 5' }));
-    
-    const Share2 = ({ size = 24 }) => React.createElement('svg', {
-      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
-      fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
-      strokeLinejoin: 'round'
-    },
-    React.createElement('circle', { cx: 18, cy: 5, r: 3 }),
-    React.createElement('circle', { cx: 6, cy: 12, r: 3 }),
-    React.createElement('circle', { cx: 18, cy: 19, r: 3 }),
-    React.createElement('line', { x1: 8.59, y1: 13.51, x2: 15.42, y2: 17.49 }),
-    React.createElement('line', { x1: 15.41, y1: 6.51, x2: 8.59, y2: 10.49 }));
+    // ── Entry background — rotates randomly each visit ────────────────────
+    // Drop ANY image (any filename) into current/entry/ and it joins the
+    // rotation automatically — no code editing. The list is discovered at
+    // runtime: a live directory listing first (instant drop-and-go in local
+    // preview), then entry/manifest.json on the real site, then a baked-in
+    // default as a last resort.
+    var IMG_RE = /\.(png|jpe?g|webp|gif|avif)$/i;
+    // No baked-in fallbacks: the entry rotation is whatever images live in
+    // current/entry/. Drop files in there (any filename) to populate it; if it's
+    // empty the entry screen simply shows its black background + logo.
+    var DEFAULT_ENTRY = [];
 
-    const Mic = ({ size = 24 }) => React.createElement('svg', {
-      xmlns: 'http://www.w3.org/2000/svg', width: size, height: size, viewBox: '0 0 24 24',
-      fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round',
-      strokeLinejoin: 'round'
-    },
-    React.createElement('path', { d: 'M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z' }),
-    React.createElement('path', { d: 'M19 10v2a7 7 0 0 1-14 0v-2' }),
-    React.createElement('line', { x1: 12, y1: 19, x2: 12, y2: 23 }),
-    React.createElement('line', { x1: 8, y1: 23, x2: 16, y2: 23 }));
-
-    function App() {
-      const [view, setView] = useState('landing');
-      const [artworks, setArtworks] = useState([]);
-      const [loading, setLoading] = useState(true);
-      const [selectedArtwork, setSelectedArtwork] = useState(null);
-      const [searchQuery, setSearchQuery] = useState('');
-      const [isPlaying, setIsPlaying] = useState(false);
-      const [progress, setProgress] = useState(0);
-      const [currentTime, setCurrentTime] = useState(0);
-      const [duration, setDuration] = useState(0);
-      const [showTranscript, setShowTranscript] = useState(false);
-      const [voiceState, setVoiceState] = useState('idle'); // 'idle' | 'listening'
-      const [voiceMessage, setVoiceMessage] = useState('');
-      const [cacheStatus, setCacheStatus] = useState(null); // { done, total } or null
-      const [audioError, setAudioError] = useState('');
-      const audioRef = useRef(null);
-      const recognitionRef = useRef(null);
-      const voiceMsgTimerRef = useRef(null);
-
-      const showVoiceMessage = (msg) => {
-        setVoiceMessage(msg);
-        if (voiceMsgTimerRef.current) clearTimeout(voiceMsgTimerRef.current);
-        voiceMsgTimerRef.current = setTimeout(() => setVoiceMessage(''), 4500);
-      };
-
-      const startVoiceSearch = () => {
-        // If a previous recognition is still running, treat the click as a stop.
-        if (recognitionRef.current && voiceState === 'listening') {
-          try { recognitionRef.current.stop(); } catch (e) {}
-          return;
-        }
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SR) {
-          showVoiceMessage("Voice search isn't supported in this browser — please type instead.");
-          return;
-        }
-        if (typeof navigator !== 'undefined' && navigator.onLine === false) {
-          showVoiceMessage('Voice search needs a signal — please type instead.');
-          return;
-        }
-        try {
-          const recognition = new SR();
-          recognition.lang = 'en-US';
-          recognition.interimResults = false;
-          recognition.maxAlternatives = 1;
-          recognition.continuous = false;
-          recognition.onstart = () => {
-            setVoiceMessage('');
-            setVoiceState('listening');
-          };
-          recognition.onresult = (e) => {
-            const transcript = (e.results[0][0].transcript || '').trim();
-            if (transcript) {
-              setSearchQuery(transcript);
-            } else {
-              showVoiceMessage("Didn't catch that — try again.");
-            }
-          };
-          recognition.onerror = (e) => {
-            const err = e && e.error;
-            if (err === 'not-allowed' || err === 'service-not-allowed') {
-              showVoiceMessage('Please allow microphone access to use voice search.');
-            } else if (err === 'network') {
-              showVoiceMessage('Voice search needs a signal — please type instead.');
-            } else if (err === 'no-speech') {
-              showVoiceMessage("Didn't hear anything — try again.");
-            } else if (err === 'aborted') {
-              // user cancelled — no message
-            } else {
-              showVoiceMessage('Voice search failed — please type instead.');
-            }
-          };
-          recognition.onend = () => {
-            setVoiceState('idle');
-            recognitionRef.current = null;
-          };
-          recognitionRef.current = recognition;
-          recognition.start();
-        } catch (err) {
-          showVoiceMessage('Voice search failed — please type instead.');
-          setVoiceState('idle');
-        }
-      };
-
-      // Listen for download-progress messages from the service worker so
-      // a small "saving for offline" indicator can be shown.
-      useEffect(() => {
-        if (!('serviceWorker' in navigator)) return;
-        const handler = (event) => {
-          if (!event.data || event.data.type !== 'audio-cache-progress') return;
-          setCacheStatus({ done: event.data.done, total: event.data.total });
-        };
-        navigator.serviceWorker.addEventListener('message', handler);
-        // Ask the active SW (if any) to report progress / resume caching.
-        navigator.serviceWorker.ready.then((reg) => {
-          const sw = reg.active || reg.waiting || reg.installing;
-          if (sw) sw.postMessage({ type: 'precache-audio' });
-        }).catch(() => {});
-        return () => navigator.serviceWorker.removeEventListener('message', handler);
-      }, []);
-
-      // Skip backward by N seconds, used by both the on-screen button and the
-      // lock-screen seekbackward action.
-      const skipBackSeconds = (seconds) => {
-        const audio = audioRef.current;
-        if (!audio) return;
-        audio.currentTime = Math.max(0, (audio.currentTime || 0) - seconds);
-      };
-      const skipForwardSeconds = (seconds) => {
-        const audio = audioRef.current;
-        if (!audio) return;
-        const dur = audio.duration || 0;
-        audio.currentTime = Math.min(dur, (audio.currentTime || 0) + seconds);
-      };
-
-      // Wire up the Media Session API: lock-screen / control-center metadata
-      // and play/pause/skip handlers. This also keeps audio playing when the
-      // screen is locked or the user switches apps.
-      useEffect(() => {
-        if (!selectedArtwork || !('mediaSession' in navigator)) return;
-        try {
-          navigator.mediaSession.metadata = new window.MediaMetadata({
-            title: selectedArtwork.title,
-            artist: selectedArtwork.artist + (selectedArtwork.year ? ', ' + selectedArtwork.year : ''),
-            album: 'Listen to Frank',
-            artwork: [
-              { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
-              { src: 'icon-512.png', sizes: '512x512', type: 'image/png' }
-            ]
-          });
-        } catch (e) { /* MediaMetadata not supported */ }
-
-        const setHandler = (action, handler) => {
-          try { navigator.mediaSession.setActionHandler(action, handler); }
-          catch (e) { /* unsupported action — ignore */ }
-        };
-        setHandler('play', () => {
-          const a = audioRef.current;
-          if (a) a.play().catch(() => {});
-        });
-        setHandler('pause', () => {
-          const a = audioRef.current;
-          if (a) a.pause();
-        });
-        setHandler('seekbackward', (details) => {
-          skipBackSeconds((details && details.seekOffset) || 15);
-        });
-        setHandler('seekforward', (details) => {
-          skipForwardSeconds((details && details.seekOffset) || 15);
-        });
-        setHandler('seekto', (details) => {
-          const a = audioRef.current;
-          if (!a || !details || details.seekTime == null) return;
-          if (details.fastSeek && 'fastSeek' in a) { a.fastSeek(details.seekTime); return; }
-          a.currentTime = details.seekTime;
-        });
-        // No previous/next track wiring — single-track player, but clear them
-        // in case a previous artwork left handlers behind.
-        setHandler('previoustrack', null);
-        setHandler('nexttrack', null);
-        return () => {
-          // Clean up handlers when the artwork changes.
-          setHandler('play', null);
-          setHandler('pause', null);
-          setHandler('seekbackward', null);
-          setHandler('seekforward', null);
-          setHandler('seekto', null);
-        };
-      }, [selectedArtwork]);
-
-      // Reflect playback state to the OS so the lock-screen play/pause icon
-      // matches what the audio element is actually doing.
-      useEffect(() => {
-        if (!('mediaSession' in navigator)) return;
-        try {
-          navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
-        } catch (e) {}
-      }, [isPlaying]);
-
-      // Push position info so the OS lock-screen scrubber stays in sync.
-      useEffect(() => {
-        if (!('mediaSession' in navigator) || !navigator.mediaSession.setPositionState) return;
-        if (!duration || isNaN(duration) || duration <= 0) return;
-        try {
-          navigator.mediaSession.setPositionState({
-            duration: duration,
-            position: Math.min(currentTime || 0, duration),
-            playbackRate: 1.0
-          });
-        } catch (e) {}
-      }, [currentTime, duration]);
-
-      
-      // Load artworks data on mount
-      useEffect(() => {
-        const fetchData = async () => {
-          const data = await loadArtworksData();
-          setArtworks(data);
-          ARTWORKS_DATA = data;
-          setLoading(false);
-        };
-        fetchData();
-      }, []);
-
-      useEffect(() => {
-        if (loading || artworks.length === 0) return;
-        
-        const handleHashChange = () => {
-          const hash = window.location.hash.slice(1);
-          if (hash) {
-            const artwork = artworks.find(a => a.id === hash);
-            if (artwork) {
-              setSelectedArtwork(artwork);
-              setView('player');
-              setShowTranscript(false);
-              setIsPlaying(false);
-              setProgress(0);
-              setCurrentTime(0);
-            } else {
-              setView('search');
-              setSelectedArtwork(null);
-            }
-          } else if (view !== 'landing') {
-            // Only go to search if we're not on the landing page
-            setView('search');
-            setSelectedArtwork(null);
-          }
-        };
-
-        // Don't run on initial mount - let landing page show
-        window.addEventListener('hashchange', handleHashChange);
-        
-        // Only check hash if there is one on initial load
-        if (window.location.hash) {
-          handleHashChange();
-        }
-        
-        return () => window.removeEventListener('hashchange', handleHashChange);
-      }, [view, loading, artworks]);
-
-      useEffect(() => {
-        // Reset state when artwork changes
-        setProgress(0);
-        setCurrentTime(0);
-        setDuration(0);
-        setIsPlaying(false);
-        setAudioError('');
-      }, [selectedArtwork]);
-
-      // The "About" entry lives in artworks.json (id: about-listen-to-frank)
-      // so it can use the existing player. We pull it out here and hide it
-      // from the regular list / search results / artwork count.
-      const aboutArtwork = artworks.find(a => a.isAbout || a.id === 'about-listen-to-frank');
-      // Gallery search (wayfinding).
-      // Accepts: "506", "gallery 506", "room 506", "i'm in 506",
-      // and spoken-style: "five oh six", "five hundred six", etc.
-      // Numeric/wayfinding queries require an EXACT match on art.gallery
-      // so "50" doesn't accidentally surface every 5XX gallery.
-      // Non-numeric labels like "1 North" / "Floor 6" still work via
-      // substring against the gallery label.
-      const _DIGIT_WORDS = {
-        zero: '0', oh: '0', o: '0', nought: '0', naught: '0',
-        one: '1', two: '2', three: '3', four: '4', five: '5',
-        six: '6', seven: '7', eight: '8', nine: '9'
-      };
-      const _NUMBER_WORDS = {
-        zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5,
-        six: 6, seven: 7, eight: 8, nine: 9,
-        ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14,
-        fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19,
-        twenty: 20, thirty: 30, forty: 40, fifty: 50,
-        sixty: 60, seventy: 70, eighty: 80, ninety: 90
-      };
-      function _spokenToGallery(text) {
-        if (!text) return '';
-        let s = text.toLowerCase()
-          .replace(/\b(i\s*am|i'm|im)\s+in\b/g, ' ')
-          .replace(/[,'\-]/g, ' ')
-          .replace(/\b(in\s+)?(gallery|galleries|room|rm)\b/g, ' ')
-          .replace(/^\s*in\s+/g, ' ')
-          .replace(/\band\b/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim();
-        if (!s) return '';
-        if (/^\d{1,4}$/.test(s)) return s;
-        const tokens = s.split(' ');
-        if (tokens.length >= 2 && tokens.every(function (t) { return t in _DIGIT_WORDS; })) {
-          return tokens.map(function (t) { return _DIGIT_WORDS[t]; }).join('');
-        }
-        const knownAdditive = function (t) {
-          return (t in _NUMBER_WORDS) || t === 'hundred' || t === 'thousand';
-        };
-        if (tokens.every(knownAdditive)) {
-          let total = 0, current = 0;
-          for (const t of tokens) {
-            if (t === 'hundred') current = (current || 1) * 100;
-            else if (t === 'thousand') { total += (current || 1) * 1000; current = 0; }
-            else current += _NUMBER_WORDS[t];
-          }
-          const n = total + current;
-          if (n > 0 && n < 10000) return String(n);
-        }
-        return '';
-      }
-      // Voice & natural-language normalization for gallery-label matching.
-      // The gallery labels in the data look like "1 North", "Floor 5", etc.
-      // Visitors may say or type:
-      //   - "one north"        (voice spells small numbers as words)
-      //   - "1st floor"        (ordinal suffix)
-      //   - "first floor"      (ordinal word)
-      //   - "6 floor"          (correct number, reversed word order)
-      // We build a normalized version of the query (number-words -> digits,
-      // ordinals -> digits, suffixes stripped) and also try a reversed-token
-      // form so word order doesn't matter for the gallery-label substring.
-      const _ORDINAL_WORDS = {
-        first: '1', second: '2', third: '3', fourth: '4', fifth: '5',
-        sixth: '6', seventh: '7', eighth: '8', ninth: '9', tenth: '10'
-      };
-      function _normalizeDigitWords(text) {
-        // "6th" / "3rd" / "1st" / "2nd"  ->  "6" / "3" / "1" / "2"
-        let s = text.replace(/\b(\d+)(?:st|nd|rd|th)\b/g, '$1');
-        // "sixth" / "first" / ...  ->  "6" / "1" / ...
-        s = s.replace(/\b(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth)\b/g,
-          function (w) { return _ORDINAL_WORDS[w]; });
-        // "six" / "one" / ...  ->  "6" / "1" / ...
-        s = s.replace(/\b(zero|one|two|three|four|five|six|seven|eight|nine)\b/g,
-          function (w) { return _DIGIT_WORDS[w]; });
-        return s;
-      }
-      const _rawQuery = (searchQuery || '').trim().toLowerCase();
-      const _galleryQuery = _spokenToGallery(_rawQuery);
-      const _normalizedQuery = _normalizeDigitWords(_rawQuery);
-      const _normalizedTokens = _normalizedQuery.split(/\s+/).filter(Boolean);
-      const _normalizedReversed = _normalizedTokens.length >= 2
-        ? _normalizedTokens.slice().reverse().join(' ')
-        : '';
-      const filteredArtworks = artworks.filter(art => {
-        if (art.isAbout || art.id === 'about-listen-to-frank') return false;
-        if (!_rawQuery) return true;
-        const q = _rawQuery;
-        const gal = (art.gallery || '').toString().toLowerCase().trim();
-        if (_galleryQuery && gal === _galleryQuery) return true;
-        if (art.title.toLowerCase().includes(q)) return true;
-        if (art.artist.toLowerCase().includes(q)) return true;
-        if ((art.year || '').toString().toLowerCase().includes(q)) return true;
-        if (!_galleryQuery && gal) {
-          if (gal.includes(q)) return true;
-          if (_normalizedQuery !== q && gal.includes(_normalizedQuery)) return true;
-          if (_normalizedReversed && gal.includes(_normalizedReversed)) return true;
-        }
-        return false;
-      });
-
-      // Small, unobtrusive bar that appears at the bottom of the screen
-      // while the service worker is downloading audio for offline use.
-      const offlineProgressBar = (cacheStatus && cacheStatus.total > 0 && cacheStatus.done < cacheStatus.total) ? (
-        React.createElement("div", { style: ({
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          background: 'rgba(0, 0, 0, 0.88)',
-          color: 'white',
-          padding: '8px 16px',
-          fontSize: '11px',
-          fontWeight: 'bold',
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          textAlign: 'center',
-          zIndex: 1000,
-          borderTop: '1px solid rgba(255, 255, 255, 0.25)',
-          pointerEvents: 'none'
-        }) }, "Saving audio for offline use \u2014 ", cacheStatus.done, " / ", cacheStatus.total)
-      ) : null;
-
-      const handleArtworkClick = (artwork) => {
-        window.location.hash = artwork.id;
-      };
-
-      const handleBack = () => {
-        window.location.hash = '';
-      };
-
-      const togglePlay = () => {
-        const audio = audioRef.current;
-        if (!audio) return;
-
-        if (isPlaying) {
-          audio.pause();
-        } else {
-          setAudioError('');
-          const playPromise = audio.play();
-          if (playPromise && playPromise.catch) {
-            playPromise.catch(err => {
-              console.error('Audio playback failed:', err);
-              setAudioError('Audio failed to start — tap play to try again.');
-            });
-          }
-        }
-      };
-
-      const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-      };
-
-      
-      // Show loading screen while data loads
-      if (loading) {
-        return React.createElement('div', {
-          style: {
-            width: '100%',
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: '#000',
-            color: '#fff',
-            fontSize: '18px',
-            fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif'
-          }
-        }, 'Loading artworks...');
-      }
-
-      if (view === 'landing') {
-        return (
-          React.createElement("div", { style: ({
-            width: '100%',
-            minHeight: '100vh',
-            backgroundColor: 'black',
-            fontFamily: 'Helvetica, Arial, sans-serif',
-            color: 'white'
-          }) }, React.createElement("div", { style: ({
-              padding: '48px 24px 32px 24px',
-              borderBottom: '4px solid white'
-            }) }, React.createElement("h1", { style: ({
-                fontSize: 'clamp(24px, 6vw, 36px)',
-                fontWeight: 'bold',
-                margin: 0,
-                lineHeight: 1.2,
-                letterSpacing: '-0.02em',
-                textAlign: 'center'
-              }) }, "LISTEN TO FRANK")), React.createElement("div", { style: ({
-              padding: '40px 24px 32px 24px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '40px'
-            }) }, React.createElement("div", { style: ({
-                border: '4px solid white',
-                padding: '28px 32px',
-                maxWidth: '600px',
-                width: '100%'
-              }) }, React.createElement("p", { style: ({
-                  fontSize: 'clamp(18px, 4vw, 22px)',
-                  lineHeight: 1.4,
-                  margin: 0,
-                  fontWeight: '700',
-                  textAlign: 'center',
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase'
-                }) }, "Frank is that friend you go to the gallery with \u2014 he knows the history, the context, a few rumors \u2014 but moves through it all a little sideways. Go ahead. Listen to Frank while you look at the art.")), React.createElement("button", { onClick: (() => setView('search')), style: ({
-                  background: '#fff',
-                  color: '#000',
-                  border: 'none',
-                  padding: '18px 60px',
-                  fontSize: '16px',
-                  fontWeight: '700',
-                  letterSpacing: '0.05em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  fontFamily: 'Helvetica, Arial, sans-serif',
-                  transition: 'transform 0.2s ease'
-                }), onMouseEnter: ((e) => e.currentTarget.style.transform = 'scale(1.05)'), onMouseLeave: ((e) => e.currentTarget.style.transform = 'scale(1)') }, "ENTER"), aboutArtwork && (React.createElement("div", { onClick: (() => handleArtworkClick(aboutArtwork)), style: ({
-                  border: '4px solid white',
-                  padding: '20px 28px',
-                  maxWidth: '600px',
-                  width: '100%',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '16px',
-                  justifyContent: 'center',
-                  transition: 'transform 0.2s ease',
-                  boxSizing: 'border-box'
-                }), onMouseEnter: ((e) => e.currentTarget.style.transform = 'scale(1.02)'), onMouseLeave: ((e) => e.currentTarget.style.transform = 'scale(1)') }, React.createElement("div", { style: ({
-                  width: '36px',
-                  height: '36px',
-                  flexShrink: 0,
-                  borderRadius: '50%',
-                  border: '3px solid white',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }) }, React.createElement(Play, { size: (16), fill: "white", style: ({ marginLeft: '2px' }) })), React.createElement("p", { style: ({
-                  fontSize: 'clamp(14px, 3.2vw, 18px)',
-                  margin: 0,
-                  fontWeight: '700',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  textAlign: 'center'
-                }) }, "Listen to this first")))), offlineProgressBar)
-        );
-      }
-
-      if (view === 'player' && selectedArtwork) {
-        return (
-          React.createElement("div", { style: ({
-            width: '100%',
-            height: '100vh',
-            backgroundColor: selectedArtwork.color,
-            display: 'flex',
-            flexDirection: 'column',
-            position: 'relative',
-            fontFamily: 'Helvetica, Arial, sans-serif'
-          }) }, React.createElement("audio", { key: (selectedArtwork.id), ref: (audioRef), src: (selectedArtwork.audioUrl), preload: "auto", onLoadedMetadata: ((e) => {
-                if (e.target.duration && !isNaN(e.target.duration)) {
-                  setDuration(e.target.duration);
-                }
-              }), onTimeUpdate: ((e) => {
-                setCurrentTime(e.target.currentTime);
-                if (e.target.duration && !isNaN(e.target.duration)) {
-                  setProgress((e.target.currentTime / e.target.duration) * 100);
-                }
-              }), onEnded: (() => {
-                setIsPlaying(false);
-                setProgress(0);
-                setCurrentTime(0);
-              }), onPlay: (() => { setIsPlaying(true); setAudioError(''); }), onPause: (() => setIsPlaying(false)), onWaiting: (() => setAudioError('')), onPlaying: (() => setAudioError('')), onError: ((e) => {
-                // Most playback errors at the museum will be transient network
-                // hiccups; the service worker should normally serve the file
-                // from cache. As a safety net, attempt a single silent reload
-                // before showing a message.
-                const audio = e.target;
-                if (!audio) return;
-                if (!audio.dataset.retried) {
-                  audio.dataset.retried = '1';
-                  setTimeout(() => {
-                    try { audio.load(); } catch (err) {}
-                  }, 600);
-                } else {
-                  setAudioError("This audio isn't available right now. Try again or pick another artwork.");
-                  setIsPlaying(false);
-                }
-              }) }), React.createElement("button", { onClick: (handleBack), style: ({
-                position: 'absolute',
-                top: '24px',
-                left: '24px',
-                background: 'none',
-                border: 'none',
-                color: 'white',
-                cursor: 'pointer',
-                padding: '8px',
-                zIndex: 10
-              }) }, React.createElement(ArrowLeft, { size: (32) })), React.createElement("div", { style: ({
-              position: 'absolute',
-              top: '24px',
-              right: '24px',
-              color: 'white',
-              fontSize: '11px',
-              fontWeight: '400',
-              opacity: 0.6,
-              letterSpacing: '0.1em',
-              zIndex: 10
-            }) }, "LISTEN TO FRANK"), React.createElement("div", { style: ({
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: showTranscript ? 'flex-start' : 'center',
-              alignItems: showTranscript ? 'stretch' : 'center',
-              padding: '80px 32px 32px 32px',
-              color: 'white',
-              overflowY: showTranscript ? 'auto' : 'visible'
-            }) }, !showTranscript ? (
-                React.createElement(React.Fragment, null, React.createElement("h1", { style: ({
-                    fontSize: 'clamp(32px, 8vw, 64px)',
-                    fontWeight: 'bold',
-                    margin: 0,
-                    textAlign: 'center',
-                    lineHeight: 1,
-                    letterSpacing: '-0.02em',
-                    marginBottom: '16px'
-                  }) }, selectedArtwork.title), !selectedArtwork.isAbout && React.createElement("p", { style: ({
-                    fontSize: 'clamp(20px, 4vw, 32px)',
-                    fontWeight: 'bold',
-                    margin: 0,
-                    opacity: 0.9,
-                    textAlign: 'center'
-                  }) }, selectedArtwork.artist), !selectedArtwork.isAbout && React.createElement("p", { style: ({
-                    fontSize: 'clamp(16px, 3vw, 24px)',
-                    margin: '8px 0 0 0',
-                    opacity: 0.8,
-                    textAlign: 'center'
-                  }) }, selectedArtwork.year))
-              ) : (
-                React.createElement("div", { style: ({
-                  maxWidth: '700px',
-                  margin: '0 auto',
-                  width: '100%'
-                }) }, React.createElement("div", { style: ({
-                    marginBottom: '32px',
-                    paddingBottom: '24px',
-                    borderBottom: '2px solid rgba(255, 255, 255, 0.3)'
-                  }) }, React.createElement("h2", { style: ({
-                      fontSize: 'clamp(24px, 5vw, 36px)',
-                      fontWeight: 'bold',
-                      margin: '0 0 8px 0',
-                      lineHeight: 1.2
-                    }) }, selectedArtwork.title), !selectedArtwork.isAbout && React.createElement("p", { style: ({
-                      fontSize: 'clamp(16px, 3.5vw, 22px)',
-                      fontWeight: 'bold',
-                      margin: 0,
-                      opacity: 0.9
-                    }) }, selectedArtwork.artist, ", ", selectedArtwork.year)), selectedArtwork.transcript.split('\n\n').map((paragraph, idx) => (
-                    React.createElement("p", { key: (idx), style: ({
-                      fontSize: 'clamp(16px, 3.5vw, 20px)',
-                      lineHeight: 1.7,
-                      marginBottom: '24px',
-                      fontWeight: '400'
-                    }) }, paragraph)
-                  )))
-              )), React.createElement("div", { style: ({
-              padding: '32px',
-              backgroundColor: 'rgba(0, 0, 0, 0.2)'
-            }) }, audioError && (
-                React.createElement("div", { style: ({
-                  marginBottom: '16px',
-                  padding: '10px 14px',
-                  border: '2px solid white',
-                  fontSize: '13px',
-                  fontWeight: 'bold',
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase',
-                  textAlign: 'center'
-                }) }, audioError)
-              ), React.createElement("div", { style: ({ marginBottom: '24px' }) }, React.createElement("div", { onClick: ((e) => {
-                    const audio = audioRef.current;
-                    if (!audio || !audio.duration) return;
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    const clickX = e.clientX - rect.left;
-                    const percentage = clickX / rect.width;
-                    audio.currentTime = percentage * audio.duration;
-                  }), style: ({
-                  width: '100%',
-                  height: '4px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                  borderRadius: '2px',
-                  overflow: 'hidden',
-                  cursor: 'pointer'
-                }) }, React.createElement("div", { style: ({
-                    width: `${progress}%`,
-                    height: '100%',
-                    backgroundColor: 'white',
-                    transition: 'width 0.1s linear'
-                  }) })), React.createElement("div", { style: ({
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginTop: '8px',
-                  color: 'white',
-                  fontSize: '14px',
-                  fontWeight: 'bold'
-                }) }, React.createElement("span", null, formatTime(currentTime)), React.createElement("span", null, formatTime(duration)))), React.createElement("div", { style: ({
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '16px'
-              }) }, React.createElement("button", { onClick: (togglePlay), style: ({
-                    width: '72px',
-                    height: '72px',
-                    borderRadius: '50%',
-                    backgroundColor: 'white',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: selectedArtwork.color,
-                    transition: 'transform 0.2s',
-                    flexShrink: 0
-                  }) }, isPlaying ? React.createElement(Pause, { size: (32), fill: "currentColor" }) : React.createElement(Play, { size: (32), fill: "currentColor", style: ({ marginLeft: '4px' }) })), React.createElement("button", { onClick: (() => setShowTranscript(!showTranscript)), style: ({
-                    padding: '12px 20px',
-                    backgroundColor: 'transparent',
-                    border: '3px solid white',
-                    color: 'white',
-                    fontFamily: 'Helvetica, Arial, sans-serif',
-                    fontSize: '14px',
-                    fontWeight: 'bold',
-                    cursor: 'pointer',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    whiteSpace: 'nowrap'
-                  }) }, showTranscript ? 'HIDE' : 'SHOW', " TRANSCRIPT"), React.createElement("div", { style: ({ display: 'flex', gap: '16px', alignItems: 'center', flexShrink: 0 }) }, React.createElement("button", { onClick: (async () => {
-                      const shareData = {
-                        title: `${selectedArtwork.title} by ${selectedArtwork.artist}`,
-                        text: `Listen to Frank talk about "${selectedArtwork.title}"`,
-                        url: window.location.href
-                      };
-                      try {
-                        if (navigator.share) {
-                          await navigator.share(shareData);
-                        } else {
-                          // Fallback: copy to clipboard
-                          await navigator.clipboard.writeText(window.location.href);
-                          alert('Link copied to clipboard!');
-                        }
-                      } catch (err) {
-                        // If clipboard fails, show the URL
-                        const url = window.location.href;
-                        prompt('Copy this link:', url);
-                      }
-                    }), style: ({
-                      background: 'none',
-                      border: 'none',
-                      color: 'white',
-                      cursor: 'pointer',
-                      padding: '8px'
-                    }) }, React.createElement(Share2, { size: (24) }))))), offlineProgressBar)
-        );
-      }
-
-      return (
-        React.createElement("div", { style: ({
-          width: '100%',
-          minHeight: '100vh',
-          backgroundColor: 'black',
-          fontFamily: 'Helvetica, Arial, sans-serif',
-          color: 'white'
-        }) }, React.createElement("div", { style: ({
-            padding: '48px 24px 32px 24px',
-            borderBottom: '4px solid white'
-          }) }, React.createElement("h1", { style: ({
-              fontSize: 'clamp(24px, 6vw, 36px)',
-              fontWeight: 'bold',
-              margin: 0,
-              lineHeight: 1.2,
-              letterSpacing: '-0.02em'
-            }) }, "TELL FRANK WHAT YOU'RE LOOKING AT")), React.createElement("div", { style: ({ padding: '24px' }) }, React.createElement("div", { style: ({ display: 'flex', gap: '12px', alignItems: 'stretch' }) }, React.createElement("input", { type: "text", placeholder: "ARTIST, TITLE, OR GALLERY #", value: (searchQuery), onChange: ((e) => setSearchQuery(e.target.value)), style: ({
-                  flex: 1,
-                  minWidth: 0,
-                  padding: '16px',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  border: '3px solid white',
-                  backgroundColor: 'black',
-                  color: 'white',
-                  fontFamily: 'Helvetica, Arial, sans-serif',
-                  textTransform: 'uppercase'
-                }) }), React.createElement("button", { type: "button", onClick: (startVoiceSearch), "aria-label": (voiceState === 'listening' ? 'Stop listening' : 'Search by voice'), title: (voiceState === 'listening' ? 'Stop listening' : 'Search by voice'), style: ({
-                  width: '60px',
-                  flexShrink: 0,
-                  border: '3px solid white',
-                  backgroundColor: voiceState === 'listening' ? 'white' : 'black',
-                  color: voiceState === 'listening' ? 'black' : 'white',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: 0,
-                  fontFamily: 'Helvetica, Arial, sans-serif'
-                }) }, React.createElement(Mic, { size: (26) }))), (voiceState === 'listening' || voiceMessage) ? (
-              React.createElement("p", { style: ({
-                margin: '12px 0 0 0',
-                fontSize: '13px',
-                fontWeight: 'bold',
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-                opacity: 0.85
-              }) }, voiceState === 'listening' ? 'LISTENING…' : voiceMessage)
-            ) : (
-              React.createElement("p", { style: ({
-                margin: '12px 0 0 0',
-                fontSize: '12px',
-                fontWeight: 'bold',
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                opacity: 0.55
-              }) }, "Tip: standing in a gallery? Type its number (e.g. 506)")
-            )), React.createElement("div", { style: ({ padding: '0 24px 24px 24px' }) }, filteredArtworks.map((artwork) => (
-              React.createElement("div", { key: (artwork.id), onClick: (() => handleArtworkClick(artwork)), style: ({
-                  border: '3px solid white',
-                  marginBottom: '16px',
-                  cursor: 'pointer',
-                  transition: 'transform 0.2s',
-                  padding: '20px'
-                }), onMouseEnter: ((e) => e.currentTarget.style.transform = 'translateX(4px)'), onMouseLeave: ((e) => e.currentTarget.style.transform = 'translateX(0)') }, React.createElement("h3", { style: ({
-                  fontSize: 'clamp(18px, 4vw, 24px)',
-                  fontWeight: 'bold',
-                  margin: '0 0 8px 0',
-                  lineHeight: 1.2
-                }) }, artwork.title), React.createElement("p", { style: ({
-                  fontSize: 'clamp(14px, 3vw, 18px)',
-                  margin: '0 0 4px 0',
-                  opacity: 0.8,
-                  fontWeight: 'bold'
-                }) }, artwork.artist), React.createElement("p", { style: ({
-                  fontSize: 'clamp(12px, 2.5vw, 16px)',
-                  margin: 0,
-                  opacity: 0.55,
-                  fontWeight: 'bold'
-                }) }, artwork.year), artwork.gallery ? React.createElement("p", { style: ({
-                  fontSize: 'clamp(13px, 2.7vw, 17px)',
-                  margin: '4px 0 0 0',
-                  fontWeight: 'bold',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  opacity: 0.9
-                }) }, "Gallery ", artwork.gallery) : null)
-            ))), React.createElement("div", { style: ({
-            padding: '24px',
-            borderTop: '4px solid white',
-            textAlign: 'center'
-          }) }, React.createElement("p", { style: ({
-              fontSize: '14px',
-              fontWeight: 'bold',
-              margin: 0,
-              opacity: 0.6
-            }) }, filteredArtworks.length, " ARTWORKS")), offlineProgressBar)
-      );
+    // Show a random drawing from `list`, never the same one twice in a row,
+    // and skip past any file that fails to load.
+    function showEntry(list) {
+      var img = $('entry-hero');
+      if (!img) return;
+      list = (list || []).filter(function (s) { return typeof s === 'string' && IMG_RE.test(s); });
+      if (!list.length) list = DEFAULT_ENTRY;
+      var order = list.map(function (_, i) { return i; });
+      for (var i = order.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = order[i]; order[i] = order[j]; order[j] = t; }
+      var last = null;
+      try { last = localStorage.getItem('ltf_entry_last'); } catch (e) {}
+      if (list.length > 1 && list[order[0]] === last) order.push(order.shift());
+      var k = 0;
+      (function tryNext() {
+        if (k >= order.length) { img.style.display = 'none'; return; }
+        var src = list[order[k++]];
+        img.onerror = tryNext;
+        img.onload = function () { img.style.display = ''; try { localStorage.setItem('ltf_entry_last', src); } catch (e) {} };
+        img.style.display = '';
+        img.src = src;
+      })();
     }
 
-    ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
+    // Discover the drawing set, then show one.
+    function loadEntryList(cb) {
+      fetch('entry/').then(function (r) { return r.ok ? r.text() : ''; }).then(function (html) {
+        // Only trust a *real* directory index (local preview / autoindex hosts),
+        // never the SPA fallback index.html the live site returns for unknown paths.
+        if (!/directory listing for|index of/i.test(html)) throw 0;
+        var found = [], re = /href\s*=\s*"([^"?#]+)"/gi, m;
+        while ((m = re.exec(html))) {
+          var raw = m[1].replace(/^\.\//, '');
+          if (raw.indexOf('/') >= 0) continue;
+          if (IMG_RE.test(decodeURIComponent(raw))) found.push('entry/' + raw);
+        }
+        if (!found.length) throw 0;
+        cb(found);
+      }).catch(function () {
+        fetch('entry/manifest.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+          cb(Array.isArray(j) && j.length ? j.map(function (s) { return s.indexOf('/') >= 0 ? s : 'entry/' + s; }) : DEFAULT_ENTRY);
+        }).catch(function () { cb(DEFAULT_ENTRY); });
+      });
+    }
+    loadEntryList(showEntry);
+
+    // ── Search helpers ────────────────────────────────────────────────────
+    function normalizeForSearch(str) {
+      return (str || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    }
+    var _DIGIT_WORDS = { zero:'0', oh:'0', o:'0', nought:'0', naught:'0', one:'1', two:'2', three:'3', four:'4', five:'5', six:'6', seven:'7', eight:'8', nine:'9' };
+    var _NUMBER_WORDS = { zero:0, one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8, nine:9, ten:10, eleven:11, twelve:12, thirteen:13, fourteen:14, fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19, twenty:20, thirty:30, forty:40, fifty:50, sixty:60, seventy:70, eighty:80, ninety:90 };
+    var _ORDINAL_WORDS = { first:'1', second:'2', third:'3', fourth:'4', fifth:'5', sixth:'6', seventh:'7', eighth:'8', ninth:'9', tenth:'10' };
+
+    function _spokenToGallery(text) {
+      if (!text) return '';
+      var s = text.toLowerCase()
+        .replace(/\b(i\s*am|i'm|im)\s+in\b/g, ' ')
+        .replace(/[,'\-]/g, ' ')
+        .replace(/\b(in\s+)?(gallery|galleries|room|rm)\b/g, ' ')
+        .replace(/^\s*in\s+/g, ' ')
+        .replace(/\band\b/g, ' ')
+        .replace(/\s+/g, ' ').trim();
+      if (!s) return '';
+      if (/^\d{1,4}$/.test(s)) return s;
+      var tokens = s.split(' ');
+      if (tokens.length >= 2 && tokens.every(function (t) { return t in _DIGIT_WORDS; })) {
+        return tokens.map(function (t) { return _DIGIT_WORDS[t]; }).join('');
+      }
+      var knownAdditive = function (t) { return (t in _NUMBER_WORDS) || t === 'hundred' || t === 'thousand'; };
+      if (tokens.every(knownAdditive)) {
+        var total = 0, cur = 0;
+        for (var i = 0; i < tokens.length; i++) {
+          var t = tokens[i];
+          if (t === 'hundred') cur = (cur || 1) * 100;
+          else if (t === 'thousand') { total += (cur || 1) * 1000; cur = 0; }
+          else cur += _NUMBER_WORDS[t];
+        }
+        var n = total + cur;
+        if (n > 0 && n < 10000) return String(n);
+      }
+      return '';
+    }
+    function _normalizeDigitWords(text) {
+      var s = text.replace(/\b(\d+)(?:st|nd|rd|th)\b/g, '$1');
+      s = s.replace(/\b(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth)\b/g, function (w) { return _ORDINAL_WORDS[w]; });
+      s = s.replace(/\b(zero|one|two|three|four|five|six|seven|eight|nine)\b/g, function (w) { return _DIGIT_WORDS[w]; });
+      return s;
+    }
+
+    // gallery string -> floor number (or null = not on view)
+    function galleryToFloor(g) {
+      if (!g) return null;
+      var s = ('' + g).trim().toLowerCase();
+      var m = s.match(/^floor\s+(\d)/);
+      if (m) return +m[1];
+      if (s.indexOf('garden') >= 0) return 1;   // Sculpture Garden = Floor 1
+      if (s.indexOf('ps1') >= 0) return null;
+      var d = s.match(/^(\d)/);
+      if (d) return +d[1];
+      return null;
+    }
+
+    // ── Heard state ───────────────────────────────────────────────────────
+    function getHeard() { try { return JSON.parse(localStorage.getItem('ltf_heard') || '[]'); } catch (e) { return []; } }
+    function markHeard(id) { var h = getHeard(); if (h.indexOf(id) < 0) { h.push(id); try { localStorage.setItem('ltf_heard', JSON.stringify(h)); } catch (e) {} } }
+    function applyHeard() {
+      var h = getHeard();
+      ARTS.forEach(function (a) {
+        var row = ROW_OF[a.id];
+        if (row) row.classList.toggle('heard', h.indexOf(a.id) >= 0);
+      });
+    }
+
+    // ── Gallery rendering ─────────────────────────────────────────────────
+    function drawingUrl(a) {
+      return (a && DRAWINGS[a.id]) || '';
+    }
+    function makeSwatch(a) {
+      var sw = document.createElement('div');
+      sw.className = 'swatch';
+      sw.style.background = a.color || '#222';
+      return sw;
+    }
+    // Gallery badge text. Floors 1/4/5 tagged "Floor N" are hallway/landing
+    // works (not in a numbered room) → "Hallway · N". Everything else (room
+    // numbers, "1 North", "Floor 6" = Cohen Center) shows as-is.
+    function galleryBadge(a) {
+      var g = a.gallery || '';
+      if (/garden/i.test(g)) return 'Garden';
+      var m = g.match(/^floor\s+([145])\b/i);
+      return m ? 'Hallway · ' + m[1] : g;
+    }
+    function buildRow(a) {
+      var row = document.createElement('div');
+      row.className = 'row';
+      row.dataset.id = a.id;
+
+      var thumb = document.createElement('div');
+      thumb.className = 'thumb';
+      var url = drawingUrl(a);
+      if (url) {
+        var img = document.createElement('img');
+        img.alt = '';
+        img.loading = 'lazy';
+        img.onerror = function () { img.replaceWith(makeSwatch(a)); };
+        img.src = url;
+        thumb.appendChild(img);
+      } else {
+        thumb.appendChild(makeSwatch(a));
+      }
+
+      var text = document.createElement('div');
+      text.className = 'row-text';
+
+      var meta = document.createElement('div');
+      meta.className = 'row-meta';
+      var t = document.createElement('span');
+      t.className = 'row-title';
+      t.textContent = (a.title || '').toUpperCase();
+      meta.appendChild(t);
+      if (a._floor != null) {
+        var gal = document.createElement('span');
+        gal.className = 'row-gallery';
+        gal.textContent = galleryBadge(a);
+        meta.appendChild(gal);
+      }
+      text.appendChild(meta);
+
+      var artist = document.createElement('p');
+      artist.className = 'row-artist';
+      artist.textContent = (a.artist || '').toUpperCase() + (a.year ? ' · ' + a.year : '');
+      text.appendChild(artist);
+
+      if (a.hook) {
+        var hook = document.createElement('p');
+        hook.className = 'row-hook';
+        hook.textContent = a.hook;
+        text.appendChild(hook);
+      }
+
+      var dot = document.createElement('div');
+      dot.className = 'playing-dot';
+
+      row.appendChild(thumb);
+      row.appendChild(text);
+      row.appendChild(dot);
+      row.addEventListener('click', function () { openArtwork(a.id); });
+      return row;
+    }
+    function renderGallery() {
+      var list = $('gallery-list');
+      list.innerHTML = '';
+      ARTS.forEach(function (a) {
+        var row = buildRow(a);
+        ROW_OF[a.id] = row;
+        list.appendChild(row);
+      });
+    }
+
+    // ── Filtering (search + floor chip) ───────────────────────────────────
+    function matches(a, ctx) {
+      if (activeFloor != null && a._floor !== activeFloor) return false;
+      if (!ctx.q) return true;
+      var gal = ('' + (a.gallery || '')).toLowerCase().trim();
+      if (ctx.galleryQ && gal === ctx.galleryQ) return true;
+      // "hallway" matches the floor-landing works shown with a "Hallway · N" badge
+      if (ctx.q.indexOf('hallway') >= 0 && /^floor\s+[145]\b/.test(gal)) return true;
+      if (normalizeForSearch(a.title).indexOf(ctx.qNorm) >= 0) return true;
+      if (normalizeForSearch(a.artist).indexOf(ctx.qNorm) >= 0) return true;
+      if (('' + (a.year || '')).toLowerCase().indexOf(ctx.q) >= 0) return true;
+      if (!ctx.galleryQ && gal) {
+        if (gal.indexOf(ctx.q) >= 0) return true;
+        if (ctx.normQ !== ctx.q && gal.indexOf(ctx.normQ) >= 0) return true;
+        if (ctx.normRev && gal.indexOf(ctx.normRev) >= 0) return true;
+      }
+      return false;
+    }
+    function applyFilters() {
+      var raw = ($('search-input').value || '').trim().toLowerCase();
+      var normTokens = _normalizeDigitWords(raw).split(/\s+/).filter(Boolean);
+      var ctx = {
+        q: raw,
+        qNorm: normalizeForSearch(raw),
+        galleryQ: _spokenToGallery(raw),
+        normQ: _normalizeDigitWords(raw),
+        normRev: normTokens.length >= 2 ? normTokens.slice().reverse().join(' ') : ''
+      };
+      var shown = 0;
+      ARTS.forEach(function (a) {
+        var ok = matches(a, ctx);
+        var row = ROW_OF[a.id];
+        if (row) row.classList.toggle('hidden', !ok);
+        if (ok) shown++;
+      });
+      $('no-results').style.display = shown ? 'none' : 'block';
+      $('count-line').textContent = shown + (shown === 1 ? ' artwork' : ' artworks');
+    }
+    function setFloorChip(floor, btn) {
+      if (activeFloor === floor) {
+        activeFloor = null;
+        btn.classList.remove('active');
+      } else {
+        activeFloor = floor;
+        document.querySelectorAll('.chip[data-floor]').forEach(function (c) { c.classList.remove('active'); });
+        btn.classList.add('active');
+      }
+      applyFilters();
+    }
+
+    // ── Navigation between screens ────────────────────────────────────────
+    // Home: return to the main (unfiltered) gallery from anywhere.
+    function goHome() {
+      activeFloor = null;
+      document.querySelectorAll('.chip[data-floor]').forEach(function (c) { c.classList.remove('active'); });
+      var si = $('search-input'); if (si) si.value = '';
+      if (window.location.hash) window.location.hash = '';   // clears deep-link → route()
+      go(1);
+      applyFilters();
+      var list = $('gallery-list'); if (list && list.parentElement) list.parentElement.scrollTop = 0;
+    }
+
+    function go(n) {
+      for (var i = 0; i <= 4; i++) {
+        var s = $('S' + i);
+        if (s) s.classList.toggle('on', i === n);
+      }
+      currentScreen = n;
+      if (n !== 2) closeTx();
+      if (n === 1) { applyHeard(); applyFilters(); }
+      if (n === 4) initMap();
+    }
+
+    // ── Player ────────────────────────────────────────────────────────────
+    function openArtwork(id) { window.location.hash = encodeURIComponent(id); }
+
+    function showPlayer(a) {
+      current = a;
+      ARTS.forEach(function (x) { var r = ROW_OF[x.id]; if (r) r.classList.toggle('playing', x.id === a.id); });
+
+      $('player-bg').style.background = a.color || '#111';
+      $('player-title').textContent = a.title || '';
+      $('player-artist').textContent = (a.artist || '') + (a.year ? ', ' + a.year : '');
+      var hk = $('player-hook');
+      if (a.hook) { hk.textContent = a.hook; hk.style.display = 'block'; } else { hk.style.display = 'none'; }
+      $('tx-text').innerHTML = a.transcript || '';
+
+      var ghost = $('player-ghost');
+      var gurl = drawingUrl(a);
+      if (gurl) {
+        var d = new Image();
+        d.onload = function () { ghost.src = gurl; };
+        d.onerror = function () { ghost.removeAttribute('src'); };
+        d.src = gurl;
+      } else {
+        ghost.removeAttribute('src');
+      }
+
+      // reset transport
+      delete audio.dataset.retried;
+      audio.src = a.audioUrl;
+      audio.load();
+      setPlayIcon(false);
+      $('prog-bar').style.width = '0%';
+      $('prog-cur').textContent = '0:00';
+      $('prog-dur').textContent = '0:00';
+      $('audio-error').style.display = 'none';
+      setMediaMetadata(a);
+      closeTx();
+      go(2);
+    }
+
+    function setPlayIcon(playing) {
+      var ico = $('play-ico');
+      ico.innerHTML = playing
+        ? '<rect x="6" y="4" width="4" height="16" fill="white"/><rect x="14" y="4" width="4" height="16" fill="white"/>'
+        : '<polygon points="8 5 19 12 8 19 8 5" fill="white"/>';
+    }
+    function togglePlay() {
+      if (audio.paused) {
+        if (current) markHeard(current.id);
+        $('audio-error').style.display = 'none';
+        var p = audio.play();
+        if (p && p.catch) p.catch(function () { showAudioError('Audio failed to start — tap play to try again.'); });
+      } else {
+        audio.pause();
+      }
+    }
+    function showAudioError(msg) { var e = $('audio-error'); e.textContent = msg; e.style.display = 'block'; }
+    function fmt(s) { if (!s || isNaN(s)) return '0:00'; var m = Math.floor(s / 60), x = Math.floor(s % 60); return m + ':' + (x < 10 ? '0' : '') + x; }
+
+    function toggleTx() {
+      txOpen = !txOpen;
+      if (txOpen) {
+        $('tx-area').style.display = 'block';
+        $('player-spacer').style.display = 'none';
+        $('player-title').style.fontSize = '14px';
+        $('player-hook').style.display = 'none';
+        var b = $('tx-btn'); b.textContent = 'close'; b.style.color = 'rgba(255,255,255,.65)'; b.style.borderColor = 'rgba(255,255,255,.3)';
+      } else { closeTx(); }
+    }
+    function closeTx() {
+      txOpen = false;
+      $('tx-area').style.display = 'none';
+      $('player-spacer').style.display = 'flex';
+      $('player-title').style.fontSize = '22px';
+      if (current && current.hook) $('player-hook').style.display = 'block';
+      var b = $('tx-btn'); b.textContent = 'read along'; b.style.color = 'rgba(255,255,255,.5)'; b.style.borderColor = 'rgba(255,255,255,.18)';
+    }
+
+    function shareTrack() {
+      if (!current) return;
+      var url = 'https://listentofrank.art/#' + encodeURIComponent(current.id);
+      var data = { title: current.title + ' by ' + current.artist, text: 'Listen to Frank on "' + current.title + '"', url: url };
+      if (navigator.share) { navigator.share(data).catch(function () {}); }
+      else if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(function () {
+          var b = $('share-btn'), o = b.style.color; b.style.color = 'rgba(255,255,255,.85)';
+          setTimeout(function () { b.style.color = o; }, 1200);
+        }).catch(function () { prompt('Copy link:', url); });
+      } else { prompt('Copy link:', url); }
+    }
+
+    // ── Audio element events (retry-on-error preserved) ───────────────────
+    audio.addEventListener('loadedmetadata', function () { $('prog-dur').textContent = fmt(audio.duration); });
+    audio.addEventListener('timeupdate', function () {
+      $('prog-cur').textContent = fmt(audio.currentTime);
+      if (audio.duration) $('prog-bar').style.width = (audio.currentTime / audio.duration * 100) + '%';
+    });
+    audio.addEventListener('play', function () { setPlayIcon(true); $('audio-error').style.display = 'none'; $('btn-play').classList.remove('loading-pulse'); });
+    audio.addEventListener('playing', function () { $('audio-error').style.display = 'none'; $('btn-play').classList.remove('loading-pulse'); });
+    audio.addEventListener('waiting', function () { $('btn-play').classList.add('loading-pulse'); });
+    audio.addEventListener('pause', function () { setPlayIcon(false); $('btn-play').classList.remove('loading-pulse'); });
+    audio.addEventListener('ended', function () { setPlayIcon(false); $('prog-bar').style.width = '0%'; $('prog-cur').textContent = '0:00'; });
+    audio.addEventListener('error', function () {
+      if (!audio.src) return;
+      if (!audio.dataset.retried) {
+        audio.dataset.retried = '1';
+        setTimeout(function () { try { audio.load(); } catch (e) {} }, 600);
+      } else {
+        showAudioError("This audio isn't available right now. Try again or pick another artwork.");
+        setPlayIcon(false);
+      }
+    });
+
+    // ── Media Session API (lock-screen controls) ──────────────────────────
+    function skipBackSeconds(s) { audio.currentTime = Math.max(0, (audio.currentTime || 0) - s); }
+    function skipForwardSeconds(s) { var d = audio.duration || 0; audio.currentTime = d ? Math.min(d, (audio.currentTime || 0) + s) : (audio.currentTime || 0) + s; }
+    function setMediaMetadata(a) {
+      if (!('mediaSession' in navigator)) return;
+      try {
+        navigator.mediaSession.metadata = new window.MediaMetadata({
+          title: a.title,
+          artist: a.artist + (a.year ? ', ' + a.year : ''),
+          album: 'Listen to Frank',
+          artwork: [
+            { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
+            { src: 'icon-512.png', sizes: '512x512', type: 'image/png' }
+          ]
+        });
+      } catch (e) {}
+      var set = function (action, h) { try { navigator.mediaSession.setActionHandler(action, h); } catch (e) {} };
+      set('play', function () { audio.play().catch(function () {}); });
+      set('pause', function () { audio.pause(); });
+      set('seekbackward', function (d) { skipBackSeconds((d && d.seekOffset) || 15); });
+      set('seekforward', function (d) { skipForwardSeconds((d && d.seekOffset) || 15); });
+      set('seekto', function (d) {
+        if (!d || d.seekTime == null) return;
+        if (d.fastSeek && 'fastSeek' in audio) { audio.fastSeek(d.seekTime); return; }
+        audio.currentTime = d.seekTime;
+      });
+      set('previoustrack', null);
+      set('nexttrack', null);
+    }
+    if ('mediaSession' in navigator) {
+      audio.addEventListener('play', function () { try { navigator.mediaSession.playbackState = 'playing'; } catch (e) {} });
+      audio.addEventListener('pause', function () { try { navigator.mediaSession.playbackState = 'paused'; } catch (e) {} });
+      audio.addEventListener('timeupdate', function () {
+        if (!navigator.mediaSession.setPositionState) return;
+        var d = audio.duration;
+        if (!d || isNaN(d) || d <= 0) return;
+        try { navigator.mediaSession.setPositionState({ duration: d, position: Math.min(audio.currentTime || 0, d), playbackRate: 1.0 }); } catch (e) {}
+      });
+    }
+
+    // ── Voice search ──────────────────────────────────────────────────────
+    var recognition = null, voiceTimer = null;
+    function showVoiceMessage(msg) {
+      var el = $('voice-msg');
+      el.textContent = msg; el.style.display = msg ? 'block' : 'none';
+      if (voiceTimer) clearTimeout(voiceTimer);
+      if (msg) voiceTimer = setTimeout(function () { el.style.display = 'none'; }, 4500);
+    }
+    function startVoiceSearch() {
+      if (recognition) { try { recognition.stop(); } catch (e) {} return; }
+      var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) { showVoiceMessage("Voice search isn't supported here — please type instead."); return; }
+      if (navigator.onLine === false) { showVoiceMessage('Voice search needs a signal — please type instead.'); return; }
+      try {
+        var r = new SR();
+        r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 1; r.continuous = false;
+        r.onstart = function () { showVoiceMessage('Listening…'); $('mic-btn').classList.add('listening'); };
+        r.onresult = function (e) {
+          var t = (e.results[0][0].transcript || '').trim();
+          if (t) { $('search-input').value = t; applyFilters(); showVoiceMessage(''); }
+          else showVoiceMessage("Didn't catch that — try again.");
+        };
+        r.onerror = function (e) {
+          var err = e && e.error;
+          if (err === 'not-allowed' || err === 'service-not-allowed') showVoiceMessage('Please allow microphone access to use voice search.');
+          else if (err === 'network') showVoiceMessage('Voice search needs a signal — please type instead.');
+          else if (err === 'no-speech') showVoiceMessage("Didn't hear anything — try again.");
+          else if (err === 'aborted') showVoiceMessage('');
+          else showVoiceMessage('Voice search failed — please type instead.');
+        };
+        r.onend = function () { recognition = null; $('mic-btn').classList.remove('listening'); if ($('voice-msg').textContent === 'Listening…') showVoiceMessage(''); };
+        recognition = r; r.start();
+      } catch (e) { showVoiceMessage('Voice search failed — please type instead.'); $('mic-btn').classList.remove('listening'); }
+    }
+
+    // ── Map ───────────────────────────────────────────────────────────────
+    var SVGNS = 'http://www.w3.org/2000/svg';
+    var mapFloor = null, selectedRoom = null, mapInited = false;
+
+    var FLOOR_DATA = {
+      1: { theme: 'Lobby & Garden', vbW: 300, vbH: 300, rooms: [
+        { id: 'entrance', x: 10, y: 5, w: 280, h: 18, label: '53rd St Entrance', type: 'corridor' },
+        { id: 'garden', x: 10, y: 28, w: 175, h: 95, label: 'Sculpture Garden', type: 'gallery', g: 'Sculpture Garden' },
+        { id: '1north', x: 10, y: 128, w: 175, h: 45, label: '1 North', type: 'gallery', g: '1 North' },
+        { id: '1west', x: 10, y: 178, w: 175, h: 50, label: '1 West', type: 'gallery' },
+        { id: 'film', x: 192, y: 28, w: 98, h: 85, label: 'Film Center', type: 'amenity' },
+        { id: 'store', x: 192, y: 118, w: 98, h: 45, label: 'Museum Store', type: 'amenity' },
+        { id: 'artlab', x: 192, y: 168, w: 98, h: 60, label: 'Art Lab', type: 'amenity' },
+        { id: 'member', x: 10, y: 233, w: 175, h: 32, label: 'Member Desk · Checkroom', type: 'amenity' },
+        { id: 'hall1', x: 192, y: 233, w: 98, h: 32, label: 'Hallway', type: 'gallery', g: 'Floor 1' },
+        { id: 'exit54', x: 10, y: 270, w: 280, h: 15, label: '54th St Exit', type: 'corridor' }
+      ]},
+      2: { theme: 'Collection 1970s–Present', vbW: 300, vbH: 310, rooms: [
+        { id: 'r201', x: 10, y: 10, w: 48, h: 52, label: '201', type: 'gallery' }, { id: 'r202', x: 62, y: 10, w: 48, h: 52, label: '202', type: 'gallery' },
+        { id: 'r203', x: 114, y: 10, w: 48, h: 52, label: '203', type: 'gallery' }, { id: 'r204', x: 166, y: 10, w: 48, h: 52, label: '204', type: 'gallery' },
+        { id: 'r205', x: 218, y: 10, w: 72, h: 52, label: '205', type: 'gallery' }, { id: 'r206', x: 10, y: 66, w: 48, h: 52, label: '206', type: 'gallery' },
+        { id: 'r207', x: 62, y: 66, w: 48, h: 52, label: '207', type: 'gallery' }, { id: 'r208', x: 114, y: 66, w: 48, h: 52, label: '208', type: 'gallery' },
+        { id: 'r209', x: 166, y: 66, w: 48, h: 52, label: '209', type: 'gallery' }, { id: 'r210', x: 218, y: 66, w: 35, h: 52, label: '210', type: 'gallery' },
+        { id: 'r211', x: 257, y: 66, w: 33, h: 52, label: '211', type: 'gallery' }, { id: 'r212', x: 10, y: 122, w: 48, h: 52, label: '212', type: 'gallery' },
+        { id: 'r213', x: 62, y: 122, w: 48, h: 52, label: '213', type: 'gallery' }, { id: 'r214', x: 114, y: 122, w: 48, h: 52, label: '214', type: 'gallery' },
+        { id: 'r215', x: 166, y: 122, w: 48, h: 52, label: '215', type: 'gallery' }, { id: 'r216', x: 218, y: 122, w: 72, h: 52, label: '216', type: 'gallery' },
+        { id: 'atrium', x: 10, y: 179, w: 145, h: 70, label: 'Atrium', type: 'special' }, { id: '2south', x: 160, y: 179, w: 130, h: 70, label: '2 South', type: 'gallery' },
+        { id: 'cafe2', x: 10, y: 254, w: 120, h: 48, label: 'Café 2', type: 'amenity' }, { id: 'store2', x: 134, y: 254, w: 75, h: 48, label: 'Store', type: 'amenity' },
+        { id: 'creativity', x: 213, y: 254, w: 77, h: 48, label: 'Creativity Lab', type: 'amenity' }
+      ]},
+      3: { theme: 'Architecture · Design · Photo', vbW: 300, vbH: 350, rooms: [
+        { id: '3north', x: 10, y: 10, w: 160, h: 155, label: '3 North', type: 'gallery', g: '3 North' }, { id: '3east', x: 178, y: 10, w: 112, h: 155, label: '3 East', type: 'gallery' },
+        { id: '3south', x: 10, y: 172, w: 160, h: 110, label: '3 South', type: 'gallery' }, { id: '3w', x: 10, y: 288, w: 70, h: 55, label: '3W', type: 'gallery' },
+        { id: 'lounge3', x: 178, y: 172, w: 112, h: 50, label: 'Lounge', type: 'amenity' }, { id: 'rest3', x: 84, y: 288, w: 90, h: 55, label: 'Restrooms', type: 'amenity' },
+        { id: 'stair3', x: 178, y: 270, w: 112, h: 73, label: 'Stairs / Elevator', type: 'corridor' }
+      ]},
+      4: { theme: 'Collection 1940s–1970s', vbW: 300, vbH: 440, rooms: [
+        { id: 'r400', x: 10, y: 8, w: 118, h: 80, label: '400', type: 'gallery' }, { id: 'r421', x: 182, y: 8, w: 108, h: 60, label: '421', type: 'gallery' },
+        { id: 'r402', x: 10, y: 94, w: 55, h: 52, label: '402', type: 'gallery' }, { id: 'r401', x: 69, y: 94, w: 60, h: 52, label: '401', type: 'gallery' },
+        { id: 'r420', x: 135, y: 72, w: 155, h: 74, label: '420', type: 'gallery' }, { id: 'r403', x: 10, y: 150, w: 55, h: 52, label: '403', type: 'gallery' },
+        { id: 'r404', x: 69, y: 150, w: 60, h: 52, label: '404', type: 'gallery' }, { id: 'r416', x: 135, y: 150, w: 70, h: 52, label: '416', type: 'gallery' },
+        { id: 'r418', x: 210, y: 150, w: 43, h: 52, label: '418', type: 'gallery' }, { id: 'r419', x: 257, y: 150, w: 33, h: 52, label: '419', type: 'gallery' },
+        { id: 'r405', x: 10, y: 206, w: 55, h: 55, label: '405', type: 'gallery' }, { id: 'r406', x: 69, y: 206, w: 60, h: 55, label: '406', type: 'gallery' },
+        { id: 'r415', x: 135, y: 206, w: 70, h: 55, label: '415', type: 'gallery' }, { id: 'r417', x: 210, y: 206, w: 80, h: 55, label: '417', type: 'gallery' },
+        { id: 'r407', x: 10, y: 265, w: 120, h: 50, label: '407', type: 'gallery' }, { id: 'landing4', x: 215, y: 265, w: 75, h: 40, label: 'Hallway', type: 'gallery', g: 'Floor 4' },
+        { id: 'r408', x: 10, y: 319, w: 55, h: 55, label: '408', type: 'gallery' }, { id: 'r414', x: 69, y: 319, w: 60, h: 55, label: '414', type: 'gallery' },
+        { id: 'r413', x: 135, y: 309, w: 155, h: 65, label: '413', type: 'gallery' }, { id: 'r409', x: 10, y: 378, w: 55, h: 52, label: '409', type: 'gallery' },
+        { id: 'r410', x: 69, y: 378, w: 30, h: 52, label: '410', type: 'gallery' }, { id: 'r412', x: 103, y: 378, w: 26, h: 52, label: '412', type: 'gallery' },
+        { id: 'elev4a', x: 134, y: 8, w: 42, h: 38, label: '', type: 'corridor' }, { id: 'stairs4', x: 134, y: 50, w: 42, h: 38, label: '', type: 'corridor' },
+        { id: 'elev4b', x: 135, y: 265, w: 75, h: 45, label: '', type: 'corridor' }
+      ]},
+      5: { theme: 'Collection 1880s–1940s', vbW: 300, vbH: 400, rooms: [
+        { id: 'r500', x: 10, y: 8, w: 55, h: 55, label: '500', type: 'gallery' }, { id: 'r501', x: 69, y: 8, w: 55, h: 55, label: '501', type: 'gallery' },
+        { id: 'r502', x: 128, y: 8, w: 55, h: 55, label: '502', type: 'gallery' }, { id: 'r503', x: 187, y: 8, w: 55, h: 55, label: '503', type: 'gallery' },
+        { id: 'r504', x: 246, y: 8, w: 44, h: 55, label: '504', type: 'gallery' }, { id: 'r505', x: 10, y: 67, w: 55, h: 55, label: '505', type: 'gallery' },
+        { id: 'r506', x: 69, y: 67, w: 55, h: 55, label: '506', type: 'gallery' }, { id: 'r507', x: 128, y: 67, w: 55, h: 55, label: '507', type: 'gallery' },
+        { id: 'r508', x: 187, y: 67, w: 55, h: 55, label: '508', type: 'gallery' }, { id: 'r516', x: 246, y: 67, w: 44, h: 55, label: '516', type: 'gallery' },
+        { id: 'r509', x: 10, y: 126, w: 55, h: 55, label: '509', type: 'gallery' }, { id: 'r510', x: 69, y: 126, w: 55, h: 55, label: '510', type: 'gallery' },
+        { id: 'r511', x: 128, y: 126, w: 55, h: 55, label: '511', type: 'gallery' }, { id: 'r512', x: 187, y: 126, w: 55, h: 55, label: '512', type: 'gallery' },
+        { id: 'r513', x: 10, y: 185, w: 55, h: 55, label: '513', type: 'gallery' }, { id: 'r514', x: 69, y: 185, w: 55, h: 55, label: '514', type: 'gallery' },
+        { id: 'r515', x: 128, y: 185, w: 162, h: 55, label: '515', type: 'gallery' }, { id: 'r517', x: 10, y: 244, w: 55, h: 55, label: '517', type: 'gallery' },
+        { id: 'r518', x: 69, y: 244, w: 55, h: 55, label: '518', type: 'gallery' }, { id: 'r519', x: 128, y: 244, w: 55, h: 55, label: '519', type: 'gallery' },
+        { id: 'r520', x: 187, y: 244, w: 55, h: 55, label: '520', type: 'gallery' }, { id: 'r521', x: 10, y: 303, w: 55, h: 55, label: '521', type: 'gallery' },
+        { id: 'r522', x: 69, y: 303, w: 55, h: 55, label: '522', type: 'gallery' }, { id: 'r523', x: 128, y: 303, w: 103, h: 55, label: '523', type: 'gallery' },
+        { id: 'landing5', x: 235, y: 303, w: 55, h: 55, label: 'Hallway', type: 'gallery', g: 'Floor 5' },
+        { id: 'rest5', x: 10, y: 362, w: 280, h: 28, label: 'Restrooms', type: 'amenity' }
+      ]},
+      6: { theme: 'Special Exhibitions', vbW: 300, vbH: 372, rooms: [
+        { id: 'cohen', x: 10, y: 8, w: 280, h: 210, label: 'Cohen Center\nSpecial Exhibitions', type: 'gallery', g: 'Floor 6' },
+        { id: 'terrace', x: 10, y: 225, w: 135, h: 100, label: 'Terrace Café', type: 'amenity' },
+        { id: 'outdoor', x: 150, y: 225, w: 140, h: 100, label: 'Outdoor Terrace', type: 'gallery' },
+        { id: 'rest6', x: 10, y: 330, w: 100, h: 32, label: 'Restrooms', type: 'amenity' },
+        { id: 'store6', x: 120, y: 330, w: 170, h: 32, label: 'Store', type: 'amenity' }
+      ]}
+    };
+
+    // Active gallery values (from artworks.json) and per-floor active sets.
+    var ACTIVE_GALLERIES = {};   // gallery string -> count
+    var FRANK_ROOMS = {};        // floor -> [ gallery keys with content ]
+    function roomKey(r) { return r.g || r.label; }
+    function buildMapActivity() {
+      ACTIVE_GALLERIES = {};
+      ARTS.forEach(function (a) {
+        if (a._floor == null || !a.gallery) return;
+        ACTIVE_GALLERIES[a.gallery] = (ACTIVE_GALLERIES[a.gallery] || 0) + 1;
+      });
+      FRANK_ROOMS = {};
+      for (var f = 1; f <= 6; f++) {
+        var list = [];
+        (FLOOR_DATA[f].rooms || []).forEach(function (r) {
+          if (r.type === 'gallery' && ACTIVE_GALLERIES[roomKey(r)]) list.push(roomKey(r));
+        });
+        FRANK_ROOMS[f] = list;
+      }
+    }
+
+    function buildFloorTabs() {
+      var box = $('floor-tabs');
+      box.innerHTML = '';
+      for (var f = 1; f <= 6; f++) {
+        (function (f) {
+          var b = document.createElement('button');
+          b.id = 'ft' + f; b.textContent = f;
+          b.style.cssText = 'flex:1;background:none;border:none;border-bottom:1px solid transparent;color:#2d2d2d;padding:9px 0;font-size:11px;cursor:pointer;font-family:inherit;letter-spacing:.05em;transition:color .1s;';
+          b.addEventListener('click', function () { setFloorMap(f); });
+          box.appendChild(b);
+        })(f);
+      }
+    }
+    function initMap() {
+      if (!mapInited) {
+        mapInited = true;
+        buildMapActivity();
+        buildFloorTabs();
+        setFloorMap(5);   // FIRST visit defaults to Floor 5 (main painting galleries)
+      } else {
+        showBlankMap();   // later visits open blank until a floor is tapped
+      }
+    }
+    function showBlankMap() {
+      mapFloor = null;
+      selectedRoom = null;
+      for (var i = 1; i <= 6; i++) {
+        var b = $('ft' + i);
+        if (b) { b.style.color = '#2d2d2d'; b.style.borderBottom = '1px solid transparent'; }
+      }
+      $('floor-theme-label').textContent = '';
+      $('map-info').style.display = 'none';
+      $('map-container').innerHTML = '<div style="padding:64px 20px;text-align:center;color:rgba(255,255,255,.28);font-size:12px;letter-spacing:1px;font-style:italic;line-height:1.7;">Select a floor above<br>to see Frank\'s picks</div>';
+    }
+    function setFloorMap(f) {
+      mapFloor = f; selectedRoom = null;
+      for (var i = 1; i <= 6; i++) {
+        var b = $('ft' + i);
+        if (b) { b.style.color = i === f ? '#fff' : '#2d2d2d'; b.style.borderBottom = i === f ? '1px solid #fff' : '1px solid transparent'; }
+      }
+      var fd = FLOOR_DATA[f];
+      $('floor-theme-label').textContent = fd ? fd.theme : '';
+      $('map-info').style.display = 'none';
+      renderFloorMap(f);
+    }
+    function renderFloorMap(f) {
+      var fd = FLOOR_DATA[f]; if (!fd) return;
+      var PAD = 4, frankList = FRANK_ROOMS[f] || [];
+      var svg = document.createElementNS(SVGNS, 'svg');
+      svg.setAttribute('viewBox', '0 0 ' + fd.vbW + ' ' + fd.vbH);
+      svg.style.cssText = 'width:100%;display:block;';
+      var bg = document.createElementNS(SVGNS, 'rect');
+      bg.setAttribute('x', 0); bg.setAttribute('y', 0); bg.setAttribute('width', fd.vbW); bg.setAttribute('height', fd.vbH); bg.setAttribute('fill', '#000');
+      svg.appendChild(bg);
+      fd.rooms.forEach(function (r) {
+        var isSel = selectedRoom === r.id;
+        var isNav = r.type === 'corridor', isAmen = r.type === 'amenity';
+        var hasFrank = frankList.indexOf(roomKey(r)) >= 0;
+        var noContent = r.type === 'gallery' && frankList.length > 0 && !hasFrank;
+        var sc = isNav ? '#111' : isAmen ? '#1a1a1a' : noContent ? '#1e1e1e' : '#fff';
+        var sw = isNav ? 0.4 : noContent ? 0.5 : 0.6;
+        var fz = r.w < 32 ? 5.5 : r.w < 50 ? 6.5 : 7;
+        var clickable = !isNav && !noContent;
+        var g = document.createElementNS(SVGNS, 'g');
+        if (clickable) { g.setAttribute('data-room-id', r.id); g.style.cursor = 'pointer'; }
+        var rect = document.createElementNS(SVGNS, 'rect');
+        rect.setAttribute('x', r.x); rect.setAttribute('y', r.y); rect.setAttribute('width', r.w); rect.setAttribute('height', r.h);
+        rect.setAttribute('fill', isSel ? '#fff' : 'transparent');
+        rect.setAttribute('stroke', isSel ? '#fff' : sc);
+        rect.setAttribute('stroke-width', sw);
+        g.appendChild(rect);
+        (r.label ? r.label.split('\n') : []).forEach(function (line, i) {
+          if (!line) return;
+          var t = document.createElementNS(SVGNS, 'text');
+          t.setAttribute('x', r.x + PAD);
+          t.setAttribute('y', r.y + PAD + fz + i * (fz + 1.5));
+          t.setAttribute('fill', isSel ? '#000' : isNav ? '#111' : isAmen ? '#1a1a1a' : noContent ? '#1e1e1e' : '#fff');
+          t.setAttribute('font-size', fz);
+          t.setAttribute('font-family', 'Inter,Helvetica Neue,Arial,sans-serif');
+          t.setAttribute('letter-spacing', '0.02em');
+          t.style.pointerEvents = 'none'; t.style.userSelect = 'none';
+          t.textContent = line;
+          g.appendChild(t);
+        });
+        svg.appendChild(g);
+      });
+      var mc = $('map-container');
+      mc.innerHTML = '';
+      mc.appendChild(svg);
+      svg.addEventListener('click', function (e) {
+        var g = e.target.closest ? e.target.closest('[data-room-id]') : null;
+        if (!g) { g = e.target.parentNode; if (!g || !g.getAttribute || !g.getAttribute('data-room-id')) g = null; }
+        if (g) selectRoom(g.getAttribute('data-room-id'), f);
+      });
+    }
+    function selectRoom(id, f) {
+      selectedRoom = selectedRoom === id ? null : id;
+      renderFloorMap(f);
+      var info = $('map-info');
+      if (!selectedRoom) { info.style.display = 'none'; return; }
+      var fd = FLOOR_DATA[f];
+      var room = fd ? fd.rooms.find(function (r) { return r.id === id; }) : null;
+      var key = room ? roomKey(room) : id;
+      var label = room ? room.label.replace('\n', ' ') : id;
+      var here = ARTS.filter(function (a) { return a.gallery === key; });
+      $('map-room-floor').textContent = 'Floor ' + f;
+      $('map-room-name').textContent = label;
+      if (here.length) {
+        var names = here.slice(0, 6).map(function (a) { return a.title; }).join(' · ');
+        $('map-room-note').textContent = 'Frank covers ' + here.length + (here.length === 1 ? ' work' : ' works') + ' here: ' + names + (here.length > 6 ? '…' : '');
+        $('map-filter-btn').style.display = 'inline-block';
+        info.dataset.key = key;
+      } else {
+        $('map-room-note').textContent = 'No Frank picks here yet.';
+        $('map-filter-btn').style.display = 'none';
+      }
+      info.style.display = 'block';
+    }
+    function applyMapFilter() {
+      var info = $('map-info');
+      var key = info.dataset.key;
+      if (!key) return;
+      activeFloor = null;
+      document.querySelectorAll('.chip[data-floor]').forEach(function (c) { c.classList.remove('active'); });
+      $('search-input').value = key;
+      go(1);
+    }
+
+    // ── Routing ───────────────────────────────────────────────────────────
+    function route() {
+      var hash = decodeURIComponent(window.location.hash.slice(1));
+      if (hash) {
+        var a = BY_ID[hash];
+        if (a && !a.isAbout) { showPlayer(a); return; }
+        go(1); return;
+      }
+      if (currentScreen === 2) go(1);
+    }
+
+    // ── Service worker offline-cache progress ─────────────────────────────
+    function wireServiceWorker() {
+      if (!('serviceWorker' in navigator)) return;
+      navigator.serviceWorker.addEventListener('message', function (e) {
+        if (!e.data || e.data.type !== 'audio-cache-progress') return;
+        var bar = $('offline-bar');
+        if (e.data.total > 0 && e.data.done < e.data.total) {
+          bar.textContent = 'Saving audio for offline use — ' + e.data.done + ' / ' + e.data.total;
+          bar.style.display = 'block';
+        } else { bar.style.display = 'none'; }
+      });
+      navigator.serviceWorker.ready.then(function (reg) {
+        var sw = reg.active || reg.waiting || reg.installing;
+        if (sw) sw.postMessage({ type: 'precache-audio' });
+      }).catch(function () {});
+    }
+
+    // ── Wire static controls ──────────────────────────────────────────────
+    function wireUI() {
+      $('S0').addEventListener('click', function () { go(1); });
+      document.querySelectorAll('.home-logo').forEach(function (el) {
+        el.addEventListener('click', function (e) { e.stopPropagation(); goHome(); });
+        el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHome(); } });
+      });
+      $('map-btn').addEventListener('click', function () { go(4); });
+      $('about-btn').addEventListener('click', function () { go(3); });
+      $('about-close').addEventListener('click', function () { go(1); });
+      $('map-close').addEventListener('click', function () { go(1); });
+      $('chip-map').addEventListener('click', function () { go(4); });
+      $('play-something').addEventListener('click', function () { if (ARTS.length) openArtwork(ARTS[Math.floor(Math.random() * ARTS.length)].id); });
+      $('search-input').addEventListener('input', applyFilters);
+      $('mic-btn').addEventListener('click', startVoiceSearch);
+      document.querySelectorAll('.chip[data-floor]').forEach(function (c) {
+        c.addEventListener('click', function () { setFloorChip(+c.dataset.floor, c); });
+      });
+      $('player-back').addEventListener('click', function () { window.location.hash = ''; });
+      $('btn-play').addEventListener('click', togglePlay);
+      $('btn-back10').addEventListener('click', function () { skipBackSeconds(10); });
+      $('btn-fwd30').addEventListener('click', function () { skipForwardSeconds(30); });
+      $('tx-btn').addEventListener('click', toggleTx);
+      $('share-btn').addEventListener('click', shareTrack);
+      $('map-filter-btn').addEventListener('click', applyMapFilter);
+      $('prog-track').addEventListener('click', function (e) {
+        if (!audio.duration) return;
+        var rect = e.currentTarget.getBoundingClientRect();
+        audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+      });
+
+      // Swipe up → gallery (player / about / map only)
+      var sy = 0, sx = 0;
+      document.addEventListener('touchstart', function (e) { sy = e.changedTouches[0].clientY; sx = e.changedTouches[0].clientX; }, { passive: true });
+      document.addEventListener('touchend', function (e) {
+        if (currentScreen < 2) return;
+        var dy = e.changedTouches[0].clientY - sy, dx = e.changedTouches[0].clientX - sx;
+        if (dy < -70 && Math.abs(dy) > Math.abs(dx) * 1.5) {
+          // Player carries a hash (clearing it routes to gallery); About/Map
+          // have no hash, so go straight to the gallery.
+          if (window.location.hash) window.location.hash = ''; else go(1);
+        }
+      }, { passive: true });
+
+      window.addEventListener('hashchange', route);
+    }
+
+    // ── Boot ──────────────────────────────────────────────────────────────
+    function boot(data, drawings) {
+      ALL = data || [];
+      DRAWINGS = drawings || {};
+      aboutArt = ALL.find(function (a) { return a.isAbout || a.id === 'about-listen-to-frank'; }) || null;
+      ARTS = ALL.filter(function (a) { return !(a.isAbout || a.id === 'about-listen-to-frank'); });
+      ARTS.forEach(function (a) { a._floor = galleryToFloor(a.gallery); BY_ID[a.id] = a; });
+      if (aboutArt) BY_ID[aboutArt.id] = aboutArt;
+
+      renderGallery();
+      applyHeard();
+      applyFilters();
+      wireUI();
+      wireServiceWorker();
+      booted = true;
+
+      var hash = decodeURIComponent(window.location.hash.slice(1));
+      if (hash && BY_ID[hash] && !BY_ID[hash].isAbout) showPlayer(BY_ID[hash]);
+      else go(0);
+    }
+
+    Promise.all([
+      fetch('artworks.json').then(function (r) { if (!r.ok) throw new Error('load failed'); return r.json(); }),
+      fetch('drawings/manifest.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
+    ]).then(function (res) { boot(res[0], res[1]); })
+      .catch(function () { boot([], {}); });
+  })();
   </script>
-  
+
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(reg => console.log('Service Worker registered'))
-          .catch(err => console.log('Service Worker registration failed:', err));
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function () {});
       });
     }
   </script>

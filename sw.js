@@ -12,7 +12,7 @@
  *      iOS will refuse to play a cached MP3 that doesn't honor Range.
  */
 
-const CACHE_VERSION = 'frank-v4';
+const CACHE_VERSION = 'frank-v5';
 const SHELL_CACHE = CACHE_VERSION + '-shell';
 const AUDIO_CACHE = CACHE_VERSION + '-audio';
 const VENDOR_CACHE = CACHE_VERSION + '-vendor';
@@ -23,15 +23,15 @@ const SHELL_URLS = [
   '/manifest.json',
   '/artworks.json',
   '/icon-192.png',
-  '/icon-512.png'
+  '/icon-512.png',
+  '/kawaracaps.otf',
+  '/entry/manifest.json',
+  '/drawings/manifest.json'
 ];
 
-// Cross-origin libraries the page needs to boot. Pre-cached on install so
-// that after a single connected visit the site no longer depends on unpkg.
-const VENDOR_URLS = [
-  'https://unpkg.com/react@18/umd/react.production.min.js',
-  'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js'
-];
+// v3 is plain vanilla JS — no external libraries needed. (Previously this
+// pre-cached the React CDN; removed.)
+const VENDOR_URLS = [];
 
 // ---------------- install ----------------
 self.addEventListener('install', (event) => {
