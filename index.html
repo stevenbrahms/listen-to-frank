@@ -38,7 +38,6 @@
       height: 100vh; height: 100dvh;
       margin: 0 auto; overflow: hidden; background: #000;
     }
-    @media (min-width: 720px) { #app { max-width: 620px; } }
     .screen {
       position: absolute; inset: 0;
       display: flex; flex-direction: column; overflow: hidden;
@@ -50,28 +49,11 @@
     #S0, #S2 { position: fixed; inset: 0; }
     /* …but their inner content stays in the centered column. */
     .pcol { width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; }
-    @media (min-width: 720px) { .pcol { max-width: 620px; } }
-    /* Scale type/spacing up on larger screens so the column reads intentionally,
-       not like a phone. */
-    @media (min-width: 720px) {
-      .kawara-logo { font-size: 24px; }
-      .row { padding: 18px 0; }
-      .thumb { width: 66px; height: 94px; }
-      .thumb img { max-width: 66px; max-height: 94px; }
-      .thumb .swatch { width: 48px; height: 66px; }
-      .row-title { font-size: 15px; }
-      .row-artist { font-size: 12.5px; }
-      .row-hook { font-size: 15px; line-height: 1.6; }
-      .row-gallery { font-size: 12.5px; }
-      .search-input { font-size: 15px; padding: 13px 15px; }
-      .mic-btn { width: 48px; }
-      .chip { font-size: 12.5px; padding: 7px 15px; }
-    }
 
     /* Kawara logo */
     .kawara-logo {
       font-family: 'KawaraCaps', sans-serif;
-      font-size: 20px; letter-spacing: 4px; white-space: nowrap;
+      font-size: 21px; letter-spacing: 4px; white-space: nowrap;
       font-weight: normal; -webkit-text-stroke: 0.4px white;
       text-rendering: optimizeLegibility; font-kerning: normal;
     }
@@ -83,14 +65,14 @@
     .row:active { opacity: .4; transform: scale(0.985); }
     .row.hidden { display: none; }
     .thumb { flex-shrink: 0; width: 58px; height: 84px; display: flex; align-items: flex-end; justify-content: center; }
-    .thumb img { max-width: 58px; max-height: 84px; object-fit: contain; object-position: bottom center; display: block; transition: opacity .3s; }
-    .thumb .swatch { width: 44px; height: 60px; align-self: flex-end; opacity: .82; }
+    .thumb img { max-width: 58px; max-height: 84px; object-fit: contain; object-position: bottom center; display: block; filter: brightness(1.35); }
+    .thumb .swatch { width: 44px; height: 60px; align-self: flex-end; opacity: .9; }
     .row-text { flex: 1; padding-top: 2px; min-width: 0; }
     .row-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; gap: 8px; }
-    .row-title { color: rgba(255,255,255,.96); font-size: 13px; letter-spacing: 1.2px; font-weight: 500; transition: color .3s; }
-    .row-gallery { color: rgba(255,255,255,.5); font-size: 11px; letter-spacing: .5px; flex-shrink: 0; white-space: nowrap; }
-    .row-artist { color: rgba(255,255,255,.58); font-size: 11px; margin: 0 0 6px; letter-spacing: .5px; }
-    .row-hook { color: rgba(255,255,255,.66); font-size: 13.5px; margin: 0; line-height: 1.6; font-style: italic; font-weight: 300; }
+    .row-title { color: rgba(255,255,255,.97); font-size: 14px; letter-spacing: 1.2px; font-weight: 500; transition: color .3s; }
+    .row-gallery { color: rgba(255,255,255,.5); font-size: 12px; letter-spacing: .5px; flex-shrink: 0; white-space: nowrap; }
+    .row-artist { color: rgba(255,255,255,.6); font-size: 12px; margin: 0 0 6px; letter-spacing: .5px; }
+    .row-hook { color: rgba(255,255,255,.68); font-size: 14.5px; margin: 0; line-height: 1.6; font-style: italic; font-weight: 300; }
     @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
     .playing-dot { display: none; width: 5px; height: 5px; border-radius: 50%; background: #fff; position: absolute; right: 0; top: 50%; transform: translateY(-50%); animation: pulse 1.8s ease-in-out infinite; }
     .row.playing .playing-dot { display: block; }
@@ -99,12 +81,10 @@
     .row.playing .row-hook { color: rgba(255,255,255,.85) !important; }
     .row.playing .thumb img { opacity: 1 !important; }
 
-    /* Heard state (dimmer than normal, but still readable) */
-    .row.heard .row-title { color: rgba(255,255,255,.5); }
-    .row.heard .row-artist { color: rgba(255,255,255,.32); }
-    .row.heard .row-hook { color: rgba(255,255,255,.4); }
-    .row.heard .thumb img { opacity: .4; }
-    .row.heard .thumb .swatch { opacity: .35; }
+    /* Heard state: ONLY the text dims a little — the drawing stays full brightness. */
+    .row.heard .row-title { color: rgba(255,255,255,.64); }
+    .row.heard .row-artist { color: rgba(255,255,255,.4); }
+    .row.heard .row-hook { color: rgba(255,255,255,.48); }
 
     /* Audio loading pulse */
     @keyframes pulse-ring {
@@ -116,21 +96,65 @@
     /* Search */
     .search-wrap { padding: 10px 16px 9px; background: #000; }
     .search-row { display: flex; gap: 8px; align-items: stretch; }
-    .search-input { flex: 1; min-width: 0; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.92); font-size: 14px; font-family: 'Inter', sans-serif; padding: 11px 13px; outline: none; border-radius: 2px; }
+    .search-input { flex: 1; min-width: 0; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.92); font-size: 15px; font-family: 'Inter', sans-serif; padding: 12px 13px; outline: none; border-radius: 2px; }
     .search-input::placeholder { color: rgba(255,255,255,.42); }
     .search-input:focus { border-color: #555; }
     .mic-btn { flex-shrink: 0; width: 42px; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.65); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 2px; }
     .mic-btn.listening { background: #fff; color: #000; border-color: #fff; }
     .voice-msg { color: rgba(255,255,255,.6); font-size: 11px; letter-spacing: .5px; padding: 7px 2px 0; font-style: italic; }
     .chips { display: flex; gap: 6px; padding: 9px 0 1px; justify-content: space-between; }
-    .chip { background: transparent; border: 0.5px solid #3a3a3a; color: rgba(255,255,255,.55); font-size: 11px; letter-spacing: 1px; padding: 5px 12px; cursor: pointer; font-family: 'Inter', sans-serif; border-radius: 2px; transition: all .12s; white-space: nowrap; }
+    .chip { background: transparent; border: 0.5px solid #3a3a3a; color: rgba(255,255,255,.55); font-size: 12px; letter-spacing: 1px; padding: 6px 13px; cursor: pointer; font-family: 'Inter', sans-serif; border-radius: 2px; transition: all .12s; white-space: nowrap; }
     .chip.active { border-color: rgba(255,255,255,.6); color: #fff; background: rgba(255,255,255,.1); }
 
     .icon-btn { background: transparent; border: none; cursor: pointer; padding: 0; color: rgba(255,255,255,.62); display: flex; align-items: center; }
     .rule { height: 0.5px; background: rgba(255,255,255,.18); margin: 0 16px; }
 
+    /* Now Playing bar */
+    #now-playing {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 40;
+      display: none; align-items: center; gap: 12px;
+      padding: 10px 16px max(10px, env(safe-area-inset-bottom));
+      background: rgba(14,14,14,.97); border-top: 0.5px solid #333;
+      cursor: pointer; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    }
+    #now-playing.show { display: flex; }
+    #np-thumb { width: 30px; height: 42px; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: center; }
+    #np-thumb img { max-width: 30px; max-height: 42px; object-fit: contain; object-position: bottom center; filter: brightness(1.35); }
+    #np-thumb .swatch { width: 24px; height: 34px; opacity: .9; }
+    #np-text { flex: 1; min-width: 0; }
+    #np-title { color: rgba(255,255,255,.96); font-size: 12px; letter-spacing: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #np-artist { color: rgba(255,255,255,.5); font-size: 10.5px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #np-toggle { flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255,255,255,.45); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    #app.np-on .scrollpad { padding-bottom: 80px !important; }
+    @media (min-width: 720px) {
+      #np-title { font-size: 14px; }
+      #np-artist { font-size: 12px; }
+      #np-thumb { width: 36px; height: 50px; }
+      #np-thumb img { max-width: 36px; max-height: 50px; }
+      #np-toggle { width: 48px; height: 48px; }
+    }
+
     /* Offline saving bar */
     #offline-bar { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.88); color: #fff; padding: 8px 16px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; text-align: center; z-index: 50; border-top: 1px solid rgba(255,255,255,.2); pointer-events: none; display: none; }
+
+    /* Desktop / large screens: wider column and ~25% larger type & elements.
+       Placed at the END of the stylesheet so it overrides the base rules above. */
+    @media (min-width: 720px) {
+      #app { max-width: 760px; }
+      .pcol { max-width: 760px; }
+      .kawara-logo { font-size: 26px; }
+      .row { padding: 15px 0; }
+      .thumb { width: 70px; height: 100px; }
+      .thumb img { max-width: 70px; max-height: 100px; }
+      .thumb .swatch { width: 52px; height: 72px; }
+      .row-title { font-size: 18px; }
+      .row-artist { font-size: 15px; }
+      .row-hook { font-size: 18px; line-height: 1.6; }
+      .row-gallery { font-size: 15px; }
+      .search-input { font-size: 18px; padding: 15px 18px; }
+      .mic-btn { width: 54px; }
+      .chip { font-size: 15px; padding: 8px 18px; }
+    }
   </style>
 </head>
 <body>
@@ -190,7 +214,7 @@
         </div>
       </div>
 
-      <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
+      <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
         <div id="play-something" style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:0.5px solid #222;cursor:pointer;">
           <span style="color:rgba(255,255,255,.6);font-size:12px;letter-spacing:2px;">PLAY SOMETHING</span>
           <span style="color:rgba(255,255,255,.45);font-size:13px;">→</span>
@@ -211,12 +235,12 @@
         </div>
         <div class="pcol" style="flex:1;padding:20px 16px 0;position:relative;z-index:2;display:flex;flex-direction:column;overflow:hidden;">
           <div style="flex-shrink:0;">
-            <p id="player-title" style="color:#fff;font-size:26px;line-height:1.2;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
-            <p id="player-artist" style="color:rgba(255,255,255,.72);font-size:13px;margin:12px 0 0;letter-spacing:1px;"></p>
-            <p id="player-hook" style="color:rgba(255,255,255,.78);font-size:15px;margin:18px 0 0;line-height:1.7;font-weight:300;font-style:italic;display:none;"></p>
+            <p id="player-title" style="color:#fff;font-size:30px;line-height:1.2;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
+            <p id="player-artist" style="color:rgba(255,255,255,.72);font-size:15px;margin:13px 0 0;letter-spacing:1px;"></p>
+            <p id="player-hook" style="color:rgba(255,255,255,.78);font-size:17px;margin:18px 0 0;line-height:1.7;font-weight:300;font-style:italic;display:none;"></p>
           </div>
           <div id="tx-area" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-top:16px;display:none;">
-            <p id="tx-text" style="color:rgba(255,255,255,.86);font-size:15px;line-height:1.85;margin:0;font-weight:300;"></p>
+            <p id="tx-text" style="color:rgba(255,255,255,.86);font-size:17px;line-height:1.85;margin:0;font-weight:300;"></p>
           </div>
           <div id="player-spacer" style="flex:1;"></div>
         </div>
@@ -263,7 +287,7 @@
         </div>
         <div class="rule" style="margin-bottom:26px;"></div>
       </div>
-      <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
+      <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
         <p style="color:rgba(255,255,255,.78);font-size:16px;line-height:1.85;margin:0 0 16px;font-weight:300;">This is Listen to Frank.</p>
         <p style="color:rgba(255,255,255,.75);font-size:15px;line-height:1.85;margin:0 0 16px;font-weight:300;">Go find something on a wall. Or just start somewhere. Frank talks — a little history, a little gossip, a few sideways theories. None of it precious.</p>
         <p style="color:rgba(255,255,255,.75);font-size:15px;line-height:1.85;margin:0 0 36px;font-weight:300;">You don't need to know anything going in. That's the whole point.</p>
@@ -288,13 +312,24 @@
         <div id="floor-tabs" style="display:flex;border-bottom:1px solid #2a2a2a;"></div>
         <div id="floor-theme-label" style="padding:7px 14px;font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;border-bottom:1px solid #1a1a1a;"></div>
       </div>
-      <div id="map-container" style="flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:8px 10px 0;"></div>
+      <div id="map-container" class="scrollpad" style="flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:8px 10px 0;"></div>
       <div id="map-info" style="display:none;padding:14px 16px max(16px,env(safe-area-inset-bottom));border-top:1px solid #2a2a2a;flex-shrink:0;background:#000;">
         <div id="map-room-floor" style="font-size:9px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;"></div>
         <div id="map-room-name" style="font-size:16px;color:#fff;font-weight:400;line-height:1.3;margin-bottom:5px;"></div>
         <div id="map-room-note" style="font-size:12.5px;color:rgba(255,255,255,.68);line-height:1.6;margin-bottom:12px;"></div>
         <button id="map-filter-btn" style="background:transparent;border:0.5px solid rgba(255,255,255,.4);color:rgba(255,255,255,.78);font-size:11px;letter-spacing:1px;padding:7px 15px;cursor:pointer;font-family:'Inter',sans-serif;">SEE FRANK'S PICKS HERE →</button>
       </div>
+    </div>
+
+    <!-- Now Playing bar — appears on gallery/about/map while a track is loaded;
+         tap to return to the player. -->
+    <div id="now-playing">
+      <div id="np-thumb"></div>
+      <div id="np-text">
+        <div id="np-title"></div>
+        <div id="np-artist"></div>
+      </div>
+      <button id="np-toggle" type="button" aria-label="Play or pause"></button>
     </div>
 
     <div id="offline-bar"></div>
@@ -603,12 +638,15 @@
       if (n !== 2) closeTx();
       if (n === 1) { applyHeard(); applyFilters(); }
       if (n === 4) initMap();
+      updateNowPlaying();
     }
 
     // ── Player ────────────────────────────────────────────────────────────
     function openArtwork(id) { window.location.hash = encodeURIComponent(id); }
 
     function showPlayer(a) {
+      // Returning to the track that's already loaded? Keep it playing — don't reload.
+      var sameTrack = !!(current && current.id === a.id && audio.src);
       current = a;
       ARTS.forEach(function (x) { var r = ROW_OF[x.id]; if (r) r.classList.toggle('playing', x.id === a.id); });
 
@@ -630,15 +668,23 @@
         ghost.removeAttribute('src');
       }
 
-      // reset transport
-      delete audio.dataset.retried;
-      audio.src = a.audioUrl;
-      audio.load();
-      setPlayIcon(false);
-      $('prog-bar').style.width = '0%';
-      $('prog-cur').textContent = '0:00';
-      $('prog-dur').textContent = '0:00';
       $('audio-error').style.display = 'none';
+      if (sameTrack) {
+        // Sync the UI to the in-progress playback (no reload, no restart).
+        setPlayIcon(!audio.paused);
+        var dur = audio.duration || 0;
+        $('prog-dur').textContent = fmt(dur);
+        $('prog-cur').textContent = fmt(audio.currentTime);
+        $('prog-bar').style.width = (dur ? (audio.currentTime / dur * 100) : 0) + '%';
+      } else {
+        delete audio.dataset.retried;
+        audio.src = a.audioUrl;
+        audio.load();
+        setPlayIcon(false);
+        $('prog-bar').style.width = '0%';
+        $('prog-cur').textContent = '0:00';
+        $('prog-dur').textContent = '0:00';
+      }
       setMediaMetadata(a);
       closeTx();
       go(2);
@@ -649,6 +695,28 @@
       ico.innerHTML = playing
         ? '<rect x="6" y="4" width="4" height="16" fill="white"/><rect x="14" y="4" width="4" height="16" fill="white"/>'
         : '<polygon points="8 5 19 12 8 19 8 5" fill="white"/>';
+    }
+
+    // ── Now Playing bar (return to the playing track from anywhere) ────────
+    function setNpIcon() {
+      var b = $('np-toggle'); if (!b) return;
+      b.innerHTML = audio.paused
+        ? '<svg width="15" height="15" viewBox="0 0 24 24"><polygon points="8 5 19 12 8 19 8 5" fill="white"/></svg>'
+        : '<svg width="15" height="15" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="white"/><rect x="14" y="4" width="4" height="16" fill="white"/></svg>';
+    }
+    function updateNowPlaying() {
+      var np = $('now-playing'); if (!np) return;
+      var show = !!current && currentScreen !== 0 && currentScreen !== 2;
+      np.classList.toggle('show', show);
+      document.getElementById('app').classList.toggle('np-on', show);
+      if (!show) return;
+      $('np-title').textContent = current.title || '';
+      $('np-artist').textContent = (current.artist || '') + (current.year ? ' · ' + current.year : '');
+      var tb = $('np-thumb'); tb.innerHTML = '';
+      var url = drawingUrl(current);
+      if (url) { var im = document.createElement('img'); im.alt = ''; im.onerror = function () { im.replaceWith(makeSwatch(current)); }; im.src = url; tb.appendChild(im); }
+      else tb.appendChild(makeSwatch(current));
+      setNpIcon();
     }
     function togglePlay() {
       if (audio.paused) {
@@ -668,7 +736,7 @@
       if (txOpen) {
         $('tx-area').style.display = 'block';
         $('player-spacer').style.display = 'none';
-        $('player-title').style.fontSize = '16px';
+        $('player-title').style.fontSize = '18px';
         $('player-hook').style.display = 'none';
         var b = $('tx-btn'); b.textContent = 'close'; b.style.color = 'rgba(255,255,255,.65)'; b.style.borderColor = 'rgba(255,255,255,.3)';
       } else { closeTx(); }
@@ -677,7 +745,7 @@
       txOpen = false;
       $('tx-area').style.display = 'none';
       $('player-spacer').style.display = 'flex';
-      $('player-title').style.fontSize = '26px';
+      $('player-title').style.fontSize = '30px';
       if (current && current.hook) $('player-hook').style.display = 'block';
       var b = $('tx-btn'); b.textContent = 'read along'; b.style.color = 'rgba(255,255,255,.5)'; b.style.borderColor = 'rgba(255,255,255,.18)';
     }
@@ -706,6 +774,9 @@
     audio.addEventListener('waiting', function () { $('btn-play').classList.add('loading-pulse'); });
     audio.addEventListener('pause', function () { setPlayIcon(false); $('btn-play').classList.remove('loading-pulse'); });
     audio.addEventListener('ended', function () { setPlayIcon(false); $('prog-bar').style.width = '0%'; $('prog-cur').textContent = '0:00'; });
+    audio.addEventListener('play', setNpIcon);
+    audio.addEventListener('pause', setNpIcon);
+    audio.addEventListener('ended', setNpIcon);
     audio.addEventListener('error', function () {
       if (!audio.src) return;
       if (!audio.dataset.retried) {
@@ -1063,6 +1134,8 @@
         c.addEventListener('click', function () { setFloorChip(+c.dataset.floor, c); });
       });
       $('player-back').addEventListener('click', function () { window.location.hash = ''; });
+      $('now-playing').addEventListener('click', function () { if (current) openArtwork(current.id); });
+      $('np-toggle').addEventListener('click', function (e) { e.stopPropagation(); togglePlay(); });
       $('btn-play').addEventListener('click', togglePlay);
       $('btn-back10').addEventListener('click', function () { skipBackSeconds(10); });
       $('btn-fwd30').addEventListener('click', function () { skipForwardSeconds(30); });
