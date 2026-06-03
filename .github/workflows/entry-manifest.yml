@@ -1,34 +1,38 @@
-name: Refresh entry drawing manifest
+name: Refresh drawing manifests
 
-# When entry-screen drawings change, rebuild entry/manifest.json (the list the
-# site reads) and commit it back — so dropping a drawing into GitHub with any
-# filename makes it appear on the live entry screen automatically.
+# When entry-screen or gallery drawings change, rebuild the manifests the site
+# reads (entry/manifest.json + drawings/manifest.json) and commit them back —
+# so dropping a drawing into GitHub makes it appear on the live site
+# automatically, with no manual steps.
 
 on:
   push:
     branches: [ main ]
     paths:
       - 'entry/**'
+      - 'drawings/**'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  manifest:
+  manifests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Rebuild entry/manifest.json
+      - name: Rebuild entry manifest
         run: python3 build-entry-manifest.py
+      - name: Rebuild gallery drawings manifest
+        run: python3 build-drawings-manifest.py
       - name: Commit if changed
         run: |
-          if [ -n "$(git status --porcelain entry/manifest.json)" ]; then
+          git add entry/manifest.json drawings/manifest.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "Manifests already up to date."
+          else
             git config user.name  "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add entry/manifest.json
-            git commit -m "Auto-update entry/manifest.json"
+            git commit -m "Auto-update drawing manifests"
             git push
-          else
-            echo "Manifest already up to date."
           fi
