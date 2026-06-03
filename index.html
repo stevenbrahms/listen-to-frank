@@ -54,24 +54,24 @@
     /* Scale type/spacing up on larger screens so the column reads intentionally,
        not like a phone. */
     @media (min-width: 720px) {
-      .kawara-logo { font-size: 21px; }
-      .row { padding: 16px 0; }
-      .thumb { width: 60px; height: 88px; }
-      .thumb img { max-width: 60px; max-height: 88px; }
-      .thumb .swatch { width: 44px; height: 60px; }
-      .row-title { font-size: 12px; }
-      .row-artist { font-size: 10px; }
-      .row-hook { font-size: 13px; line-height: 1.7; }
-      .row-gallery { font-size: 10px; }
-      .search-input { font-size: 14px; padding: 11px 13px; }
-      .mic-btn { width: 44px; }
-      .chip { font-size: 10px; padding: 5px 13px; }
+      .kawara-logo { font-size: 24px; }
+      .row { padding: 18px 0; }
+      .thumb { width: 66px; height: 94px; }
+      .thumb img { max-width: 66px; max-height: 94px; }
+      .thumb .swatch { width: 48px; height: 66px; }
+      .row-title { font-size: 15px; }
+      .row-artist { font-size: 12.5px; }
+      .row-hook { font-size: 15px; line-height: 1.6; }
+      .row-gallery { font-size: 12.5px; }
+      .search-input { font-size: 15px; padding: 13px 15px; }
+      .mic-btn { width: 48px; }
+      .chip { font-size: 12.5px; padding: 7px 15px; }
     }
 
     /* Kawara logo */
     .kawara-logo {
       font-family: 'KawaraCaps', sans-serif;
-      font-size: 18px; letter-spacing: 4px; white-space: nowrap;
+      font-size: 20px; letter-spacing: 4px; white-space: nowrap;
       font-weight: normal; -webkit-text-stroke: 0.4px white;
       text-rendering: optimizeLegibility; font-kerning: normal;
     }
@@ -82,29 +82,29 @@
     .row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 0.5px solid #0e0e0e; cursor: pointer; transition: opacity .12s; position: relative; }
     .row:active { opacity: .4; transform: scale(0.985); }
     .row.hidden { display: none; }
-    .thumb { flex-shrink: 0; width: 52px; height: 76px; display: flex; align-items: flex-end; justify-content: center; }
-    .thumb img { max-width: 52px; max-height: 76px; object-fit: contain; object-position: bottom center; display: block; transition: opacity .3s; }
-    .thumb .swatch { width: 38px; height: 52px; align-self: flex-end; opacity: .82; }
+    .thumb { flex-shrink: 0; width: 58px; height: 84px; display: flex; align-items: flex-end; justify-content: center; }
+    .thumb img { max-width: 58px; max-height: 84px; object-fit: contain; object-position: bottom center; display: block; transition: opacity .3s; }
+    .thumb .swatch { width: 44px; height: 60px; align-self: flex-end; opacity: .82; }
     .row-text { flex: 1; padding-top: 2px; min-width: 0; }
-    .row-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; gap: 8px; }
-    .row-title { color: rgba(255,255,255,.85); font-size: 10px; letter-spacing: 1.5px; font-weight: 500; transition: color .3s; }
-    .row-gallery { color: rgba(255,255,255,.18); font-size: 9px; letter-spacing: .5px; flex-shrink: 0; white-space: nowrap; }
-    .row-artist { color: rgba(255,255,255,.2); font-size: 9px; margin: 0 0 6px; letter-spacing: .5px; }
-    .row-hook { color: rgba(255,255,255,.42); font-size: 11.5px; margin: 0; line-height: 1.65; font-style: italic; font-weight: 300; }
+    .row-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; gap: 8px; }
+    .row-title { color: rgba(255,255,255,.96); font-size: 13px; letter-spacing: 1.2px; font-weight: 500; transition: color .3s; }
+    .row-gallery { color: rgba(255,255,255,.5); font-size: 11px; letter-spacing: .5px; flex-shrink: 0; white-space: nowrap; }
+    .row-artist { color: rgba(255,255,255,.58); font-size: 11px; margin: 0 0 6px; letter-spacing: .5px; }
+    .row-hook { color: rgba(255,255,255,.66); font-size: 13.5px; margin: 0; line-height: 1.6; font-style: italic; font-weight: 300; }
     @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
     .playing-dot { display: none; width: 5px; height: 5px; border-radius: 50%; background: #fff; position: absolute; right: 0; top: 50%; transform: translateY(-50%); animation: pulse 1.8s ease-in-out infinite; }
     .row.playing .playing-dot { display: block; }
     .row.playing .row-title { color: rgba(255,255,255,1) !important; }
-    .row.playing .row-artist { color: rgba(255,255,255,.38) !important; }
-    .row.playing .row-hook { color: rgba(255,255,255,.62) !important; }
+    .row.playing .row-artist { color: rgba(255,255,255,.78) !important; }
+    .row.playing .row-hook { color: rgba(255,255,255,.85) !important; }
     .row.playing .thumb img { opacity: 1 !important; }
 
-    /* Heard state */
-    .row.heard .row-title { color: rgba(255,255,255,.28); }
-    .row.heard .row-artist { color: rgba(255,255,255,.14); }
-    .row.heard .row-hook { color: rgba(255,255,255,.22); }
-    .row.heard .thumb img { opacity: .3; }
-    .row.heard .thumb .swatch { opacity: .25; }
+    /* Heard state (dimmer than normal, but still readable) */
+    .row.heard .row-title { color: rgba(255,255,255,.5); }
+    .row.heard .row-artist { color: rgba(255,255,255,.32); }
+    .row.heard .row-hook { color: rgba(255,255,255,.4); }
+    .row.heard .thumb img { opacity: .4; }
+    .row.heard .thumb .swatch { opacity: .35; }
 
     /* Audio loading pulse */
     @keyframes pulse-ring {
@@ -116,18 +116,18 @@
     /* Search */
     .search-wrap { padding: 10px 16px 9px; background: #000; }
     .search-row { display: flex; gap: 8px; align-items: stretch; }
-    .search-input { flex: 1; min-width: 0; background: #080808; border: 0.5px solid #1c1c1c; color: rgba(255,255,255,.7); font-size: 12px; font-family: 'Inter', sans-serif; padding: 9px 11px; outline: none; border-radius: 2px; }
-    .search-input::placeholder { color: rgba(255,255,255,.16); }
-    .search-input:focus { border-color: #333; }
-    .mic-btn { flex-shrink: 0; width: 38px; background: #080808; border: 0.5px solid #1c1c1c; color: rgba(255,255,255,.45); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 2px; }
+    .search-input { flex: 1; min-width: 0; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.92); font-size: 14px; font-family: 'Inter', sans-serif; padding: 11px 13px; outline: none; border-radius: 2px; }
+    .search-input::placeholder { color: rgba(255,255,255,.42); }
+    .search-input:focus { border-color: #555; }
+    .mic-btn { flex-shrink: 0; width: 42px; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.65); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 2px; }
     .mic-btn.listening { background: #fff; color: #000; border-color: #fff; }
-    .voice-msg { color: rgba(255,255,255,.5); font-size: 10px; letter-spacing: .5px; padding: 7px 2px 0; font-style: italic; }
-    .chips { display: flex; gap: 5px; padding: 8px 0 1px; justify-content: space-between; }
-    .chip { background: transparent; border: 0.5px solid #1a1a1a; color: rgba(255,255,255,.2); font-size: 9px; letter-spacing: 1px; padding: 4px 11px; cursor: pointer; font-family: 'Inter', sans-serif; border-radius: 2px; transition: all .12s; white-space: nowrap; }
-    .chip.active { border-color: rgba(255,255,255,.28); color: rgba(255,255,255,.65); background: rgba(255,255,255,.04); }
+    .voice-msg { color: rgba(255,255,255,.6); font-size: 11px; letter-spacing: .5px; padding: 7px 2px 0; font-style: italic; }
+    .chips { display: flex; gap: 6px; padding: 9px 0 1px; justify-content: space-between; }
+    .chip { background: transparent; border: 0.5px solid #3a3a3a; color: rgba(255,255,255,.55); font-size: 11px; letter-spacing: 1px; padding: 5px 12px; cursor: pointer; font-family: 'Inter', sans-serif; border-radius: 2px; transition: all .12s; white-space: nowrap; }
+    .chip.active { border-color: rgba(255,255,255,.6); color: #fff; background: rgba(255,255,255,.1); }
 
-    .icon-btn { background: transparent; border: none; cursor: pointer; padding: 0; color: #383838; display: flex; align-items: center; }
-    .rule { height: 0.5px; background: rgba(255,255,255,.1); margin: 0 16px; }
+    .icon-btn { background: transparent; border: none; cursor: pointer; padding: 0; color: rgba(255,255,255,.62); display: flex; align-items: center; }
+    .rule { height: 0.5px; background: rgba(255,255,255,.18); margin: 0 16px; }
 
     /* Offline saving bar */
     #offline-bar { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.88); color: #fff; padding: 8px 16px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; text-align: center; z-index: 50; border-top: 1px solid rgba(255,255,255,.2); pointer-events: none; display: none; }
@@ -146,10 +146,10 @@
         <div style="background:#000;padding:30px 28px 28px;margin-bottom:20px;width:100%;max-width:360px;">
           <p class="kawara-logo" style="color:#fff;text-align:center;opacity:.95;font-size:20px;">LISTEN TO FRANK</p>
         </div>
-        <p style="color:rgba(255,255,255,.62);font-size:12px;line-height:2.1;text-align:center;font-weight:300;letter-spacing:.3px;">A little history.&nbsp; A little gossip.<br>A few sideways theories.</p>
+        <p style="color:rgba(255,255,255,.78);font-size:14px;line-height:2.1;text-align:center;font-weight:300;letter-spacing:.3px;">A little history.&nbsp; A little gossip.<br>A few sideways theories.</p>
       </div>
       <div style="position:relative;z-index:1;padding:0 0 40px;text-align:center;">
-        <p style="color:rgba(255,255,255,.18);font-size:10px;letter-spacing:2px;">tap anywhere</p>
+        <p style="color:rgba(255,255,255,.45);font-size:11px;letter-spacing:2px;">tap anywhere</p>
       </div>
     </div>
 
@@ -157,7 +157,7 @@
     <div class="screen" id="S1" style="background:#000;">
       <div style="flex-shrink:0;padding:max(28px,env(safe-area-inset-top)) 0 0;background:#000;">
         <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:18px 16px 0;margin-bottom:16px;">
-          <p class="kawara-logo home-logo" style="color:#fff;opacity:.7;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
+          <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
           <div style="position:absolute;right:16px;top:18px;display:flex;align-items:center;gap:14px;">
             <button class="icon-btn" id="map-btn" title="Map">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 7 9 4 15 7 21 4 21 17 15 20 9 17 3 20 3 7"/><line x1="9" y1="4" x2="9" y2="17"/><line x1="15" y1="7" x2="15" y2="20"/></svg>
@@ -191,13 +191,13 @@
       </div>
 
       <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
-        <div id="play-something" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:0.5px solid #141414;cursor:pointer;">
-          <span style="color:rgba(255,255,255,.18);font-size:10px;letter-spacing:2px;">PLAY SOMETHING</span>
-          <span style="color:rgba(255,255,255,.12);font-size:11px;">→</span>
+        <div id="play-something" style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:0.5px solid #222;cursor:pointer;">
+          <span style="color:rgba(255,255,255,.6);font-size:12px;letter-spacing:2px;">PLAY SOMETHING</span>
+          <span style="color:rgba(255,255,255,.45);font-size:13px;">→</span>
         </div>
         <div id="gallery-list"></div>
-        <p id="no-results" style="display:none;color:rgba(255,255,255,.18);font-size:11px;padding:20px 0;font-style:italic;">nothing here yet — try a gallery number, a floor, or a title.</p>
-        <p id="count-line" style="color:rgba(255,255,255,.12);font-size:9px;letter-spacing:1.5px;padding:18px 0 0;text-transform:uppercase;"></p>
+        <p id="no-results" style="display:none;color:rgba(255,255,255,.5);font-size:13px;padding:20px 0;font-style:italic;">nothing here yet — try a gallery number, a floor, or a title.</p>
+        <p id="count-line" style="color:rgba(255,255,255,.4);font-size:10px;letter-spacing:1.5px;padding:18px 0 0;text-transform:uppercase;"></p>
       </div>
     </div>
 
@@ -206,47 +206,49 @@
       <div id="player-bg" style="background:#1A2F4E;position:relative;height:100%;display:flex;flex-direction:column;">
         <img id="player-ghost" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:.09;pointer-events:none;z-index:0;" />
         <div class="pcol" style="padding:max(40px,env(safe-area-inset-top)) 16px 0;flex-shrink:0;position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;">
-          <button id="player-back" style="background:transparent;border:none;color:rgba(255,255,255,.4);font-size:10px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;">← back</button>
-          <span class="home-logo" style="color:rgba(255,255,255,.34);font-size:9px;letter-spacing:1.5px;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</span>
+          <button id="player-back" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:11px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;">← back</button>
+          <span class="home-logo" style="color:rgba(255,255,255,.6);font-size:10px;letter-spacing:1.5px;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</span>
         </div>
-        <div class="pcol" style="flex:1;padding:18px 16px 0;position:relative;z-index:2;display:flex;flex-direction:column;overflow:hidden;">
+        <div class="pcol" style="flex:1;padding:20px 16px 0;position:relative;z-index:2;display:flex;flex-direction:column;overflow:hidden;">
           <div style="flex-shrink:0;">
-            <p id="player-title" style="color:#fff;font-size:22px;line-height:1.22;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
-            <p id="player-artist" style="color:rgba(255,255,255,.34);font-size:11px;margin:10px 0 0;letter-spacing:1px;"></p>
-            <p id="player-hook" style="color:rgba(255,255,255,.48);font-size:12.5px;margin:18px 0 0;line-height:1.8;font-weight:300;font-style:italic;display:none;"></p>
+            <p id="player-title" style="color:#fff;font-size:26px;line-height:1.2;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
+            <p id="player-artist" style="color:rgba(255,255,255,.72);font-size:13px;margin:12px 0 0;letter-spacing:1px;"></p>
+            <p id="player-hook" style="color:rgba(255,255,255,.78);font-size:15px;margin:18px 0 0;line-height:1.7;font-weight:300;font-style:italic;display:none;"></p>
           </div>
           <div id="tx-area" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-top:16px;display:none;">
-            <p id="tx-text" style="color:rgba(255,255,255,.72);font-size:13px;line-height:1.9;margin:0;font-weight:300;"></p>
+            <p id="tx-text" style="color:rgba(255,255,255,.86);font-size:15px;line-height:1.85;margin:0;font-weight:300;"></p>
           </div>
           <div id="player-spacer" style="flex:1;"></div>
         </div>
-        <div class="pcol" style="background:rgba(0,0,0,.52);padding:14px 16px max(28px,env(safe-area-inset-bottom));flex-shrink:0;position:relative;z-index:2;border-radius:0;">
-          <div id="prog-track" style="height:3px;background:rgba(255,255,255,.14);margin-bottom:8px;overflow:hidden;cursor:pointer;border-radius:2px;">
-            <div id="prog-bar" style="height:100%;width:0%;background:rgba(255,255,255,.8);"></div>
+        <div style="background:rgba(0,0,0,.6);padding:16px 16px max(28px,env(safe-area-inset-bottom));flex-shrink:0;position:relative;z-index:2;">
+          <div class="pcol">
+          <div id="prog-track" style="height:4px;background:rgba(255,255,255,.22);margin-bottom:8px;overflow:hidden;cursor:pointer;border-radius:2px;">
+            <div id="prog-bar" style="height:100%;width:0%;background:rgba(255,255,255,.92);"></div>
           </div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:14px;">
-            <span id="prog-cur" style="color:rgba(255,255,255,.3);font-size:9px;">0:00</span>
-            <span id="prog-dur" style="color:rgba(255,255,255,.3);font-size:9px;">0:00</span>
+          <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
+            <span id="prog-cur" style="color:rgba(255,255,255,.6);font-size:11px;">0:00</span>
+            <span id="prog-dur" style="color:rgba(255,255,255,.6);font-size:11px;">0:00</span>
           </div>
-          <div id="audio-error" style="display:none;color:#fff;font-size:11px;text-align:center;border:1px solid rgba(255,255,255,.4);padding:7px;margin-bottom:12px;letter-spacing:.03em;"></div>
-          <div style="display:flex;justify-content:center;align-items:center;gap:34px;margin-bottom:16px;">
-            <button id="btn-back10" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.6;position:relative;" title="back 10s">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
-              <span style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:7px;color:rgba(255,255,255,.45);">10</span>
+          <div id="audio-error" style="display:none;color:#fff;font-size:12px;text-align:center;border:1px solid rgba(255,255,255,.5);padding:7px;margin-bottom:12px;letter-spacing:.03em;"></div>
+          <div style="display:flex;justify-content:center;align-items:center;gap:38px;margin-bottom:16px;">
+            <button id="btn-back10" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.85;position:relative;" title="back 10s">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+              <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:8px;color:rgba(255,255,255,.65);">10</span>
             </button>
-            <button id="btn-play" style="width:56px;height:56px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;">
-              <svg id="play-ico" width="17" height="17" viewBox="0 0 24 24"><polygon points="8 5 19 12 8 19 8 5" fill="white"/></svg>
+            <button id="btn-play" style="width:60px;height:60px;border-radius:50%;border:1.5px solid rgba(255,255,255,.5);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+              <svg id="play-ico" width="18" height="18" viewBox="0 0 24 24"><polygon points="8 5 19 12 8 19 8 5" fill="white"/></svg>
             </button>
-            <button id="btn-fwd30" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.6;position:relative;" title="forward 30s">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
-              <span style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:7px;color:rgba(255,255,255,.45);">30</span>
+            <button id="btn-fwd30" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.85;position:relative;" title="forward 30s">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+              <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:8px;color:rgba(255,255,255,.65);">30</span>
             </button>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <button id="tx-btn" style="background:transparent;border:0.5px solid rgba(255,255,255,.18);border-radius:2px;color:rgba(255,255,255,.5);font-size:10px;letter-spacing:1.5px;cursor:pointer;padding:6px 12px;font-family:'Inter',sans-serif;">read along</button>
-            <button id="share-btn" style="background:transparent;border:none;color:rgba(255,255,255,.32);cursor:pointer;padding:4px;" title="Share">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            <button id="tx-btn" style="background:transparent;border:0.5px solid rgba(255,255,255,.4);border-radius:2px;color:rgba(255,255,255,.75);font-size:11px;letter-spacing:1.5px;cursor:pointer;padding:7px 14px;font-family:'Inter',sans-serif;">read along</button>
+            <button id="share-btn" style="background:transparent;border:none;color:rgba(255,255,255,.6);cursor:pointer;padding:4px;" title="Share">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             </button>
+          </div>
           </div>
         </div>
       </div>
@@ -256,21 +258,21 @@
     <div class="screen" id="S3" style="background:#000;">
       <div style="flex-shrink:0;padding:max(40px,env(safe-area-inset-top)) 0 0;">
         <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px;margin-bottom:20px;">
-          <p class="kawara-logo home-logo" style="color:#fff;opacity:.7;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
-          <button id="about-close" style="position:absolute;right:16px;background:transparent;border:none;color:#383838;font-size:22px;cursor:pointer;padding:0;line-height:1;">×</button>
+          <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
+          <button id="about-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);font-size:26px;cursor:pointer;padding:0;line-height:1;">×</button>
         </div>
         <div class="rule" style="margin-bottom:26px;"></div>
       </div>
       <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
-        <p style="color:rgba(255,255,255,.55);font-size:14px;line-height:1.85;margin:0 0 14px;font-weight:300;">This is Listen to Frank.</p>
-        <p style="color:rgba(255,255,255,.55);font-size:13px;line-height:1.9;margin:0 0 14px;font-weight:300;">Go find something on a wall. Or just start somewhere. Frank talks — a little history, a little gossip, a few sideways theories. None of it precious.</p>
-        <p style="color:rgba(255,255,255,.55);font-size:13px;line-height:1.9;margin:0 0 36px;font-weight:300;">You don't need to know anything going in. That's the whole point.</p>
-        <div style="border-top:0.5px solid #111;padding-top:20px;margin-bottom:28px;">
-          <p style="color:rgba(255,255,255,.55);font-size:13px;line-height:1.9;margin:0;font-weight:300;">Enjoy full access. We're in preview — everything is free while we're getting started.</p>
+        <p style="color:rgba(255,255,255,.78);font-size:16px;line-height:1.85;margin:0 0 16px;font-weight:300;">This is Listen to Frank.</p>
+        <p style="color:rgba(255,255,255,.75);font-size:15px;line-height:1.85;margin:0 0 16px;font-weight:300;">Go find something on a wall. Or just start somewhere. Frank talks — a little history, a little gossip, a few sideways theories. None of it precious.</p>
+        <p style="color:rgba(255,255,255,.75);font-size:15px;line-height:1.85;margin:0 0 36px;font-weight:300;">You don't need to know anything going in. That's the whole point.</p>
+        <div style="border-top:0.5px solid #222;padding-top:20px;margin-bottom:28px;">
+          <p style="color:rgba(255,255,255,.75);font-size:15px;line-height:1.85;margin:0;font-weight:300;">Enjoy full access. We're in preview — everything is free while we're getting started.</p>
         </div>
-        <div style="border-top:0.5px solid #111;padding-top:20px;">
-          <p style="color:rgba(255,255,255,.18);font-size:10px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
-          <a href="mailto:hello@listentofrank.art" style="color:rgba(255,255,255,.28);font-size:11px;text-decoration:none;border:0.5px solid rgba(255,255,255,.1);padding:7px 14px;display:inline-block;">hello@listentofrank.art →</a>
+        <div style="border-top:0.5px solid #222;padding-top:20px;">
+          <p style="color:rgba(255,255,255,.5);font-size:11px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
+          <a href="mailto:hello@listentofrank.art" style="color:rgba(255,255,255,.62);font-size:13px;text-decoration:none;border:0.5px solid rgba(255,255,255,.28);padding:8px 15px;display:inline-block;">hello@listentofrank.art →</a>
         </div>
       </div>
     </div>
@@ -279,19 +281,19 @@
     <div class="screen" id="S4" style="background:#000;">
       <div style="flex-shrink:0;padding:max(40px,env(safe-area-inset-top)) 0 0;background:#000;">
         <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px;margin-bottom:16px;">
-          <p class="kawara-logo home-logo" style="color:#fff;opacity:.7;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
-          <button id="map-close" style="position:absolute;right:16px;background:transparent;border:none;color:#383838;font-size:22px;cursor:pointer;padding:0;line-height:1;">×</button>
+          <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
+          <button id="map-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);font-size:26px;cursor:pointer;padding:0;line-height:1;">×</button>
         </div>
         <div class="rule"></div>
-        <div id="floor-tabs" style="display:flex;border-bottom:1px solid #151515;"></div>
-        <div id="floor-theme-label" style="padding:5px 14px;font-size:8px;color:#2a2a2a;letter-spacing:.2em;text-transform:uppercase;border-bottom:1px solid #0d0d0d;"></div>
+        <div id="floor-tabs" style="display:flex;border-bottom:1px solid #2a2a2a;"></div>
+        <div id="floor-theme-label" style="padding:7px 14px;font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;border-bottom:1px solid #1a1a1a;"></div>
       </div>
       <div id="map-container" style="flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:8px 10px 0;"></div>
-      <div id="map-info" style="display:none;padding:12px 16px max(16px,env(safe-area-inset-bottom));border-top:1px solid #151515;flex-shrink:0;background:#000;">
-        <div id="map-room-floor" style="font-size:8px;color:#333;letter-spacing:.2em;text-transform:uppercase;margin-bottom:4px;"></div>
-        <div id="map-room-name" style="font-size:13px;color:#fff;font-weight:400;line-height:1.3;margin-bottom:4px;"></div>
-        <div id="map-room-note" style="font-size:10px;color:#666;line-height:1.6;margin-bottom:10px;"></div>
-        <button id="map-filter-btn" style="background:transparent;border:0.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.55);font-size:10px;letter-spacing:1px;padding:6px 14px;cursor:pointer;font-family:'Inter',sans-serif;">SEE FRANK'S PICKS HERE →</button>
+      <div id="map-info" style="display:none;padding:14px 16px max(16px,env(safe-area-inset-bottom));border-top:1px solid #2a2a2a;flex-shrink:0;background:#000;">
+        <div id="map-room-floor" style="font-size:9px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;"></div>
+        <div id="map-room-name" style="font-size:16px;color:#fff;font-weight:400;line-height:1.3;margin-bottom:5px;"></div>
+        <div id="map-room-note" style="font-size:12.5px;color:rgba(255,255,255,.68);line-height:1.6;margin-bottom:12px;"></div>
+        <button id="map-filter-btn" style="background:transparent;border:0.5px solid rgba(255,255,255,.4);color:rgba(255,255,255,.78);font-size:11px;letter-spacing:1px;padding:7px 15px;cursor:pointer;font-family:'Inter',sans-serif;">SEE FRANK'S PICKS HERE →</button>
       </div>
     </div>
 
@@ -666,7 +668,7 @@
       if (txOpen) {
         $('tx-area').style.display = 'block';
         $('player-spacer').style.display = 'none';
-        $('player-title').style.fontSize = '14px';
+        $('player-title').style.fontSize = '16px';
         $('player-hook').style.display = 'none';
         var b = $('tx-btn'); b.textContent = 'close'; b.style.color = 'rgba(255,255,255,.65)'; b.style.borderColor = 'rgba(255,255,255,.3)';
       } else { closeTx(); }
@@ -675,7 +677,7 @@
       txOpen = false;
       $('tx-area').style.display = 'none';
       $('player-spacer').style.display = 'flex';
-      $('player-title').style.fontSize = '22px';
+      $('player-title').style.fontSize = '26px';
       if (current && current.hook) $('player-hook').style.display = 'block';
       var b = $('tx-btn'); b.textContent = 'read along'; b.style.color = 'rgba(255,255,255,.5)'; b.style.borderColor = 'rgba(255,255,255,.18)';
     }
@@ -893,7 +895,7 @@
         (function (f) {
           var b = document.createElement('button');
           b.id = 'ft' + f; b.textContent = f;
-          b.style.cssText = 'flex:1;background:none;border:none;border-bottom:1px solid transparent;color:#2d2d2d;padding:9px 0;font-size:11px;cursor:pointer;font-family:inherit;letter-spacing:.05em;transition:color .1s;';
+          b.style.cssText = 'flex:1;background:none;border:none;border-bottom:1px solid transparent;color:rgba(255,255,255,.5);padding:11px 0;font-size:13px;cursor:pointer;font-family:inherit;letter-spacing:.05em;transition:color .1s;';
           b.addEventListener('click', function () { setFloorMap(f); });
           box.appendChild(b);
         })(f);
@@ -914,17 +916,17 @@
       selectedRoom = null;
       for (var i = 1; i <= 6; i++) {
         var b = $('ft' + i);
-        if (b) { b.style.color = '#2d2d2d'; b.style.borderBottom = '1px solid transparent'; }
+        if (b) { b.style.color = 'rgba(255,255,255,.5)'; b.style.borderBottom = '1px solid transparent'; }
       }
       $('floor-theme-label').textContent = '';
       $('map-info').style.display = 'none';
-      $('map-container').innerHTML = '<div style="padding:64px 20px;text-align:center;color:rgba(255,255,255,.28);font-size:12px;letter-spacing:1px;font-style:italic;line-height:1.7;">Select a floor above<br>to see Frank\'s picks</div>';
+      $('map-container').innerHTML = '<div style="padding:64px 20px;text-align:center;color:rgba(255,255,255,.55);font-size:14px;letter-spacing:1px;font-style:italic;line-height:1.7;">Select a floor above<br>to see Frank\'s picks</div>';
     }
     function setFloorMap(f) {
       mapFloor = f; selectedRoom = null;
       for (var i = 1; i <= 6; i++) {
         var b = $('ft' + i);
-        if (b) { b.style.color = i === f ? '#fff' : '#2d2d2d'; b.style.borderBottom = i === f ? '1px solid #fff' : '1px solid transparent'; }
+        if (b) { b.style.color = i === f ? '#fff' : 'rgba(255,255,255,.5)'; b.style.borderBottom = i === f ? '1px solid #fff' : '1px solid transparent'; }
       }
       var fd = FLOOR_DATA[f];
       $('floor-theme-label').textContent = fd ? fd.theme : '';
@@ -945,8 +947,8 @@
         var isNav = r.type === 'corridor', isAmen = r.type === 'amenity';
         var hasFrank = frankList.indexOf(roomKey(r)) >= 0;
         var noContent = r.type === 'gallery' && frankList.length > 0 && !hasFrank;
-        var sc = isNav ? '#111' : isAmen ? '#1a1a1a' : noContent ? '#1e1e1e' : '#fff';
-        var sw = isNav ? 0.4 : noContent ? 0.5 : 0.6;
+        var sc = isNav ? '#222' : isAmen ? '#3a3a3a' : noContent ? '#4a4a4a' : '#fff';
+        var sw = isNav ? 0.4 : noContent ? 0.5 : 0.7;
         var fz = r.w < 32 ? 5.5 : r.w < 50 ? 6.5 : 7;
         var clickable = !isNav && !noContent;
         var g = document.createElementNS(SVGNS, 'g');
@@ -962,7 +964,7 @@
           var t = document.createElementNS(SVGNS, 'text');
           t.setAttribute('x', r.x + PAD);
           t.setAttribute('y', r.y + PAD + fz + i * (fz + 1.5));
-          t.setAttribute('fill', isSel ? '#000' : isNav ? '#111' : isAmen ? '#1a1a1a' : noContent ? '#1e1e1e' : '#fff');
+          t.setAttribute('fill', isSel ? '#000' : isNav ? '#333' : isAmen ? '#5a5a5a' : noContent ? '#6a6a6a' : '#fff');
           t.setAttribute('font-size', fz);
           t.setAttribute('font-family', 'Inter,Helvetica Neue,Arial,sans-serif');
           t.setAttribute('letter-spacing', '0.02em');
