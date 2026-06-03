@@ -64,9 +64,9 @@
     .row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 0.5px solid #0e0e0e; cursor: pointer; transition: opacity .12s; position: relative; }
     .row:active { opacity: .4; transform: scale(0.985); }
     .row.hidden { display: none; }
-    .thumb { flex-shrink: 0; width: 58px; height: 84px; display: flex; align-items: flex-end; justify-content: center; }
-    .thumb img { max-width: 58px; max-height: 84px; object-fit: contain; object-position: bottom center; display: block; filter: brightness(1.35); }
-    .thumb .swatch { width: 44px; height: 60px; align-self: flex-end; opacity: .9; }
+    .thumb { flex-shrink: 0; width: 76px; height: 110px; display: flex; align-items: flex-end; justify-content: center; }
+    .thumb img { max-width: 76px; max-height: 110px; object-fit: contain; object-position: bottom center; display: block; filter: brightness(1.35); }
+    .thumb .swatch { width: 58px; height: 80px; align-self: flex-end; opacity: .9; }
     .row-text { flex: 1; padding-top: 2px; min-width: 0; }
     .row-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; gap: 8px; }
     .row-title { color: rgba(255,255,255,.97); font-size: 14px; letter-spacing: 1.2px; font-weight: 500; transition: color .3s; }
@@ -118,9 +118,9 @@
       cursor: pointer; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
     }
     #now-playing.show { display: flex; }
-    #np-thumb { width: 40px; height: 56px; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: center; }
-    #np-thumb img { max-width: 40px; max-height: 56px; object-fit: contain; object-position: bottom center; filter: brightness(1.35); }
-    #np-thumb .swatch { width: 32px; height: 44px; opacity: .9; }
+    #np-thumb { width: 56px; height: 76px; margin: -12px 0; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: center; }
+    #np-thumb img { max-width: 56px; max-height: 76px; object-fit: contain; object-position: bottom center; filter: brightness(1.35); }
+    #np-thumb .swatch { width: 46px; height: 64px; opacity: .9; }
     #np-text { flex: 1; min-width: 0; }
     #np-title { color: rgba(255,255,255,.98); font-size: 14px; letter-spacing: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #np-artist { color: rgba(255,255,255,.62); font-size: 12px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -130,9 +130,9 @@
       #now-playing { padding: 20px 22px; gap: 18px; }
       #np-title { font-size: 16px; }
       #np-artist { font-size: 13px; }
-      #np-thumb { width: 48px; height: 68px; }
-      #np-thumb img { max-width: 48px; max-height: 68px; }
-      #np-thumb .swatch { width: 38px; height: 54px; }
+      #np-thumb { width: 64px; height: 88px; margin: -14px 0; }
+      #np-thumb img { max-width: 64px; max-height: 88px; }
+      #np-thumb .swatch { width: 52px; height: 74px; }
       #np-toggle { width: 58px; height: 58px; }
       #app.np-on .scrollpad { padding-bottom: 128px !important; }
     }
@@ -147,9 +147,9 @@
       .pcol { max-width: 760px; }
       .kawara-logo { font-size: 26px; }
       .row { padding: 15px 0; }
-      .thumb { width: 70px; height: 100px; }
-      .thumb img { max-width: 70px; max-height: 100px; }
-      .thumb .swatch { width: 52px; height: 72px; }
+      .thumb { width: 90px; height: 128px; }
+      .thumb img { max-width: 90px; max-height: 128px; }
+      .thumb .swatch { width: 68px; height: 94px; }
       .row-title { font-size: 18px; }
       .row-artist { font-size: 15px; }
       .row-hook { font-size: 18px; line-height: 1.6; }
@@ -186,15 +186,11 @@
         <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:18px 16px 0;margin-bottom:16px;">
           <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
           <div style="position:absolute;right:16px;top:18px;display:flex;align-items:center;gap:14px;">
-            <button class="icon-btn" id="map-btn" title="Map">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 7 9 4 15 7 21 4 21 17 15 20 9 17 3 20 3 7"/><line x1="9" y1="4" x2="9" y2="17"/><line x1="15" y1="7" x2="15" y2="20"/></svg>
-            </button>
             <button class="icon-btn" id="about-btn" title="About">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
           </div>
         </div>
-        <div class="rule"></div>
         <div class="search-wrap">
           <div class="search-row">
             <input class="search-input" id="search-input" type="text" placeholder="gallery · artist · title" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
@@ -271,7 +267,7 @@
             </button>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <button id="tx-btn" style="background:transparent;border:0.5px solid rgba(255,255,255,.4);border-radius:2px;color:rgba(255,255,255,.75);font-size:11px;letter-spacing:1.5px;cursor:pointer;padding:7px 14px;font-family:'Inter',sans-serif;">read along</button>
+            <button id="tx-btn" style="background:transparent;border:1px solid rgba(255,255,255,.4);border-radius:2px;color:rgba(255,255,255,.75);font-size:11px;letter-spacing:1.5px;cursor:pointer;padding:7px 14px;font-family:'Inter',sans-serif;">read along</button>
             <button id="share-btn" style="background:transparent;border:none;color:rgba(255,255,255,.6);cursor:pointer;padding:4px;" title="Share">
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             </button>
@@ -353,6 +349,7 @@
     var current = null;
     var activeFloor = null;
     var currentScreen = 0;
+    var trackEnded = false;   // true once a track finishes → hides the Now Playing bar
     var txOpen = false;
     var booted = false;
 
@@ -651,6 +648,7 @@
       // Returning to the track that's already loaded? Keep it playing — don't reload.
       var sameTrack = !!(current && current.id === a.id && audio.src);
       current = a;
+      trackEnded = false;
       ARTS.forEach(function (x) { var r = ROW_OF[x.id]; if (r) r.classList.toggle('playing', x.id === a.id); });
 
       $('player-bg').style.background = a.color || '#111';
@@ -724,7 +722,7 @@
     }
     function updateNowPlaying() {
       var np = $('now-playing'); if (!np) return;
-      var show = !!current && currentScreen !== 0 && currentScreen !== 2;
+      var show = !!current && !trackEnded && currentScreen !== 0 && currentScreen !== 2;
       np.classList.toggle('show', show);
       document.getElementById('app').classList.toggle('np-on', show);
       if (!show) return;
@@ -788,11 +786,11 @@
       $('prog-cur').textContent = fmt(audio.currentTime);
       if (audio.duration) $('prog-bar').style.width = (audio.currentTime / audio.duration * 100) + '%';
     });
-    audio.addEventListener('play', function () { setPlayIcon(true); $('audio-error').style.display = 'none'; $('btn-play').classList.remove('loading-pulse'); });
+    audio.addEventListener('play', function () { setPlayIcon(true); $('audio-error').style.display = 'none'; $('btn-play').classList.remove('loading-pulse'); trackEnded = false; updateNowPlaying(); });
     audio.addEventListener('playing', function () { $('audio-error').style.display = 'none'; $('btn-play').classList.remove('loading-pulse'); });
     audio.addEventListener('waiting', function () { $('btn-play').classList.add('loading-pulse'); });
     audio.addEventListener('pause', function () { setPlayIcon(false); $('btn-play').classList.remove('loading-pulse'); });
-    audio.addEventListener('ended', function () { setPlayIcon(false); $('prog-bar').style.width = '0%'; $('prog-cur').textContent = '0:00'; });
+    audio.addEventListener('ended', function () { setPlayIcon(false); $('prog-bar').style.width = '0%'; $('prog-cur').textContent = '0:00'; trackEnded = true; updateNowPlaying(); });
     audio.addEventListener('play', setNpIcon);
     audio.addEventListener('pause', setNpIcon);
     audio.addEventListener('ended', setNpIcon);
@@ -1141,7 +1139,6 @@
         el.addEventListener('click', function (e) { e.stopPropagation(); goHome(); });
         el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHome(); } });
       });
-      $('map-btn').addEventListener('click', function () { go(4); });
       $('about-btn').addEventListener('click', function () { go(3); });
       $('about-close').addEventListener('click', function () { go(1); });
       $('map-close').addEventListener('click', function () { go(1); });
