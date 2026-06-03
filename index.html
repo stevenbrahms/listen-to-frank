@@ -31,13 +31,14 @@
       overflow: hidden;
     }
 
-    /* App stage — phone-width column, centered on desktop */
+    /* App stage — a comfortable centered column on any screen */
     #app {
       position: relative;
-      width: 100%; max-width: 480px;
+      width: 100%; max-width: 600px;
       height: 100vh; height: 100dvh;
       margin: 0 auto; overflow: hidden; background: #000;
     }
+    @media (min-width: 720px) { #app { max-width: 620px; } }
     .screen {
       position: absolute; inset: 0;
       display: flex; flex-direction: column; overflow: hidden;
@@ -45,6 +46,27 @@
       transition: opacity .18s ease, visibility .18s ease;
     }
     .screen.on { opacity: 1; visibility: visible; z-index: 2; }
+    /* Entry & Player break out of the column to fill the whole screen. */
+    #S0, #S2 { position: fixed; inset: 0; }
+    /* …but their inner content stays in the centered column. */
+    .pcol { width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; }
+    @media (min-width: 720px) { .pcol { max-width: 620px; } }
+    /* Scale type/spacing up on larger screens so the column reads intentionally,
+       not like a phone. */
+    @media (min-width: 720px) {
+      .kawara-logo { font-size: 21px; }
+      .row { padding: 16px 0; }
+      .thumb { width: 60px; height: 88px; }
+      .thumb img { max-width: 60px; max-height: 88px; }
+      .thumb .swatch { width: 44px; height: 60px; }
+      .row-title { font-size: 12px; }
+      .row-artist { font-size: 10px; }
+      .row-hook { font-size: 13px; line-height: 1.7; }
+      .row-gallery { font-size: 10px; }
+      .search-input { font-size: 14px; padding: 11px 13px; }
+      .mic-btn { width: 44px; }
+      .chip { font-size: 10px; padding: 5px 13px; }
+    }
 
     /* Kawara logo */
     .kawara-logo {
@@ -183,11 +205,11 @@
     <div class="screen" id="S2">
       <div id="player-bg" style="background:#1A2F4E;position:relative;height:100%;display:flex;flex-direction:column;">
         <img id="player-ghost" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:.09;pointer-events:none;z-index:0;" />
-        <div style="padding:max(40px,env(safe-area-inset-top)) 16px 0;flex-shrink:0;position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;">
+        <div class="pcol" style="padding:max(40px,env(safe-area-inset-top)) 16px 0;flex-shrink:0;position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;">
           <button id="player-back" style="background:transparent;border:none;color:rgba(255,255,255,.4);font-size:10px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;">← back</button>
           <span class="home-logo" style="color:rgba(255,255,255,.34);font-size:9px;letter-spacing:1.5px;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</span>
         </div>
-        <div style="flex:1;padding:18px 16px 0;position:relative;z-index:2;display:flex;flex-direction:column;overflow:hidden;">
+        <div class="pcol" style="flex:1;padding:18px 16px 0;position:relative;z-index:2;display:flex;flex-direction:column;overflow:hidden;">
           <div style="flex-shrink:0;">
             <p id="player-title" style="color:#fff;font-size:22px;line-height:1.22;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
             <p id="player-artist" style="color:rgba(255,255,255,.34);font-size:11px;margin:10px 0 0;letter-spacing:1px;"></p>
@@ -198,7 +220,7 @@
           </div>
           <div id="player-spacer" style="flex:1;"></div>
         </div>
-        <div style="background:rgba(0,0,0,.52);padding:14px 16px max(28px,env(safe-area-inset-bottom));flex-shrink:0;position:relative;z-index:2;">
+        <div class="pcol" style="background:rgba(0,0,0,.52);padding:14px 16px max(28px,env(safe-area-inset-bottom));flex-shrink:0;position:relative;z-index:2;border-radius:0;">
           <div id="prog-track" style="height:3px;background:rgba(255,255,255,.14);margin-bottom:8px;overflow:hidden;cursor:pointer;border-radius:2px;">
             <div id="prog-bar" style="height:100%;width:0%;background:rgba(255,255,255,.8);"></div>
           </div>
