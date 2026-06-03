@@ -1075,16 +1075,18 @@
         audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
       });
 
-      // Swipe up → gallery (player / about / map only)
+      // Player only: a clear vertical swipe (up OR down) dismisses it back to the
+      // gallery — matching "swipe to close a full-screen player". Skipped while the
+      // read-along transcript is open so it doesn't hijack scrolling. About/Map use
+      // their ✕ button and the logo, so they're not swipe-driven (avoids the
+      // gesture firing while scrolling their text).
       var sy = 0, sx = 0;
       document.addEventListener('touchstart', function (e) { sy = e.changedTouches[0].clientY; sx = e.changedTouches[0].clientX; }, { passive: true });
       document.addEventListener('touchend', function (e) {
-        if (currentScreen < 2) return;
+        if (currentScreen !== 2 || txOpen) return;
         var dy = e.changedTouches[0].clientY - sy, dx = e.changedTouches[0].clientX - sx;
-        if (dy < -70 && Math.abs(dy) > Math.abs(dx) * 1.5) {
-          // Player carries a hash (clearing it routes to gallery); About/Map
-          // have no hash, so go straight to the gallery.
-          if (window.location.hash) window.location.hash = ''; else go(1);
+        if (Math.abs(dy) > 70 && Math.abs(dy) > Math.abs(dx) * 1.5) {
+          window.location.hash = '';   // player always carries a hash → routes to gallery
         }
       }, { passive: true });
 
