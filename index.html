@@ -23,13 +23,16 @@
       font-display: swap;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
+    html, body { height: 100%; overscroll-behavior: none; }
     body {
       background: #000; color: #fff;
       font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
       -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
       overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
+    /* Scroll areas pan vertically only — no loose left/right drift. */
+    .scrollpad { overflow-x: hidden; touch-action: pan-y; overscroll-behavior: contain; }
 
     /* App stage — a comfortable centered column on any screen */
     #app {
@@ -42,9 +45,10 @@
       position: absolute; inset: 0;
       display: flex; flex-direction: column; overflow: hidden;
       opacity: 0; visibility: hidden; z-index: 1;
-      transition: opacity .18s ease, visibility .18s ease;
+      transform: translateY(6px);
+      transition: opacity .24s ease, visibility .24s ease, transform .24s cubic-bezier(.22,1,.36,1);
     }
-    .screen.on { opacity: 1; visibility: visible; z-index: 2; }
+    .screen.on { opacity: 1; visibility: visible; z-index: 2; transform: translateY(0); }
     /* Entry & Player break out of the column to fill the whole screen. */
     #S0, #S2 { position: fixed; inset: 0; }
     /* …but their inner content stays in the centered column. */
@@ -61,11 +65,11 @@
     .home-logo:active { opacity: .5 !important; }
 
     /* Gallery rows */
-    .row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 0.5px solid #0e0e0e; cursor: pointer; transition: opacity .12s; position: relative; }
+    .row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 0.5px solid #0e0e0e; cursor: pointer; transition: opacity .12s ease, transform .12s ease, background .18s ease; position: relative; }
     .row:active { opacity: .4; transform: scale(0.985); }
     .row.hidden { display: none; }
     .thumb { flex-shrink: 0; width: 90px; height: 128px; display: flex; align-items: flex-end; justify-content: center; }
-    .thumb img { max-width: 90px; max-height: 128px; object-fit: contain; object-position: bottom center; display: block; filter: brightness(1.75) contrast(1.2); }
+    .thumb img { max-width: 90px; max-height: 128px; object-fit: contain; object-position: bottom center; display: block; filter: brightness(1.75) contrast(1.2); transition: filter .2s ease, transform .2s ease; }
     .thumb .swatch { width: 68px; height: 94px; align-self: flex-end; opacity: .9; }
     .row-text { flex: 1; padding-top: 2px; min-width: 0; }
     .row-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; gap: 8px; }
@@ -112,12 +116,14 @@
     /* Now Playing bar */
     #now-playing {
       position: absolute; left: 0; right: 0; bottom: 0; z-index: 40;
-      display: none; align-items: center; gap: 14px;
+      display: flex; align-items: center; gap: 14px;
       padding: 16px 18px max(16px, env(safe-area-inset-bottom));
       background: rgba(14,14,14,.97); border-top: 0.5px solid rgba(255,255,255,.14);
       cursor: pointer; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+      transform: translateY(130%); opacity: 0; pointer-events: none;
+      transition: transform .32s cubic-bezier(.22,1,.36,1), opacity .25s ease;
     }
-    #now-playing.show { display: flex; }
+    #now-playing.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
     #np-thumb { width: 56px; height: 76px; margin: -12px 0; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: center; }
     #np-thumb img { max-width: 56px; max-height: 76px; object-fit: contain; object-position: bottom center; filter: brightness(1.75) contrast(1.2); }
     #np-thumb .swatch { width: 46px; height: 64px; opacity: .9; }
@@ -144,6 +150,36 @@
 
     /* Offline saving bar */
     #offline-bar { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; background: rgba(0,0,0,.92); color: #fff; padding: 9px 16px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; text-align: center; z-index: 60; pointer-events: none; display: none; }
+
+    /* Tasteful micro-interactions: a gentle press on every control, subtle hover
+       lift on devices that have a real pointer. Nothing flashy. */
+    button { -webkit-tap-highlight-color: transparent; }
+    .icon-btn, .mic-btn, #np-toggle, #np-close, #btn-play, #btn-back10, #btn-fwd30,
+    #share-btn, #map-filter-btn, #tx-btn, #player-back, #map-close, #about-close,
+    #play-something {
+      transition: transform .14s ease, opacity .14s ease, color .18s ease,
+                  background .18s ease, border-color .18s ease;
+    }
+    .icon-btn:active, .mic-btn:active, #np-toggle:active, #np-close:active,
+    #btn-play:active, #btn-back10:active, #btn-fwd30:active, #share-btn:active,
+    #map-filter-btn:active, #tx-btn:active, #player-back:active, #map-close:active,
+    #about-close:active { transform: scale(.9); }
+    #play-something:active { opacity: .55; }
+    @media (hover: hover) {
+      .row:hover { background: rgba(255,255,255,.03); }
+      .row:hover .thumb img { filter: brightness(1.95) contrast(1.22); transform: translateY(-1px); }
+      .chip:hover { border-color: rgba(255,255,255,.55); color: rgba(255,255,255,.9); }
+      .icon-btn:hover, .mic-btn:hover, #player-back:hover, #share-btn:hover,
+      #map-close:hover, #about-close:hover, #np-close:hover { color: #fff; }
+      #btn-play:hover, #np-toggle:hover { border-color: rgba(255,255,255,.85); }
+      #btn-back10:hover, #btn-fwd30:hover { opacity: 1; }
+      #map-filter-btn:hover, #tx-btn:hover { border-color: rgba(255,255,255,.7); color: #fff; }
+      .search-input:hover { border-color: #444; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, .screen, #now-playing, .row, .thumb img { transition: none !important; animation: none !important; }
+      .screen { transform: none !important; }
+    }
 
     /* Desktop / large screens: wider column and ~25% larger type & elements.
        Placed at the END of the stylesheet so it overrides the base rules above. */
