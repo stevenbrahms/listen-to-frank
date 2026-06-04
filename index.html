@@ -112,6 +112,7 @@
     .chips { display: flex; gap: 6px; padding: 9px 0 1px; justify-content: space-between; }
     .chip { background: transparent; border: 0.5px solid #3a3a3a; color: rgba(255,255,255,.55); font-size: 13px; letter-spacing: 1px; padding: 7px 14px; cursor: pointer; font-family: 'Inter', sans-serif; border-radius: 2px; transition: all .12s; white-space: nowrap; }
     .chip.active { border-color: rgba(255,255,255,.6); color: #fff; background: rgba(255,255,255,.1); }
+    .floor-chip { min-width: 40px; text-align: center; }
 
     .icon-btn { background: transparent; border: none; cursor: pointer; padding: 0; color: rgba(255,255,255,.62); display: flex; align-items: center; }
     .rule { height: 0.5px; background: rgba(255,255,255,.18); margin: 0 16px; }
@@ -356,7 +357,7 @@
           <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
           <button id="map-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);font-size:26px;cursor:pointer;padding:0;line-height:1;">×</button>
         </div>
-        <div id="floor-tabs" style="display:flex;border-bottom:1px solid #2a2a2a;"></div>
+        <div id="floor-tabs" style="display:flex;gap:6px;justify-content:center;padding:0 16px;"></div>
         <div id="floor-theme-label" style="padding:7px 14px;font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;"></div>
       </div>
       <div id="map-container" class="scrollpad" style="flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:8px 10px 0;"></div>
@@ -1055,8 +1056,7 @@
       for (var f = 1; f <= 6; f++) {
         (function (f) {
           var b = document.createElement('button');
-          b.id = 'ft' + f; b.textContent = f;
-          b.style.cssText = 'flex:1;background:none;border:none;border-bottom:1px solid transparent;color:rgba(255,255,255,.5);padding:12px 0;font-size:15px;cursor:pointer;font-family:inherit;letter-spacing:.05em;transition:color .1s;';
+          b.id = 'ft' + f; b.className = 'chip floor-chip'; b.textContent = f;
           b.addEventListener('click', function () { setFloorMap(f); });
           box.appendChild(b);
         })(f);
@@ -1077,7 +1077,7 @@
       selectedRoom = null;
       for (var i = 1; i <= 6; i++) {
         var b = $('ft' + i);
-        if (b) { b.style.color = 'rgba(255,255,255,.5)'; b.style.borderBottom = '1px solid transparent'; }
+        if (b) b.classList.remove('active');
       }
       $('floor-theme-label').textContent = '';
       $('map-info').style.display = 'none';
@@ -1087,7 +1087,7 @@
       mapFloor = f; selectedRoom = null;
       for (var i = 1; i <= 6; i++) {
         var b = $('ft' + i);
-        if (b) { b.style.color = i === f ? '#fff' : 'rgba(255,255,255,.5)'; b.style.borderBottom = i === f ? '1px solid #fff' : '1px solid transparent'; }
+        if (b) b.classList.toggle('active', i === f);
       }
       var fd = FLOOR_DATA[f];
       $('floor-theme-label').textContent = fd ? fd.theme : '';
