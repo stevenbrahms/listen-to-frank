@@ -1105,6 +1105,10 @@
       bg.setAttribute('x', 0); bg.setAttribute('y', 0); bg.setAttribute('width', fd.vbW); bg.setAttribute('height', fd.vbH); bg.setAttribute('fill', '#000');
       svg.appendChild(bg);
       fd.rooms.forEach(function (r) {
+        // Blank circulation spacers (unlabeled stairs/elevator cores) aren't
+        // galleries and carry no label — skip them so they don't render as
+        // faint "ghost" boxes between the real rooms.
+        if (r.type === 'corridor' && !(r.label && r.label.trim())) return;
         var isSel = selectedRoom === r.id;
         var isNav = r.type === 'corridor', isAmen = r.type === 'amenity';
         var isContent = r.type === 'gallery' || r.type === 'special';
