@@ -63,6 +63,11 @@
     }
     .home-logo { cursor: pointer; }
     .home-logo:active { opacity: .5 !important; }
+    /* Entry wordmark — colored type on the cover band, so NO white stroke.
+       Sized to one line at runtime by fitEntryTitle(). */
+    .entry-word { font-family: 'KawaraCaps', sans-serif; font-weight: normal; -webkit-text-stroke: 0;
+      letter-spacing: 1px; white-space: nowrap; display: inline-block;
+      text-rendering: optimizeLegibility; font-kerning: normal; }
 
     /* Gallery rows */
     .row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 0.5px solid #0e0e0e; cursor: pointer; transition: opacity .12s ease, transform .12s ease, background .18s ease; position: relative; }
@@ -211,17 +216,23 @@
   <div id="app">
 
     <!-- ── SCREEN 0: ENTRY ── -->
+    <!-- Three-color "cover" treatment: a color ground (set on #S0), the rotating
+         line-drawing screenprinted on top, a horizontal band carrying the wordmark,
+         and the tagline floating over the art. The combo (bg / band / type / line
+         tint) is chosen at random each visit by applyEntryCombo(); the title is
+         auto-sized to one line by fitEntryTitle(). -->
     <div class="screen on" id="S0" style="background:#000;cursor:pointer;">
-      <div style="position:absolute;inset:0;">
-        <img id="entry-hero" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center top;">
-        <div style="position:absolute;inset:0;background:rgba(0,0,0,.16);"></div>
+      <div style="position:absolute;inset:0;overflow:hidden;">
+        <img id="entry-hero" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center;">
       </div>
-      <div style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);background:#000;padding:46px 12px;z-index:1;text-align:center;">
-        <p class="kawara-logo" style="color:#fff;opacity:.97;font-size:32px;letter-spacing:3px;margin:0 0 26px;">LISTEN TO FRANK</p>
-        <p style="color:rgba(255,255,255,.82);font-size:18px;line-height:2.0;font-weight:300;letter-spacing:.3px;margin:0;">A little history.<br>A little gossip.<br>A few sideways theories.</p>
+      <div id="entry-band" style="position:absolute;left:0;right:0;top:44%;transform:translateY(-50%);background:#000;padding:26px 8px;z-index:2;text-align:center;">
+        <p id="entry-word" class="entry-word" style="color:#fff;font-size:38px;margin:0;">LISTEN TO FRANK</p>
       </div>
-      <div style="position:absolute;left:0;right:0;bottom:40px;text-align:center;z-index:1;">
-        <p style="color:rgba(255,255,255,.5);font-size:14px;letter-spacing:2px;margin:0;">tap anywhere</p>
+      <div id="entry-tagwrap" style="position:absolute;left:0;right:0;top:44%;margin-top:64px;z-index:2;text-align:center;">
+        <p id="entry-tag" style="color:rgba(255,255,255,.9);font-size:17px;line-height:2.0;font-weight:300;letter-spacing:.3px;margin:0;">A little history.<br>A little gossip.<br>A few sideways theories.</p>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:40px;text-align:center;z-index:2;">
+        <p id="entry-tap" style="color:rgba(255,255,255,.5);font-size:14px;letter-spacing:2px;margin:0;">tap anywhere</p>
       </div>
     </div>
 
@@ -320,23 +331,26 @@
     </div>
 
     <!-- ── SCREEN 3: ABOUT ── -->
+    <!-- Shares the session's entry "issue" combo (applyAboutCombo): page = bg color,
+         a full-width masthead band carries the wordmark, body text auto-picks light
+         or dark for legibility against the ground. -->
     <div class="screen" id="S3" style="background:#000;">
-      <div style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;">
-        <div style="position:relative;display:flex;align-items:center;justify-content:flex-start;padding:0 16px;margin-bottom:34px;">
-          <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
-          <button id="about-close" style="position:absolute;right:16px;top:2px;background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
+      <div style="flex-shrink:0;">
+        <div id="about-band" style="position:relative;display:flex;align-items:center;justify-content:flex-start;padding:calc(env(safe-area-inset-top, 0px) + 15px) 16px 16px;margin-bottom:30px;background:#000;">
+          <p id="about-word" class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
+          <button id="about-close" style="margin-left:auto;flex-shrink:0;background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
         </div>
       </div>
       <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
-        <p style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Go find something on a wall. Or just start somewhere.</p>
-        <p style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Frank talks. A little history, a little gossip, a few sideways theories. None of it precious.</p>
-        <p style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0 0 36px;font-weight:300;">You don't need to know anything going in. That's the whole point.</p>
+        <p class="about-body" style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Go find something on a wall. Or just start somewhere.</p>
+        <p class="about-body" style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Frank talks. A little history, a little gossip, a few sideways theories. None of it precious.</p>
+        <p class="about-body" style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0 0 36px;font-weight:300;">You don't need to know anything going in. That's the whole point.</p>
         <div style="margin-bottom:44px;">
-          <p style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0;font-weight:300;">Everything's free while we're getting started.</p>
+          <p class="about-body" style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0;font-weight:300;">Everything's free while we're getting started.</p>
         </div>
         <div>
-          <p style="color:rgba(255,255,255,.5);font-size:15px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
-          <a href="mailto:hello@listentofrank.art" style="color:rgba(255,255,255,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(255,255,255,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">hello@listentofrank.art<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></a>
+          <p id="about-label" style="color:rgba(255,255,255,.5);font-size:15px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
+          <a id="about-email" href="mailto:hello@listentofrank.art" style="color:rgba(255,255,255,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(255,255,255,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">hello@listentofrank.art<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></a>
         </div>
       </div>
     </div>
@@ -455,7 +469,77 @@
         }).catch(function () { cb(DEFAULT_ENTRY); });
       });
     }
+    // ── Entry "cover" combo — rotating three-color set (PORT / Paris Review /
+    //    Davison palettes). line:'white' = white line-art on a dark/saturated
+    //    ground; line:'dark' = inverted (dark) line-art on a light/cream ground.
+    var ENTRY_COMBOS = [
+      { bg: '#000000', band: '#ec159a', font: '#80ec46', line: 'white', tag: '#80ec46' }, // PORT 23 — black / pink band / green
+      { bg: '#ec0e8f', band: '#000000', font: '#74c947', line: 'dark',  tag: '#f1ead0' }, // PORT 23 alt — pink / black band / green
+      { bg: '#f1ead0', band: '#f5179a', font: '#111111', line: 'dark',  tag: '#111111' }  // PORT Norton alt — cream / pink band / black
+    ];
+    var ACTIVE_COMBO = ENTRY_COMBOS[0];   // the session's chosen "issue" palette (entry + about share it)
+    function applyEntryCombo() {
+      var S0 = $('S0'); if (!S0) return;
+      var n = ENTRY_COMBOS.length, idx = Math.floor(Math.random() * n), last = -1;
+      try { last = parseInt(localStorage.getItem('ltf_entry_combo'), 10); } catch (e) {}
+      if (n > 1 && idx === last) idx = (idx + 1) % n;
+      try { localStorage.setItem('ltf_entry_combo', idx); } catch (e) {}
+      var c = ENTRY_COMBOS[idx];
+      ACTIVE_COMBO = c;
+      S0.style.background = c.bg;
+      var img = $('entry-hero');
+      if (img) {
+        img.style.filter = (c.line === 'dark') ? 'invert(1) brightness(.22) contrast(1.1)' : 'brightness(1.4) contrast(1.05)';
+        img.style.opacity = (c.line === 'dark') ? '0.5' : '0.62';
+      }
+      $('entry-band').style.background = c.band;
+      $('entry-word').style.color = c.font;
+      var tag = $('entry-tag');
+      tag.style.color = c.tag;
+      // "tap anywhere" follows the ground's luminance so it stays legible on any combo.
+      var tap = $('entry-tap');
+      if (tap) tap.style.color = 'rgba(' + aboutTextRGB(c.bg) + ',.5)';
+      // tagline gets a scrim either way so it reads over busy line-art:
+      // a dark shadow under light type, a light halo under dark type.
+      tag.style.textShadow = (aboutTextRGB(c.bg) === '255,255,255')
+        ? '0 1px 12px rgba(0,0,0,.45)' : '0 0 10px rgba(255,255,255,.6)';
+    }
+    // About shares the session's combo. Body text auto-picks light or dark for
+    // legibility against the ground (by relative luminance), independent of the
+    // drawing-tint flag used on the entry.
+    function aboutTextRGB(bg) {
+      var c = (bg || '#000000').replace('#', '');
+      var r = parseInt(c.substr(0, 2), 16), g = parseInt(c.substr(2, 2), 16), b = parseInt(c.substr(4, 2), 16);
+      var lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      return lum > 0.55 ? '20,20,20' : '255,255,255';
+    }
+    function applyAboutCombo() {
+      var c = ACTIVE_COMBO; if (!c) return;
+      var S3 = $('S3'); if (!S3) return;
+      S3.style.background = c.bg;
+      var band = $('about-band'); if (band) band.style.background = c.band;
+      var word = $('about-word'); if (word) { word.style.color = c.font; word.style.webkitTextStroke = '0'; }
+      var close = $('about-close'); if (close) close.style.color = c.font;
+      var rgb = aboutTextRGB(c.bg);
+      var body = document.querySelectorAll('#S3 .about-body');
+      for (var i = 0; i < body.length; i++) body[i].style.color = 'rgba(' + rgb + ',.86)';
+      var label = $('about-label'); if (label) label.style.color = 'rgba(' + rgb + ',.55)';
+      var email = $('about-email'); if (email) { email.style.color = 'rgba(' + rgb + ',.82)'; email.style.borderColor = 'rgba(' + rgb + ',.4)'; }
+    }
+    // Size the wordmark to the largest that holds one line at this width.
+    function fitEntryTitle() {
+      var el = $('entry-word'); if (!el) return;
+      var avail = (window.innerWidth || 375) - 20;   // ~10px breathing room each side
+      var fs = 30; el.style.fontSize = fs + 'px';
+      while (fs < 64 && el.getBoundingClientRect().width <= avail) { fs += 1; el.style.fontSize = fs + 'px'; }
+      while (fs > 16 && el.getBoundingClientRect().width > avail) { fs -= 1; el.style.fontSize = fs + 'px'; }
+    }
+    applyEntryCombo();
+    applyAboutCombo();   // About echoes the same issue palette
     loadEntryList(showEntry);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitEntryTitle);
+    setTimeout(fitEntryTitle, 60); setTimeout(fitEntryTitle, 400);
+    window.addEventListener('resize', fitEntryTitle);
 
     // ── Search helpers ────────────────────────────────────────────────────
     function normalizeForSearch(str) {
