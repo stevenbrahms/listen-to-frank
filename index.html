@@ -106,9 +106,6 @@
     .search-input:focus { border-color: #555; }
     .clear-btn { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; padding: 0; background: transparent; border: 0; color: rgba(255,255,255,.45); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 50%; transition: transform .14s ease, color .18s ease; }
     .clear-btn:active { transform: translateY(-50%) scale(.85); }
-    .mic-btn { flex-shrink: 0; width: 42px; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.65); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 2px; }
-    .mic-btn.listening { background: #fff; color: #000; border-color: #fff; }
-    .voice-msg { color: rgba(255,255,255,.6); font-size: 15px; letter-spacing: .5px; padding: 7px 2px 0; font-style: italic; }
     .chips { display: flex; gap: 6px; padding: 9px 0 1px; justify-content: space-between; }
     .chip { background: transparent; border: 0.5px solid #3a3a3a; color: rgba(255,255,255,.55); font-size: 16.5px; letter-spacing: 1px; padding: 7px 14px; cursor: pointer; font-family: 'Inter', sans-serif; border-radius: 2px; transition: all .12s; white-space: nowrap; }
     .chip.active { border-color: rgba(255,255,255,.6); color: #fff; background: rgba(255,255,255,.1); }
@@ -162,13 +159,13 @@
     /* Tasteful micro-interactions: a gentle press on every control, subtle hover
        lift on devices that have a real pointer. Nothing flashy. */
     button { -webkit-tap-highlight-color: transparent; }
-    .icon-btn, .mic-btn, #np-toggle, #np-close, #btn-play, #btn-back10, #btn-fwd30,
+    .icon-btn, #np-toggle, #np-close, #btn-play, #btn-back10, #btn-fwd30,
     #share-btn, #tx-btn, #player-back, #map-close, #about-close,
     #play-something {
       transition: transform .14s ease, opacity .14s ease, color .18s ease,
                   background .18s ease, border-color .18s ease;
     }
-    .icon-btn:active, .mic-btn:active, #np-toggle:active, #np-close:active,
+    .icon-btn:active, #np-toggle:active, #np-close:active,
     #btn-play:active, #btn-back10:active, #btn-fwd30:active, #share-btn:active,
     #tx-btn:active, #player-back:active, #map-close:active,
     #about-close:active { transform: scale(.9); }
@@ -179,7 +176,7 @@
       .chip:hover { border-color: rgba(255,255,255,.55); color: rgba(255,255,255,.9); }
       #map-info.tappable:hover { background: #0a0a0a; }
       #map-info.tappable:hover #map-info-arrow { color: #fff; transform: translateX(3px); }
-      .icon-btn:hover, .mic-btn:hover, #player-back:hover, #share-btn:hover,
+      .icon-btn:hover, #player-back:hover, #share-btn:hover,
       #map-close:hover, #about-close:hover, #np-close:hover, .clear-btn:hover { color: #fff; }
       #btn-play:hover, #np-toggle:hover { border-color: rgba(255,255,255,.85); }
       #btn-back10:hover, #btn-fwd30:hover { opacity: 1; }
@@ -206,7 +203,6 @@
       .row-hook { font-size: 25px; line-height: 1.6; }
       .row-gallery { font-size: 20px; }
       .search-input { font-size: 24px; padding: 16px 44px 16px 19px; }
-      .mic-btn { width: 56px; }
       .chip { font-size: 20px; padding: 9px 19px; }
     }
   </style>
@@ -232,7 +228,7 @@
     <!-- ── SCREEN 1: GALLERY ── -->
     <div class="screen" id="S1" style="background:#000;">
       <div style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;background:#000;">
-        <div style="display:flex;align-items:center;justify-content:flex-end;padding:0 14px 0;margin-bottom:2px;">
+        <div style="display:flex;align-items:center;justify-content:flex-end;padding:0 16px 0;margin-bottom:2px;">
           <button class="icon-btn" id="about-btn" title="About" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;padding:2px;display:flex;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="3" y1="9" x2="21" y2="9" vector-effect="non-scaling-stroke"/><line x1="3" y1="15" x2="21" y2="15" vector-effect="non-scaling-stroke"/></svg>
           </button>
@@ -245,11 +241,7 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg>
               </button>
             </div>
-            <button class="mic-btn" id="mic-btn" type="button" title="Search by voice" aria-label="Search by voice">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-            </button>
           </div>
-          <div id="voice-msg" class="voice-msg" style="display:none;"></div>
           <div class="chips">
             <div style="display:flex;gap:5px;">
               <button class="chip" data-floor="1">1</button>
@@ -329,21 +321,20 @@
 
     <!-- ── SCREEN 3: ABOUT ── -->
     <div class="screen" id="S3" style="background:#000;">
-      <div style="flex-shrink:0;padding:max(16px,env(safe-area-inset-top)) 0 0;">
-        <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px;margin-bottom:20px;">
+      <div style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;">
+        <div style="position:relative;display:flex;align-items:center;justify-content:flex-start;padding:0 16px;margin-bottom:34px;">
           <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
-          <button id="about-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:0;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
+          <button id="about-close" style="position:absolute;right:16px;top:2px;background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
         </div>
-        <div class="rule" style="margin-bottom:26px;"></div>
       </div>
       <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
         <p style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Go find something on a wall. Or just start somewhere.</p>
         <p style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Frank talks. A little history, a little gossip, a few sideways theories. None of it precious.</p>
         <p style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0 0 36px;font-weight:300;">You don't need to know anything going in. That's the whole point.</p>
-        <div style="border-top:0.5px solid #222;padding-top:20px;margin-bottom:28px;">
+        <div style="margin-bottom:44px;">
           <p style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0;font-weight:300;">Everything's free while we're getting started.</p>
         </div>
-        <div style="border-top:0.5px solid #222;padding-top:20px;">
+        <div>
           <p style="color:rgba(255,255,255,.5);font-size:15px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
           <a href="mailto:hello@listentofrank.art" style="color:rgba(255,255,255,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(255,255,255,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">hello@listentofrank.art<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></a>
         </div>
@@ -352,12 +343,12 @@
 
     <!-- ── SCREEN 4: MAP ── -->
     <div class="screen" id="S4" style="background:#000;">
-      <div style="flex-shrink:0;padding:max(16px,env(safe-area-inset-top)) 0 0;background:#000;">
-        <div style="display:flex;align-items:center;justify-content:flex-end;padding:2px 14px 0;margin-bottom:12px;">
-          <button id="map-close" style="background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:4px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
+      <div style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;background:#000;">
+        <div style="display:flex;align-items:center;justify-content:flex-end;padding:0 16px 0;margin-bottom:12px;">
+          <button id="map-close" style="background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
         </div>
-        <div id="floor-tabs" style="display:flex;gap:6px;padding:0 14px;"></div>
-        <div id="floor-theme-label" style="padding:7px 14px;font-size:14px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;"></div>
+        <div id="floor-tabs" style="display:flex;gap:6px;padding:0 16px;"></div>
+        <div id="floor-theme-label" style="padding:7px 16px;font-size:14px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;"></div>
       </div>
       <div id="map-container" class="scrollpad" style="flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:8px 10px 0;"></div>
       <div id="map-info" style="display:none;padding:14px 16px max(16px,env(safe-area-inset-bottom));border-top:1px solid #2a2a2a;flex-shrink:0;background:#000;" role="button" tabindex="0">
@@ -925,41 +916,6 @@
       });
     }
 
-    // ── Voice search ──────────────────────────────────────────────────────
-    var recognition = null, voiceTimer = null;
-    function showVoiceMessage(msg) {
-      var el = $('voice-msg');
-      el.textContent = msg; el.style.display = msg ? 'block' : 'none';
-      if (voiceTimer) clearTimeout(voiceTimer);
-      if (msg) voiceTimer = setTimeout(function () { el.style.display = 'none'; }, 4500);
-    }
-    function startVoiceSearch() {
-      if (recognition) { try { recognition.stop(); } catch (e) {} return; }
-      var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SR) { showVoiceMessage("Voice search isn't supported here — please type instead."); return; }
-      if (navigator.onLine === false) { showVoiceMessage('Voice search needs a signal — please type instead.'); return; }
-      try {
-        var r = new SR();
-        r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 1; r.continuous = false;
-        r.onstart = function () { showVoiceMessage('Listening…'); $('mic-btn').classList.add('listening'); };
-        r.onresult = function (e) {
-          var t = (e.results[0][0].transcript || '').trim();
-          if (t) { clearActiveFloor(); $('search-input').value = t; applyFilters(); showVoiceMessage(''); }
-          else showVoiceMessage("Didn't catch that — try again.");
-        };
-        r.onerror = function (e) {
-          var err = e && e.error;
-          if (err === 'not-allowed' || err === 'service-not-allowed') showVoiceMessage('Please allow microphone access to use voice search.');
-          else if (err === 'network') showVoiceMessage('Voice search needs a signal — please type instead.');
-          else if (err === 'no-speech') showVoiceMessage("Didn't hear anything — try again.");
-          else if (err === 'aborted') showVoiceMessage('');
-          else showVoiceMessage('Voice search failed — please type instead.');
-        };
-        r.onend = function () { recognition = null; $('mic-btn').classList.remove('listening'); if ($('voice-msg').textContent === 'Listening…') showVoiceMessage(''); };
-        recognition = r; r.start();
-      } catch (e) { showVoiceMessage('Voice search failed — please type instead.'); $('mic-btn').classList.remove('listening'); }
-    }
-
     // ── Map ───────────────────────────────────────────────────────────────
     var SVGNS = 'http://www.w3.org/2000/svg';
     var mapFloor = null, selectedRoom = null, mapInited = false;
@@ -1236,7 +1192,6 @@
       $('play-something').addEventListener('click', function () { if (ARTS.length) openArtwork(ARTS[Math.floor(Math.random() * ARTS.length)].id); });
       $('search-input').addEventListener('input', function () { clearActiveFloor(); applyFilters(); });
       $('clear-btn').addEventListener('click', function () { clearSearch(true); applyFilters(); });
-      $('mic-btn').addEventListener('click', startVoiceSearch);
       document.querySelectorAll('.chip[data-floor]').forEach(function (c) {
         c.addEventListener('click', function () { setFloorChip(+c.dataset.floor, c); });
       });
