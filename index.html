@@ -100,9 +100,12 @@
     /* Search */
     .search-wrap { padding: 10px 16px 9px; background: #000; }
     .search-row { display: flex; gap: 8px; align-items: stretch; }
-    .search-input { flex: 1; min-width: 0; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.92); font-size: 16px; font-family: 'Inter', sans-serif; padding: 13px 14px; outline: none; border-radius: 2px; }
+    .search-field { position: relative; flex: 1; min-width: 0; display: flex; }
+    .search-input { flex: 1; min-width: 0; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.92); font-size: 16px; font-family: 'Inter', sans-serif; padding: 13px 40px 13px 14px; outline: none; border-radius: 2px; }
     .search-input::placeholder { color: rgba(255,255,255,.42); }
     .search-input:focus { border-color: #555; }
+    .clear-btn { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; padding: 0; background: transparent; border: 0; color: rgba(255,255,255,.45); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 50%; transition: transform .14s ease, color .18s ease; }
+    .clear-btn:active { transform: translateY(-50%) scale(.85); }
     .mic-btn { flex-shrink: 0; width: 42px; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.65); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 2px; }
     .mic-btn.listening { background: #fff; color: #000; border-color: #fff; }
     .voice-msg { color: rgba(255,255,255,.6); font-size: 12px; letter-spacing: .5px; padding: 7px 2px 0; font-style: italic; }
@@ -170,7 +173,7 @@
       .row:hover .thumb img { filter: brightness(1.95) contrast(1.22); transform: translateY(-1px); }
       .chip:hover { border-color: rgba(255,255,255,.55); color: rgba(255,255,255,.9); }
       .icon-btn:hover, .mic-btn:hover, #player-back:hover, #share-btn:hover,
-      #map-close:hover, #about-close:hover, #np-close:hover { color: #fff; }
+      #map-close:hover, #about-close:hover, #np-close:hover, .clear-btn:hover { color: #fff; }
       #btn-play:hover, #np-toggle:hover { border-color: rgba(255,255,255,.85); }
       #btn-back10:hover, #btn-fwd30:hover { opacity: 1; }
       #map-filter-btn:hover, #tx-btn:hover { border-color: rgba(255,255,255,.7); color: #fff; }
@@ -195,7 +198,7 @@
       .row-artist { font-size: 16px; }
       .row-hook { font-size: 20px; line-height: 1.6; }
       .row-gallery { font-size: 16px; }
-      .search-input { font-size: 19px; padding: 16px 19px; }
+      .search-input { font-size: 19px; padding: 16px 44px 16px 19px; }
       .mic-btn { width: 56px; }
       .chip { font-size: 16px; padding: 9px 19px; }
     }
@@ -234,7 +237,12 @@
         </div>
         <div class="search-wrap">
           <div class="search-row">
-            <input class="search-input" id="search-input" type="text" placeholder="gallery · artist · title" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+            <div class="search-field">
+              <input class="search-input" id="search-input" type="text" placeholder="gallery · artist · title" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+              <button class="clear-btn" id="clear-btn" type="button" title="Clear search" aria-label="Clear search" style="display:none;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+              </button>
+            </div>
             <button class="mic-btn" id="mic-btn" type="button" title="Search by voice" aria-label="Search by voice">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
             </button>
@@ -645,8 +653,22 @@
       });
       $('no-results').style.display = shown ? 'none' : 'block';
       $('count-line').textContent = shown + (shown === 1 ? ' artwork' : ' artworks');
+      var clr = $('clear-btn');
+      if (clr) clr.style.display = ($('search-input').value || '') ? 'flex' : 'none';
+    }
+    // Search and the floor chips are either/or: one clears the other so they
+    // never combine into a contradictory (empty) result.
+    function clearActiveFloor() {
+      if (activeFloor == null) return;
+      activeFloor = null;
+      document.querySelectorAll('.chip[data-floor]').forEach(function (c) { c.classList.remove('active'); });
+    }
+    function clearSearch(focus) {
+      var si = $('search-input');
+      if (si) { si.value = ''; if (focus) si.focus(); }
     }
     function setFloorChip(floor, btn) {
+      clearSearch(false);                 // tapping a floor empties the search box
       if (activeFloor === floor) {
         activeFloor = null;
         btn.classList.remove('active');
@@ -917,7 +939,7 @@
         r.onstart = function () { showVoiceMessage('Listening…'); $('mic-btn').classList.add('listening'); };
         r.onresult = function (e) {
           var t = (e.results[0][0].transcript || '').trim();
-          if (t) { $('search-input').value = t; applyFilters(); showVoiceMessage(''); }
+          if (t) { clearActiveFloor(); $('search-input').value = t; applyFilters(); showVoiceMessage(''); }
           else showVoiceMessage("Didn't catch that — try again.");
         };
         r.onerror = function (e) {
@@ -1195,7 +1217,8 @@
       $('map-close').addEventListener('click', function () { go(1); });
       $('chip-map').addEventListener('click', function () { go(4); });
       $('play-something').addEventListener('click', function () { if (ARTS.length) openArtwork(ARTS[Math.floor(Math.random() * ARTS.length)].id); });
-      $('search-input').addEventListener('input', applyFilters);
+      $('search-input').addEventListener('input', function () { clearActiveFloor(); applyFilters(); });
+      $('clear-btn').addEventListener('click', function () { clearSearch(true); applyFilters(); });
       $('mic-btn').addEventListener('click', startVoiceSearch);
       document.querySelectorAll('.chip[data-floor]').forEach(function (c) {
         c.addEventListener('click', function () { setFloorChip(+c.dataset.floor, c); });
