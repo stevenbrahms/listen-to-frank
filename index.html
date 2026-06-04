@@ -68,15 +68,15 @@
     .row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 0.5px solid #0e0e0e; cursor: pointer; transition: opacity .12s ease, transform .12s ease, background .18s ease; position: relative; }
     .row:active { opacity: .4; transform: scale(0.985); }
     .row.hidden { display: none; }
-    .thumb { flex-shrink: 0; width: 90px; height: 128px; display: flex; align-items: flex-end; justify-content: center; }
-    .thumb img { max-width: 90px; max-height: 128px; object-fit: contain; object-position: bottom center; display: block; filter: brightness(1.75) contrast(1.2); transition: filter .2s ease, transform .2s ease; }
-    .thumb .swatch { width: 68px; height: 94px; align-self: flex-end; opacity: .9; }
+    .thumb { flex-shrink: 0; width: 90px; height: 128px; display: flex; align-items: flex-start; justify-content: center; }
+    .thumb img { max-width: 90px; max-height: 128px; object-fit: contain; object-position: top center; display: block; filter: brightness(1.75) contrast(1.2); transition: filter .2s ease, transform .2s ease; }
+    .thumb .swatch { width: 68px; height: 94px; align-self: flex-start; opacity: .9; }
     .row-text { flex: 1; padding-top: 2px; min-width: 0; }
     .row-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; gap: 8px; }
-    .row-title { color: rgba(255,255,255,.97); font-size: 16px; letter-spacing: 1.2px; font-weight: 500; transition: color .3s; }
-    .row-gallery { color: rgba(255,255,255,.5); font-size: 13px; letter-spacing: .5px; flex-shrink: 0; white-space: nowrap; }
-    .row-artist { color: rgba(255,255,255,.6); font-size: 13px; margin: 0 0 6px; letter-spacing: .5px; }
-    .row-hook { color: rgba(255,255,255,.68); font-size: 16px; margin: 0; line-height: 1.6; font-style: italic; font-weight: 300; }
+    .row-title { color: rgba(255,255,255,.97); font-size: 20px; letter-spacing: 1.2px; font-weight: 500; transition: color .3s; }
+    .row-gallery { color: rgba(255,255,255,.5); font-size: 16.5px; letter-spacing: .5px; flex-shrink: 0; white-space: nowrap; }
+    .row-artist { color: rgba(255,255,255,.6); font-size: 16.5px; margin: 0 0 6px; letter-spacing: .5px; }
+    .row-hook { color: rgba(255,255,255,.68); font-size: 20px; margin: 0; line-height: 1.6; font-style: italic; font-weight: 300; }
     @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
     .playing-dot { display: none; width: 5px; height: 5px; border-radius: 50%; background: #fff; position: absolute; right: 0; top: 50%; transform: translateY(-50%); animation: pulse 1.8s ease-in-out infinite; }
     .row.playing .playing-dot { display: block; }
@@ -101,16 +101,16 @@
     .search-wrap { padding: 10px 16px 9px; background: #000; }
     .search-row { display: flex; gap: 8px; align-items: stretch; }
     .search-field { position: relative; flex: 1; min-width: 0; display: flex; }
-    .search-input { flex: 1; min-width: 0; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.92); font-size: 16px; font-family: 'Inter', sans-serif; padding: 13px 40px 13px 14px; outline: none; border-radius: 2px; }
+    .search-input { flex: 1; min-width: 0; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.92); font-size: 20px; font-family: 'Inter', sans-serif; padding: 13px 40px 13px 14px; outline: none; border-radius: 2px; }
     .search-input::placeholder { color: rgba(255,255,255,.42); }
     .search-input:focus { border-color: #555; }
     .clear-btn { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; padding: 0; background: transparent; border: 0; color: rgba(255,255,255,.45); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 50%; transition: transform .14s ease, color .18s ease; }
     .clear-btn:active { transform: translateY(-50%) scale(.85); }
     .mic-btn { flex-shrink: 0; width: 42px; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.65); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 2px; }
     .mic-btn.listening { background: #fff; color: #000; border-color: #fff; }
-    .voice-msg { color: rgba(255,255,255,.6); font-size: 12px; letter-spacing: .5px; padding: 7px 2px 0; font-style: italic; }
+    .voice-msg { color: rgba(255,255,255,.6); font-size: 15px; letter-spacing: .5px; padding: 7px 2px 0; font-style: italic; }
     .chips { display: flex; gap: 6px; padding: 9px 0 1px; justify-content: space-between; }
-    .chip { background: transparent; border: 0.5px solid #3a3a3a; color: rgba(255,255,255,.55); font-size: 13px; letter-spacing: 1px; padding: 7px 14px; cursor: pointer; font-family: 'Inter', sans-serif; border-radius: 2px; transition: all .12s; white-space: nowrap; }
+    .chip { background: transparent; border: 0.5px solid #3a3a3a; color: rgba(255,255,255,.55); font-size: 16.5px; letter-spacing: 1px; padding: 7px 14px; cursor: pointer; font-family: 'Inter', sans-serif; border-radius: 2px; transition: all .12s; white-space: nowrap; }
     .chip.active { border-color: rgba(255,255,255,.6); color: #fff; background: rgba(255,255,255,.1); }
     .floor-chip { min-width: 40px; text-align: center; }
 
@@ -132,10 +132,10 @@
     #np-thumb img { max-width: 56px; max-height: 76px; object-fit: contain; object-position: bottom center; filter: brightness(1.75) contrast(1.2); }
     #np-thumb .swatch { width: 46px; height: 64px; opacity: .9; }
     #np-text { flex: 1; min-width: 0; }
-    #np-title { color: rgba(255,255,255,.98); font-size: 15px; letter-spacing: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    #np-artist { color: rgba(255,255,255,.62); font-size: 13px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #np-title { color: rgba(255,255,255,.98); font-size: 19px; letter-spacing: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #np-artist { color: rgba(255,255,255,.62); font-size: 16.5px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #np-toggle { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(255,255,255,.55); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    #np-close { flex-shrink: 0; width: 34px; height: 34px; margin-left: -2px; border: none; background: transparent; color: rgba(255,255,255,.6); font-size: 26px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
+    #np-close { flex-shrink: 0; width: 34px; height: 34px; margin-left: -2px; border: none; background: transparent; color: rgba(255,255,255,.6); font-size: 32.5px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
     #np-close:active { opacity: .5; }
     #app.np-on .scrollpad { padding-bottom: 108px !important; }
     /* Map room-info panel isn't a scrollpad, so lift it above the Now Playing bar. */
@@ -143,11 +143,11 @@
     /* When the selected room has picks, the whole panel is the tap target. */
     #map-info.tappable { cursor: pointer; transition: background .15s ease; }
     #map-info.tappable:active { background: #0d0d0d; }
-    #map-info-arrow { font-size: 24px; color: rgba(255,255,255,.55); flex-shrink: 0; transition: transform .15s ease, color .15s ease; }
+    #map-info-arrow { font-size: 30px; color: rgba(255,255,255,.55); flex-shrink: 0; transition: transform .15s ease, color .15s ease; }
     @media (min-width: 720px) {
       #now-playing { padding: 20px 22px; gap: 18px; }
-      #np-title { font-size: 16px; }
-      #np-artist { font-size: 13px; }
+      #np-title { font-size: 20px; }
+      #np-artist { font-size: 16.5px; }
       #np-thumb { width: 64px; height: 88px; margin: -14px 0; }
       #np-thumb img { max-width: 64px; max-height: 88px; }
       #np-thumb .swatch { width: 52px; height: 74px; }
@@ -157,7 +157,7 @@
     }
 
     /* Offline saving bar */
-    #offline-bar { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; background: rgba(0,0,0,.92); color: #fff; padding: 9px 16px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; text-align: center; z-index: 60; pointer-events: none; display: none; }
+    #offline-bar { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; background: rgba(0,0,0,.92); color: #fff; padding: 9px 16px; font-size: 14px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; text-align: center; z-index: 60; pointer-events: none; display: none; }
 
     /* Tasteful micro-interactions: a gentle press on every control, subtle hover
        lift on devices that have a real pointer. Nothing flashy. */
@@ -201,13 +201,13 @@
       .thumb { width: 106px; height: 150px; }
       .thumb img { max-width: 106px; max-height: 150px; }
       .thumb .swatch { width: 80px; height: 110px; }
-      .row-title { font-size: 20px; }
-      .row-artist { font-size: 16px; }
-      .row-hook { font-size: 20px; line-height: 1.6; }
-      .row-gallery { font-size: 16px; }
-      .search-input { font-size: 19px; padding: 16px 44px 16px 19px; }
+      .row-title { font-size: 25px; }
+      .row-artist { font-size: 20px; }
+      .row-hook { font-size: 25px; line-height: 1.6; }
+      .row-gallery { font-size: 20px; }
+      .search-input { font-size: 24px; padding: 16px 44px 16px 19px; }
       .mic-btn { width: 56px; }
-      .chip { font-size: 16px; padding: 9px 19px; }
+      .chip { font-size: 20px; padding: 9px 19px; }
     }
   </style>
 </head>
@@ -218,16 +218,14 @@
     <div class="screen on" id="S0" style="background:#000;cursor:pointer;">
       <div style="position:absolute;inset:0;">
         <img id="entry-hero" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center top;">
-        <div style="position:absolute;inset:0;background:rgba(0,0,0,.38);"></div>
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,.16);"></div>
       </div>
-      <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 22px;">
-        <div style="background:#000;padding:30px 28px 28px;margin-bottom:20px;width:100%;max-width:360px;">
-          <p class="kawara-logo" style="color:#fff;text-align:center;opacity:.95;font-size:22px;">LISTEN TO FRANK</p>
-        </div>
-        <p style="color:rgba(255,255,255,.78);font-size:15px;line-height:2.1;text-align:center;font-weight:300;letter-spacing:.3px;">A little history.&nbsp; A little gossip.<br>A few sideways theories.</p>
+      <div style="position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);background:#000;padding:46px 12px;z-index:1;text-align:center;">
+        <p class="kawara-logo" style="color:#fff;opacity:.97;font-size:32px;letter-spacing:3px;margin:0 0 26px;">LISTEN TO FRANK</p>
+        <p style="color:rgba(255,255,255,.82);font-size:18px;line-height:2.0;font-weight:300;letter-spacing:.3px;margin:0;">A little history.<br>A little gossip.<br>A few sideways theories.</p>
       </div>
-      <div style="position:relative;z-index:1;padding:0 0 40px;text-align:center;">
-        <p style="color:rgba(255,255,255,.45);font-size:12px;letter-spacing:2px;">tap anywhere</p>
+      <div style="position:absolute;left:0;right:0;bottom:40px;text-align:center;z-index:1;">
+        <p style="color:rgba(255,255,255,.5);font-size:14px;letter-spacing:2px;margin:0;">tap anywhere</p>
       </div>
     </div>
 
@@ -271,12 +269,12 @@
 
       <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
         <div id="play-something" style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:0.5px solid #222;cursor:pointer;">
-          <span style="color:rgba(255,255,255,.6);font-size:13px;letter-spacing:2px;">PLAY SOMETHING</span>
-          <span style="color:rgba(255,255,255,.45);font-size:14px;">→</span>
+          <span style="color:rgba(255,255,255,.6);font-size:16.5px;letter-spacing:2px;">PLAY SOMETHING</span>
+          <span style="color:rgba(255,255,255,.45);font-size:17.5px;">→</span>
         </div>
         <div id="gallery-list"></div>
-        <p id="no-results" style="display:none;color:rgba(255,255,255,.5);font-size:14px;padding:20px 0;font-style:italic;">nothing here yet — try a gallery number, a floor, or a title.</p>
-        <p id="count-line" style="color:rgba(255,255,255,.4);font-size:11px;letter-spacing:1.5px;padding:18px 0 0;text-transform:uppercase;"></p>
+        <p id="no-results" style="display:none;color:rgba(255,255,255,.5);font-size:17.5px;padding:20px 0;font-style:italic;">nothing here yet — try a gallery number, a floor, or a title.</p>
+        <p id="count-line" style="color:rgba(255,255,255,.4);font-size:14px;letter-spacing:1.5px;padding:18px 0 0;text-transform:uppercase;"></p>
       </div>
     </div>
 
@@ -285,17 +283,17 @@
       <div id="player-bg" style="background:#1A2F4E;position:relative;height:100%;display:flex;flex-direction:column;">
         <img id="player-ghost" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:.09;pointer-events:none;z-index:0;" />
         <div class="pcol" style="padding:max(40px,env(safe-area-inset-top)) 16px 0;flex-shrink:0;position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;">
-          <button id="player-back" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:12px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;">← back</button>
-          <span class="home-logo" style="color:rgba(255,255,255,.6);font-size:10px;letter-spacing:1.5px;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</span>
+          <button id="player-back" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:15px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;">← back</button>
+          <span class="home-logo" style="color:rgba(255,255,255,.6);font-size:12.5px;letter-spacing:1.5px;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</span>
         </div>
         <div class="pcol" style="flex:1;padding:20px 16px 0;position:relative;z-index:2;display:flex;flex-direction:column;overflow:hidden;">
           <div style="flex-shrink:0;">
-            <p id="player-title" style="color:#fff;font-size:33px;line-height:1.2;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
-            <p id="player-artist" style="color:rgba(255,255,255,.72);font-size:16px;margin:13px 0 0;letter-spacing:1px;"></p>
-            <p id="player-hook" style="color:rgba(255,255,255,.78);font-size:18px;margin:18px 0 0;line-height:1.7;font-weight:300;font-style:italic;display:none;"></p>
+            <p id="player-title" style="color:#fff;font-size:41.5px;line-height:1.2;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
+            <p id="player-artist" style="color:rgba(255,255,255,.72);font-size:20px;margin:13px 0 0;letter-spacing:1px;"></p>
+            <p id="player-hook" style="color:rgba(255,255,255,.78);font-size:22.5px;margin:18px 0 0;line-height:1.7;font-weight:300;font-style:italic;display:none;"></p>
           </div>
           <div id="tx-area" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-top:16px;display:none;">
-            <p id="tx-text" style="color:rgba(255,255,255,.86);font-size:18px;line-height:1.85;margin:0;font-weight:300;"></p>
+            <p id="tx-text" style="color:rgba(255,255,255,.86);font-size:22.5px;line-height:1.85;margin:0;font-weight:300;"></p>
           </div>
           <div id="player-spacer" style="flex:1;"></div>
         </div>
@@ -305,25 +303,25 @@
             <div id="prog-bar" style="height:100%;width:0%;background:rgba(255,255,255,.92);"></div>
           </div>
           <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-            <span id="prog-cur" style="color:rgba(255,255,255,.6);font-size:12px;">0:00</span>
-            <span id="prog-dur" style="color:rgba(255,255,255,.6);font-size:12px;">0:00</span>
+            <span id="prog-cur" style="color:rgba(255,255,255,.6);font-size:15px;">0:00</span>
+            <span id="prog-dur" style="color:rgba(255,255,255,.6);font-size:15px;">0:00</span>
           </div>
-          <div id="audio-error" style="display:none;color:#fff;font-size:12px;text-align:center;border:1px solid rgba(255,255,255,.5);padding:7px;margin-bottom:12px;letter-spacing:.03em;"></div>
+          <div id="audio-error" style="display:none;color:#fff;font-size:15px;text-align:center;border:1px solid rgba(255,255,255,.5);padding:7px;margin-bottom:12px;letter-spacing:.03em;"></div>
           <div style="display:flex;justify-content:center;align-items:center;gap:38px;margin-bottom:16px;">
             <button id="btn-back10" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.85;position:relative;" title="back 10s">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
-              <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:8px;color:rgba(255,255,255,.65);">10</span>
+              <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,.65);">10</span>
             </button>
             <button id="btn-play" style="width:60px;height:60px;border-radius:50%;border:1.5px solid rgba(255,255,255,.5);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;">
               <svg id="play-ico" width="18" height="18" viewBox="0 0 24 24"><polygon points="8 5 19 12 8 19 8 5" fill="white"/></svg>
             </button>
             <button id="btn-fwd30" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.85;position:relative;" title="forward 30s">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
-              <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:8px;color:rgba(255,255,255,.65);">30</span>
+              <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,.65);">30</span>
             </button>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <button id="tx-btn" style="background:transparent;border:1px solid rgba(255,255,255,.4);border-radius:2px;color:rgba(255,255,255,.75);font-size:12px;letter-spacing:1.5px;cursor:pointer;padding:8px 15px;font-family:'Inter',sans-serif;">read along</button>
+            <button id="tx-btn" style="background:transparent;border:1px solid rgba(255,255,255,.4);border-radius:2px;color:rgba(255,255,255,.75);font-size:15px;letter-spacing:1.5px;cursor:pointer;padding:8px 15px;font-family:'Inter',sans-serif;">read along</button>
             <button id="share-btn" style="background:transparent;border:none;color:rgba(255,255,255,.6);cursor:pointer;padding:4px;" title="Share">
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             </button>
@@ -338,20 +336,20 @@
       <div style="flex-shrink:0;padding:max(40px,env(safe-area-inset-top)) 0 0;">
         <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px;margin-bottom:20px;">
           <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
-          <button id="about-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);font-size:26px;cursor:pointer;padding:0;line-height:1;">×</button>
+          <button id="about-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);font-size:32.5px;cursor:pointer;padding:0;line-height:1;">×</button>
         </div>
         <div class="rule" style="margin-bottom:26px;"></div>
       </div>
       <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
-        <p style="color:rgba(255,255,255,.78);font-size:18px;line-height:1.85;margin:0 0 16px;font-weight:300;">This is Listen to Frank.</p>
-        <p style="color:rgba(255,255,255,.75);font-size:16px;line-height:1.85;margin:0 0 16px;font-weight:300;">Go find something on a wall. Or just start somewhere. Frank talks — a little history, a little gossip, a few sideways theories. None of it precious.</p>
-        <p style="color:rgba(255,255,255,.75);font-size:16px;line-height:1.85;margin:0 0 36px;font-weight:300;">You don't need to know anything going in. That's the whole point.</p>
+        <p style="color:rgba(255,255,255,.78);font-size:22.5px;line-height:1.85;margin:0 0 16px;font-weight:300;">This is Listen to Frank.</p>
+        <p style="color:rgba(255,255,255,.75);font-size:20px;line-height:1.85;margin:0 0 16px;font-weight:300;">Go find something on a wall. Or just start somewhere. Frank talks — a little history, a little gossip, a few sideways theories. None of it precious.</p>
+        <p style="color:rgba(255,255,255,.75);font-size:20px;line-height:1.85;margin:0 0 36px;font-weight:300;">You don't need to know anything going in. That's the whole point.</p>
         <div style="border-top:0.5px solid #222;padding-top:20px;margin-bottom:28px;">
-          <p style="color:rgba(255,255,255,.75);font-size:16px;line-height:1.85;margin:0;font-weight:300;">Enjoy full access. We're in preview — everything is free while we're getting started.</p>
+          <p style="color:rgba(255,255,255,.75);font-size:20px;line-height:1.85;margin:0;font-weight:300;">Enjoy full access. We're in preview — everything is free while we're getting started.</p>
         </div>
         <div style="border-top:0.5px solid #222;padding-top:20px;">
-          <p style="color:rgba(255,255,255,.5);font-size:12px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
-          <a href="mailto:hello@listentofrank.art" style="color:rgba(255,255,255,.62);font-size:14px;text-decoration:none;border:0.5px solid rgba(255,255,255,.28);padding:9px 16px;display:inline-block;">hello@listentofrank.art →</a>
+          <p style="color:rgba(255,255,255,.5);font-size:15px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
+          <a href="mailto:hello@listentofrank.art" style="color:rgba(255,255,255,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(255,255,255,.28);padding:9px 16px;display:inline-block;">hello@listentofrank.art →</a>
         </div>
       </div>
     </div>
@@ -361,18 +359,18 @@
       <div style="flex-shrink:0;padding:max(40px,env(safe-area-inset-top)) 0 0;background:#000;">
         <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px;margin-bottom:16px;">
           <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
-          <button id="map-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);font-size:26px;cursor:pointer;padding:0;line-height:1;">×</button>
+          <button id="map-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);font-size:32.5px;cursor:pointer;padding:0;line-height:1;">×</button>
         </div>
         <div id="floor-tabs" style="display:flex;gap:6px;justify-content:center;padding:0 16px;"></div>
-        <div id="floor-theme-label" style="padding:7px 14px;font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;"></div>
+        <div id="floor-theme-label" style="padding:7px 14px;font-size:14px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;"></div>
       </div>
       <div id="map-container" class="scrollpad" style="flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:8px 10px 0;"></div>
       <div id="map-info" style="display:none;padding:14px 16px max(16px,env(safe-area-inset-bottom));border-top:1px solid #2a2a2a;flex-shrink:0;background:#000;" role="button" tabindex="0">
         <div style="display:flex;align-items:center;gap:14px;">
           <div style="flex:1;min-width:0;">
-            <div id="map-room-floor" style="font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;"></div>
-            <div id="map-room-name" style="font-size:18px;color:#fff;font-weight:400;line-height:1.3;margin-bottom:5px;"></div>
-            <div id="map-room-note" style="font-size:13.5px;color:rgba(255,255,255,.68);line-height:1.6;"></div>
+            <div id="map-room-floor" style="font-size:12.5px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;"></div>
+            <div id="map-room-name" style="font-size:22.5px;color:#fff;font-weight:400;line-height:1.3;margin-bottom:5px;"></div>
+            <div id="map-room-note" style="font-size:17px;color:rgba(255,255,255,.68);line-height:1.6;"></div>
           </div>
           <div id="map-info-arrow" aria-hidden="true">→</div>
         </div>
@@ -725,7 +723,7 @@
       trackEnded = false;
       ARTS.forEach(function (x) { var r = ROW_OF[x.id]; if (r) r.classList.toggle('playing', x.id === a.id); });
 
-      $('player-bg').style.background = a.color || '#111';
+      $('player-bg').style.background = npBackground(a.color || '#111');   // darken light colors so the white title + ghost stay legible
       $('player-title').textContent = a.title || '';
       $('player-artist').textContent = (a.artist || '') + (a.year ? ', ' + a.year : '');
       var hk = $('player-hook');
@@ -788,8 +786,9 @@
       var r = parseInt(hex.slice(0, 2), 16) / 255, g = parseInt(hex.slice(2, 4), 16) / 255, b = parseInt(hex.slice(4, 6), 16) / 255;
       var lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
       // Graduated: the lighter the color, the stronger the black layer. Dark
-      // colors (most of them) stay raw.
-      var overlay = Math.max(0, Math.min(0.5, (lum - 0.4) * 0.95));
+      // colors (most of them) stay raw; bright colors get pushed down hard so
+      // the white title + line-drawing ghost stay legible.
+      var overlay = Math.max(0, Math.min(0.78, (lum - 0.38) * 1.25));
       if (overlay < 0.03) return color;
       var a = overlay.toFixed(2);
       return 'linear-gradient(rgba(0,0,0,' + a + '),rgba(0,0,0,' + a + ')), ' + color;
@@ -839,7 +838,7 @@
       if (txOpen) {
         $('tx-area').style.display = 'block';
         $('player-spacer').style.display = 'none';
-        $('player-title').style.fontSize = '20px';
+        $('player-title').style.fontSize = '25px';
         $('player-hook').style.display = 'none';
         var b = $('tx-btn'); b.textContent = 'close'; b.style.color = 'rgba(255,255,255,.65)'; b.style.borderColor = 'rgba(255,255,255,.3)';
       } else { closeTx(); }
@@ -848,7 +847,7 @@
       txOpen = false;
       $('tx-area').style.display = 'none';
       $('player-spacer').style.display = 'flex';
-      $('player-title').style.fontSize = '33px';
+      $('player-title').style.fontSize = '41.5px';
       if (current && current.hook) $('player-hook').style.display = 'block';
       var b = $('tx-btn'); b.textContent = 'read along'; b.style.color = 'rgba(255,255,255,.5)'; b.style.borderColor = 'rgba(255,255,255,.18)';
     }
@@ -1091,7 +1090,7 @@
       }
       $('floor-theme-label').textContent = '';
       $('map-info').style.display = 'none';
-      $('map-container').innerHTML = '<div style="padding:64px 20px;text-align:center;color:rgba(255,255,255,.55);font-size:14px;letter-spacing:1px;font-style:italic;line-height:1.7;">Select a floor above<br>to see Frank\'s picks</div>';
+      $('map-container').innerHTML = '<div style="padding:64px 20px;text-align:center;color:rgba(255,255,255,.55);font-size:17.5px;letter-spacing:1px;font-style:italic;line-height:1.7;">Select a floor above<br>to see Frank\'s picks</div>';
     }
     function setFloorMap(f) {
       mapFloor = f; selectedRoom = null;
