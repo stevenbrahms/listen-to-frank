@@ -1002,7 +1002,7 @@
         { id: 'r407', x: 10, y: 265, w: 120, h: 50, label: '407', type: 'gallery' }, { id: 'landing4', x: 215, y: 265, w: 75, h: 40, label: 'Hallway', type: 'gallery', g: 'Floor 4' },
         { id: 'r408', x: 10, y: 319, w: 55, h: 55, label: '408', type: 'gallery' }, { id: 'r414', x: 69, y: 319, w: 60, h: 55, label: '414', type: 'gallery' },
         { id: 'r413', x: 135, y: 309, w: 155, h: 65, label: '413', type: 'gallery' }, { id: 'r409', x: 10, y: 378, w: 55, h: 52, label: '409', type: 'gallery' },
-        { id: 'r410', x: 69, y: 378, w: 30, h: 52, label: '410', type: 'gallery' }, { id: 'r412', x: 103, y: 378, w: 26, h: 52, label: '412', type: 'gallery' },
+        { id: 'r410', x: 69, y: 378, w: 30, h: 52, label: '410', type: 'gallery' }, { id: 'r411', x: 103, y: 378, w: 30, h: 52, label: '411', type: 'gallery' }, { id: 'r412', x: 137, y: 378, w: 30, h: 52, label: '412', type: 'gallery' },
         { id: 'elev4a', x: 134, y: 8, w: 42, h: 38, label: '', type: 'corridor' }, { id: 'stairs4', x: 134, y: 50, w: 42, h: 38, label: '', type: 'corridor' },
         { id: 'elev4b', x: 135, y: 265, w: 75, h: 45, label: '', type: 'corridor' }
       ]},
@@ -1043,7 +1043,7 @@
       for (var f = 1; f <= 6; f++) {
         var list = [];
         (FLOOR_DATA[f].rooms || []).forEach(function (r) {
-          if (r.type === 'gallery' && ACTIVE_GALLERIES[roomKey(r)]) list.push(roomKey(r));
+          if ((r.type === 'gallery' || r.type === 'special') && ACTIVE_GALLERIES[roomKey(r)]) list.push(roomKey(r));
         });
         FRANK_ROOMS[f] = list;
       }
@@ -1097,6 +1097,7 @@
     function renderFloorMap(f) {
       var fd = FLOOR_DATA[f]; if (!fd) return;
       var PAD = 4, frankList = FRANK_ROOMS[f] || [];
+      var BRIGHT = '#cfcfcf';   // highlight tone for active galleries (dialed back from pure #fff)
       var svg = document.createElementNS(SVGNS, 'svg');
       svg.setAttribute('viewBox', '0 0 ' + fd.vbW + ' ' + fd.vbH);
       svg.style.cssText = 'width:100%;display:block;';
@@ -1106,9 +1107,12 @@
       fd.rooms.forEach(function (r) {
         var isSel = selectedRoom === r.id;
         var isNav = r.type === 'corridor', isAmen = r.type === 'amenity';
-        var hasFrank = frankList.indexOf(roomKey(r)) >= 0;
-        var noContent = r.type === 'gallery' && frankList.length > 0 && !hasFrank;
-        var sc = isNav ? '#222' : isAmen ? '#3a3a3a' : noContent ? '#4a4a4a' : '#fff';
+        var isContent = r.type === 'gallery' || r.type === 'special';
+        var hasFrank = isContent && frankList.indexOf(roomKey(r)) >= 0;
+        // A content room (gallery or special space) only lights up when Frank
+        // actually covers a work there — otherwise it stays dim + non-clickable.
+        var noContent = isContent && !hasFrank;
+        var sc = isNav ? '#222' : isAmen ? '#3a3a3a' : noContent ? '#4a4a4a' : BRIGHT;
         var sw = isNav ? 0.4 : noContent ? 0.5 : 0.7;
         var fz = r.w < 32 ? 5.5 : r.w < 50 ? 6.5 : 7;
         var clickable = !isNav && !noContent;
@@ -1116,8 +1120,8 @@
         if (clickable) { g.setAttribute('data-room-id', r.id); g.style.cursor = 'pointer'; }
         var rect = document.createElementNS(SVGNS, 'rect');
         rect.setAttribute('x', r.x); rect.setAttribute('y', r.y); rect.setAttribute('width', r.w); rect.setAttribute('height', r.h);
-        rect.setAttribute('fill', isSel ? '#fff' : 'transparent');
-        rect.setAttribute('stroke', isSel ? '#fff' : sc);
+        rect.setAttribute('fill', isSel ? BRIGHT : 'transparent');
+        rect.setAttribute('stroke', isSel ? BRIGHT : sc);
         rect.setAttribute('stroke-width', sw);
         g.appendChild(rect);
         (r.label ? r.label.split('\n') : []).forEach(function (line, i) {
@@ -1125,7 +1129,7 @@
           var t = document.createElementNS(SVGNS, 'text');
           t.setAttribute('x', r.x + PAD);
           t.setAttribute('y', r.y + PAD + fz + i * (fz + 1.5));
-          t.setAttribute('fill', isSel ? '#000' : isNav ? '#333' : isAmen ? '#5a5a5a' : noContent ? '#6a6a6a' : '#fff');
+          t.setAttribute('fill', isSel ? '#000' : isNav ? '#333' : isAmen ? '#5a5a5a' : noContent ? '#6a6a6a' : BRIGHT);
           t.setAttribute('font-size', fz);
           t.setAttribute('font-family', 'Inter,Helvetica Neue,Arial,sans-serif');
           t.setAttribute('letter-spacing', '0.02em');
