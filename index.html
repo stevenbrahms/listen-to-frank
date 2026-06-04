@@ -134,7 +134,7 @@
     #np-text { flex: 1; min-width: 0; }
     #np-title { color: rgba(255,255,255,.98); font-size: 19px; letter-spacing: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #np-artist { color: rgba(255,255,255,.62); font-size: 16.5px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    #np-toggle { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(255,255,255,.55); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    #np-toggle { flex-shrink: 0; width: 52px; height: 52px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     #np-close { flex-shrink: 0; width: 34px; height: 34px; margin-left: -2px; border: none; background: transparent; color: rgba(255,255,255,.6); font-size: 32.5px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
     #np-close:active { opacity: .5; }
     #app.np-on .scrollpad { padding-bottom: 108px !important; }
@@ -143,7 +143,7 @@
     /* When the selected room has picks, the whole panel is the tap target. */
     #map-info.tappable { cursor: pointer; transition: background .15s ease; }
     #map-info.tappable:active { background: #0d0d0d; }
-    #map-info-arrow { font-size: 30px; color: rgba(255,255,255,.55); flex-shrink: 0; transition: transform .15s ease, color .15s ease; }
+    #map-info-arrow { color: rgba(255,255,255,.55); flex-shrink: 0; display: flex; align-items: center; transition: transform .15s ease, color .15s ease; }
     @media (min-width: 720px) {
       #now-playing { padding: 20px 22px; gap: 18px; }
       #np-title { font-size: 20px; }
@@ -236,7 +236,7 @@
           <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
           <div style="position:absolute;right:16px;top:18px;display:flex;align-items:center;gap:14px;">
             <button class="icon-btn" id="about-btn" title="About">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="4" y1="10" x2="20" y2="10" vector-effect="non-scaling-stroke"/><line x1="4" y1="14" x2="20" y2="14" vector-effect="non-scaling-stroke"/></svg>
             </button>
           </div>
         </div>
@@ -245,7 +245,7 @@
             <div class="search-field">
               <input class="search-input" id="search-input" type="text" placeholder="gallery · artist · title" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
               <button class="clear-btn" id="clear-btn" type="button" title="Clear search" aria-label="Clear search" style="display:none;">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg>
               </button>
             </div>
             <button class="mic-btn" id="mic-btn" type="button" title="Search by voice" aria-label="Search by voice">
@@ -270,7 +270,7 @@
       <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
         <div id="play-something" style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:0.5px solid #222;cursor:pointer;">
           <span style="color:rgba(255,255,255,.6);font-size:16.5px;letter-spacing:2px;">PLAY SOMETHING</span>
-          <span style="color:rgba(255,255,255,.45);font-size:17.5px;">→</span>
+          <span style="color:rgba(255,255,255,.5);display:inline-flex;align-items:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></span>
         </div>
         <div id="gallery-list"></div>
         <p id="no-results" style="display:none;color:rgba(255,255,255,.5);font-size:17.5px;padding:20px 0;font-style:italic;">nothing here yet — try a gallery number, a floor, or a title.</p>
@@ -283,7 +283,7 @@
       <div id="player-bg" style="background:#1A2F4E;position:relative;height:100%;display:flex;flex-direction:column;">
         <img id="player-ghost" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:.09;pointer-events:none;z-index:0;" />
         <div class="pcol" style="padding:max(40px,env(safe-area-inset-top)) 16px 0;flex-shrink:0;position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;">
-          <button id="player-back" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:15px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;">← back</button>
+          <button id="player-back" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:15px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:9px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="5" y1="12" x2="20" y2="12" vector-effect="non-scaling-stroke"/><polyline points="11,6 5,12 11,18" vector-effect="non-scaling-stroke"/></svg>back</button>
           <span class="home-logo" style="color:rgba(255,255,255,.6);font-size:12.5px;letter-spacing:1.5px;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</span>
         </div>
         <div class="pcol" style="flex:1;padding:20px 16px 0;position:relative;z-index:2;display:flex;flex-direction:column;overflow:hidden;">
@@ -309,14 +309,14 @@
           <div id="audio-error" style="display:none;color:#fff;font-size:15px;text-align:center;border:1px solid rgba(255,255,255,.5);padding:7px;margin-bottom:12px;letter-spacing:.03em;"></div>
           <div style="display:flex;justify-content:center;align-items:center;gap:38px;margin-bottom:16px;">
             <button id="btn-back10" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.85;position:relative;" title="back 10s">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75"><polygon points="19 20 9 12 19 4 19 20" vector-effect="non-scaling-stroke"/><line x1="5" y1="19" x2="5" y2="5" vector-effect="non-scaling-stroke"/></svg>
               <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,.65);">10</span>
             </button>
-            <button id="btn-play" style="width:60px;height:60px;border-radius:50%;border:1.5px solid rgba(255,255,255,.5);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;">
-              <svg id="play-ico" width="18" height="18" viewBox="0 0 24 24"><polygon points="8 5 19 12 8 19 8 5" fill="white"/></svg>
+            <button id="btn-play" style="width:56px;height:56px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+              <svg id="play-ico" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.75" stroke-linejoin="miter"><polygon points="6,4 6,20 19.86,12" vector-effect="non-scaling-stroke"/></svg>
             </button>
             <button id="btn-fwd30" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.85;position:relative;" title="forward 30s">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75"><polygon points="5 4 15 12 5 20 5 4" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/></svg>
               <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,.65);">30</span>
             </button>
           </div>
@@ -336,7 +336,7 @@
       <div style="flex-shrink:0;padding:max(40px,env(safe-area-inset-top)) 0 0;">
         <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px;margin-bottom:20px;">
           <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
-          <button id="about-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);font-size:32.5px;cursor:pointer;padding:0;line-height:1;">×</button>
+          <button id="about-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:0;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
         </div>
         <div class="rule" style="margin-bottom:26px;"></div>
       </div>
@@ -349,7 +349,7 @@
         </div>
         <div style="border-top:0.5px solid #222;padding-top:20px;">
           <p style="color:rgba(255,255,255,.5);font-size:15px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
-          <a href="mailto:hello@listentofrank.art" style="color:rgba(255,255,255,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(255,255,255,.28);padding:9px 16px;display:inline-block;">hello@listentofrank.art →</a>
+          <a href="mailto:hello@listentofrank.art" style="color:rgba(255,255,255,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(255,255,255,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">hello@listentofrank.art<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></a>
         </div>
       </div>
     </div>
@@ -359,7 +359,7 @@
       <div style="flex-shrink:0;padding:max(40px,env(safe-area-inset-top)) 0 0;background:#000;">
         <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px;margin-bottom:16px;">
           <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
-          <button id="map-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);font-size:32.5px;cursor:pointer;padding:0;line-height:1;">×</button>
+          <button id="map-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:0;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
         </div>
         <div id="floor-tabs" style="display:flex;gap:6px;justify-content:center;padding:0 16px;"></div>
         <div id="floor-theme-label" style="padding:7px 14px;font-size:14px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;"></div>
@@ -372,7 +372,7 @@
             <div id="map-room-name" style="font-size:22.5px;color:#fff;font-weight:400;line-height:1.3;margin-bottom:5px;"></div>
             <div id="map-room-note" style="font-size:17px;color:rgba(255,255,255,.68);line-height:1.6;"></div>
           </div>
-          <div id="map-info-arrow" aria-hidden="true">→</div>
+          <div id="map-info-arrow" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></div>
         </div>
       </div>
     </div>
@@ -386,7 +386,7 @@
         <div id="np-artist"></div>
       </div>
       <button id="np-toggle" type="button" aria-label="Play or pause"></button>
-      <button id="np-close" type="button" aria-label="Dismiss" title="Dismiss">&times;</button>
+      <button id="np-close" type="button" aria-label="Dismiss" title="Dismiss"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
     </div>
 
     <div id="offline-bar"></div>
@@ -766,16 +766,16 @@
     function setPlayIcon(playing) {
       var ico = $('play-ico');
       ico.innerHTML = playing
-        ? '<rect x="6" y="4" width="4" height="16" fill="white"/><rect x="14" y="4" width="4" height="16" fill="white"/>'
-        : '<polygon points="8 5 19 12 8 19 8 5" fill="white"/>';
+        ? '<line x1="9" y1="5" x2="9" y2="19" vector-effect="non-scaling-stroke"/><line x1="15" y1="5" x2="15" y2="19" vector-effect="non-scaling-stroke"/>'
+        : '<polygon points="6,4 6,20 19.86,12" vector-effect="non-scaling-stroke"/>';
     }
 
     // ── Now Playing bar (return to the playing track from anywhere) ────────
     function setNpIcon() {
       var b = $('np-toggle'); if (!b) return;
       b.innerHTML = audio.paused
-        ? '<svg width="18" height="18" viewBox="0 0 24 24"><polygon points="8 5 19 12 8 19 8 5" fill="white"/></svg>'
-        : '<svg width="18" height="18" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="white"/><rect x="14" y="4" width="4" height="16" fill="white"/></svg>';
+        ? '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.75" stroke-linejoin="miter"><polygon points="6,4 6,20 19.86,12" vector-effect="non-scaling-stroke"/></svg>'
+        : '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.75"><line x1="9" y1="5" x2="9" y2="19" vector-effect="non-scaling-stroke"/><line x1="15" y1="5" x2="15" y2="19" vector-effect="non-scaling-stroke"/></svg>';
     }
     // Bar background = the track's color; if that color is light, lay a
     // translucent black layer behind the text so white text stays readable.
