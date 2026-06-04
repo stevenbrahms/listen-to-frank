@@ -98,7 +98,7 @@
     .loading-pulse { animation: pulse-ring 0.9s ease-in-out infinite !important; }
 
     /* Search */
-    .search-wrap { padding: 10px 16px 9px; background: #000; }
+    .search-wrap { padding: 4px 16px 9px; background: #000; }
     .search-row { display: flex; gap: 8px; align-items: stretch; }
     .search-field { position: relative; flex: 1; min-width: 0; display: flex; }
     .search-input { flex: 1; min-width: 0; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.92); font-size: 20px; font-family: 'Inter', sans-serif; padding: 13px 40px 13px 14px; outline: none; border-radius: 2px; }
@@ -231,9 +231,9 @@
 
     <!-- ── SCREEN 1: GALLERY ── -->
     <div class="screen" id="S1" style="background:#000;">
-      <div style="flex-shrink:0;padding:max(28px,env(safe-area-inset-top)) 0 0;background:#000;">
-        <div style="display:flex;align-items:center;justify-content:flex-end;padding:2px 14px 0;margin-bottom:8px;">
-          <button class="icon-btn" id="about-btn" title="About" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;padding:4px;display:flex;">
+      <div style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;background:#000;">
+        <div style="display:flex;align-items:center;justify-content:flex-end;padding:0 14px 0;margin-bottom:2px;">
+          <button class="icon-btn" id="about-btn" title="About" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;padding:2px;display:flex;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="3" y1="9" x2="21" y2="9" vector-effect="non-scaling-stroke"/><line x1="3" y1="15" x2="21" y2="15" vector-effect="non-scaling-stroke"/></svg>
           </button>
         </div>
@@ -279,7 +279,7 @@
     <div class="screen" id="S2">
       <div id="player-bg" style="background:#1A2F4E;position:relative;height:100%;display:flex;flex-direction:column;">
         <img id="player-ghost" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:.09;pointer-events:none;z-index:0;" />
-        <div class="pcol" style="padding:max(40px,env(safe-area-inset-top)) 16px 0;flex-shrink:0;position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;">
+        <div class="pcol" style="padding:max(16px,env(safe-area-inset-top)) 16px 0;flex-shrink:0;position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;">
           <button id="player-back" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:15px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:9px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="5" y1="12" x2="20" y2="12" vector-effect="non-scaling-stroke"/><polyline points="11,6 5,12 11,18" vector-effect="non-scaling-stroke"/></svg>back</button>
         </div>
         <div class="pcol" style="flex:1;padding:20px 16px 0;position:relative;z-index:2;display:flex;flex-direction:column;overflow:hidden;">
@@ -329,7 +329,7 @@
 
     <!-- ── SCREEN 3: ABOUT ── -->
     <div class="screen" id="S3" style="background:#000;">
-      <div style="flex-shrink:0;padding:max(40px,env(safe-area-inset-top)) 0 0;">
+      <div style="flex-shrink:0;padding:max(16px,env(safe-area-inset-top)) 0 0;">
         <div style="position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px;margin-bottom:20px;">
           <p class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
           <button id="about-close" style="position:absolute;right:16px;background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:0;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
@@ -352,7 +352,7 @@
 
     <!-- ── SCREEN 4: MAP ── -->
     <div class="screen" id="S4" style="background:#000;">
-      <div style="flex-shrink:0;padding:max(40px,env(safe-area-inset-top)) 0 0;background:#000;">
+      <div style="flex-shrink:0;padding:max(16px,env(safe-area-inset-top)) 0 0;background:#000;">
         <div style="display:flex;align-items:center;justify-content:flex-end;padding:2px 14px 0;margin-bottom:12px;">
           <button id="map-close" style="background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:4px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
         </div>
