@@ -472,10 +472,11 @@
     // ── Entry "cover" combo — rotating three-color set (PORT / Paris Review /
     //    Davison palettes). line:'white' = white line-art on a dark/saturated
     //    ground; line:'dark' = inverted (dark) line-art on a light/cream ground.
+    // `accent` = the combo's pop color, reused on the map room-info panel.
     var ENTRY_COMBOS = [
-      { bg: '#000000', band: '#ec159a', font: '#80ec46', line: 'white', tag: '#80ec46' }, // PORT 23 — black / pink band / green
-      { bg: '#ec0e8f', band: '#000000', font: '#74c947', line: 'dark',  tag: '#f1ead0' }, // PORT 23 alt — pink / black band / green
-      { bg: '#f1ead0', band: '#f5179a', font: '#111111', line: 'dark',  tag: '#111111' }  // PORT Norton alt — cream / pink band / black
+      { bg: '#000000', band: '#ec159a', font: '#80ec46', line: 'white', tag: '#80ec46', accent: '#ec159a' }, // PORT 23 — black / pink band / green
+      { bg: '#ec0e8f', band: '#000000', font: '#74c947', line: 'dark',  tag: '#f1ead0', accent: '#ec0e8f' }, // PORT 23 alt — pink / black band / green
+      { bg: '#f1ead0', band: '#f5179a', font: '#111111', line: 'dark',  tag: '#111111', accent: '#f5179a' }  // PORT Norton alt — cream / pink band / black
     ];
     var ACTIVE_COMBO = ENTRY_COMBOS[0];   // the session's chosen "issue" palette (entry + about share it)
     function applyEntryCombo() {
@@ -1215,12 +1216,27 @@
         info.classList.add('tappable');
         info.setAttribute('aria-label', 'See Frank’s ' + here.length + (here.length === 1 ? ' pick' : ' picks') + ' in ' + label);
         $('map-info-arrow').style.display = '';
+        // Colored panel in the session's combo accent — text auto-legible.
+        var acc = (ACTIVE_COMBO && ACTIVE_COMBO.accent) || '#ec159a';
+        var prgb = aboutTextRGB(acc);
+        info.style.background = acc;
+        info.style.borderTop = '1px solid rgba(' + prgb + ',.18)';
+        $('map-room-floor').style.color = 'rgba(' + prgb + ',.62)';
+        $('map-room-name').style.color = 'rgba(' + prgb + ',1)';
+        $('map-room-note').style.color = 'rgba(' + prgb + ',.86)';
+        $('map-info-arrow').style.color = '#111111';   // always black, regardless of combo
       } else {
         $('map-room-note').textContent = 'No Frank picks here yet.';
         delete info.dataset.key;
         info.classList.remove('tappable');
         info.removeAttribute('aria-label');
         $('map-info-arrow').style.display = 'none';
+        // Empty rooms stay neutral dark (signals "nothing here").
+        info.style.background = '#000';
+        info.style.borderTop = '1px solid #2a2a2a';
+        $('map-room-floor').style.color = 'rgba(255,255,255,.5)';
+        $('map-room-name').style.color = '#fff';
+        $('map-room-note').style.color = 'rgba(255,255,255,.68)';
       }
       info.style.display = 'block';
     }
