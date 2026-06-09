@@ -12,7 +12,7 @@
  *      iOS will refuse to play a cached MP3 that doesn't honor Range.
  */
 
-const CACHE_VERSION = 'frank-v64';
+const CACHE_VERSION = 'frank-v65';
 const SHELL_CACHE = CACHE_VERSION + '-shell';
 const AUDIO_CACHE = CACHE_VERSION + '-audio';
 const VENDOR_CACHE = CACHE_VERSION + '-vendor';
