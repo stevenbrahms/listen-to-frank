@@ -80,11 +80,15 @@
     }
     .home-logo { cursor: pointer; }
     .home-logo:active { opacity: .5 !important; }
-    /* Entry wordmark — colored type on the cover band, so NO white stroke.
-       Sized to one line at runtime by fitEntryTitle(). */
-    .entry-word { font-family: 'KawaraCaps', sans-serif; font-weight: normal; -webkit-text-stroke: 0;
-      letter-spacing: 1px; white-space: nowrap; display: inline-block;
+    /* Entry "book cover" — fixed 390x800 design canvas, scaled to fit the
+       viewport by scaleEntryCover(). Type and ink colors come per-cover from
+       COVERS in renderEntryCover(). */
+    .cover-word { font-family: 'KawaraCaps', sans-serif; font-weight: normal; -webkit-text-stroke: 0;
+      text-align: center; margin: 0; line-height: 1.06; letter-spacing: .01em;
       text-rendering: optimizeLegibility; font-kerning: normal; }
+    .cover-stamp { font-family: 'Courier New', monospace; font-weight: 700; text-align: center;
+      letter-spacing: .45em; text-indent: .45em; margin: 0; }
+    #cover img { position: absolute; pointer-events: none; filter: invert(1); }
 
     /* Gallery rows */
     .row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 0.5px solid #0e0e0e; cursor: pointer; transition: opacity .12s ease, transform .12s ease, background .18s ease; position: relative; }
@@ -233,23 +237,15 @@
   <div id="app">
 
     <!-- ── SCREEN 0: ENTRY ── -->
-    <!-- Three-color "cover" treatment: a color ground (set on #S0), the rotating
-         line-drawing screenprinted on top, a horizontal band carrying the wordmark,
-         and the tagline floating over the art. The combo (bg / band / type / line
-         tint) is chosen at random each visit by applyEntryCombo(); the title is
-         auto-sized to one line by fitEntryTitle(). -->
-    <div class="screen on" id="S0" style="background:#000;cursor:pointer;">
+    <!-- "Book cover" treatment (Picador/Bolaño reference): a flat paper color,
+         one famous line drawing featured big, smaller drawings scattered like
+         marginalia, wordmark + IN MOMA stamp up top, tagline + tap-anywhere at
+         the bottom. One of three covers (cream/yellow/pink) is dealt per visit
+         by renderEntryCover(); the 390x800 canvas is scaled to the viewport by
+         scaleEntryCover(). -->
+    <div class="screen on" id="S0" style="background:#f1ead0;cursor:pointer;">
       <div style="position:absolute;inset:0;overflow:hidden;">
-        <img id="entry-hero" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center;">
-      </div>
-      <div id="entry-band" style="position:absolute;left:0;right:0;top:44%;transform:translateY(-50%);background:#000;padding:26px 8px;z-index:2;text-align:center;">
-        <p id="entry-word" class="entry-word" style="color:#fff;font-size:38px;margin:0;">LISTEN TO FRANK</p>
-      </div>
-      <div id="entry-tagwrap" style="position:absolute;left:0;right:0;top:44%;margin-top:64px;z-index:2;text-align:center;">
-        <p id="entry-tag" style="color:rgba(255,255,255,.9);font-size:17px;line-height:2.0;font-weight:300;letter-spacing:.3px;margin:0;">A little history.<br>A little gossip.<br>A few sideways theories.</p>
-      </div>
-      <div style="position:absolute;left:0;right:0;bottom:40px;text-align:center;z-index:2;">
-        <p id="entry-tap" style="color:rgba(255,255,255,.5);font-size:14px;letter-spacing:2px;margin:0;">tap anywhere</p>
+        <div id="cover" style="position:absolute;left:50%;top:50%;width:390px;height:800px;transform:translate(-50%,-50%);"></div>
       </div>
     </div>
 
@@ -431,96 +427,69 @@
     var audio = document.getElementById('audio');
     var $ = function (id) { return document.getElementById(id); };
 
-    // ── Entry background — rotates randomly each visit ────────────────────
-    // Drop ANY image (any filename) into current/entry/ and it joins the
-    // rotation automatically — no code editing. The list is discovered at
-    // runtime: a live directory listing first (instant drop-and-go in local
-    // preview), then entry/manifest.json on the real site, then a baked-in
-    // default as a last resort.
-    var IMG_RE = /\.(png|jpe?g|webp|gif|avif)$/i;
-    // No baked-in fallbacks: the entry rotation is whatever images live in
-    // current/entry/. Drop files in there (any filename) to populate it; if it's
-    // empty the entry screen simply shows its black background + logo.
-    var DEFAULT_ENTRY = [];
-
-    // Show a random drawing from `list`, never the same one twice in a row,
-    // and skip past any file that fails to load.
-    function showEntry(list) {
-      var img = $('entry-hero');
-      if (!img) return;
-      list = (list || []).filter(function (s) { return typeof s === 'string' && IMG_RE.test(s); });
-      if (!list.length) list = DEFAULT_ENTRY;
-      var order = list.map(function (_, i) { return i; });
-      for (var i = order.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = order[i]; order[i] = order[j]; order[j] = t; }
-      var last = null;
-      try { last = localStorage.getItem('ltf_entry_last'); } catch (e) {}
-      if (list.length > 1 && list[order[0]] === last) order.push(order.shift());
-      var k = 0;
-      (function tryNext() {
-        if (k >= order.length) { img.style.display = 'none'; return; }
-        var src = list[order[k++]];
-        img.onerror = tryNext;
-        img.onload = function () { img.style.display = ''; try { localStorage.setItem('ltf_entry_last', src); } catch (e) {} };
-        img.style.display = '';
-        img.src = src;
-      })();
-    }
-
-    // Discover the drawing set, then show one.
-    function loadEntryList(cb) {
-      fetch('entry/').then(function (r) { return r.ok ? r.text() : ''; }).then(function (html) {
-        // Only trust a *real* directory index (local preview / autoindex hosts),
-        // never the SPA fallback index.html the live site returns for unknown paths.
-        if (!/directory listing for|index of/i.test(html)) throw 0;
-        var found = [], re = /href\s*=\s*"([^"?#]+)"/gi, m;
-        while ((m = re.exec(html))) {
-          var raw = m[1].replace(/^\.\//, '');
-          if (raw.indexOf('/') >= 0) continue;
-          if (IMG_RE.test(decodeURIComponent(raw))) found.push('entry/' + raw);
-        }
-        if (!found.length) throw 0;
-        cb(found);
-      }).catch(function () {
-        fetch('entry/manifest.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
-          cb(Array.isArray(j) && j.length ? j.map(function (s) { return s.indexOf('/') >= 0 ? s : 'entry/' + s; }) : DEFAULT_ENTRY);
-        }).catch(function () { cb(DEFAULT_ENTRY); });
-      });
-    }
-    // ── Entry "cover" combo — rotating three-color set (PORT / Paris Review /
-    //    Davison palettes). line:'white' = white line-art on a dark/saturated
-    //    ground; line:'dark' = inverted (dark) line-art on a light/cream ground.
-    // `accent` = the combo's pop color, reused on the map room-info panel.
-    var ENTRY_COMBOS = [
-      { bg: '#000000', band: '#ec159a', font: '#80ec46', line: 'white', tag: '#80ec46', accent: '#ec159a' }, // PORT 23 — black / pink band / green
-      { bg: '#ec0e8f', band: '#000000', font: '#74c947', line: 'dark',  tag: '#f1ead0', accent: '#ec0e8f' }, // PORT 23 alt — pink / black band / green
-      { bg: '#f1ead0', band: '#f5179a', font: '#111111', line: 'dark',  tag: '#111111', accent: '#f5179a' }  // PORT Norton alt — cream / pink band / black
+    // ── Entry "book cover" — one of three covers dealt per visit ──────────
+    // Each cover = paper color + featured drawing + satellites at fixed spots
+    // on a 390x800 canvas (positions art-directed in _entry-bolano-mockup.html).
+    // Drawings are white-line PNGs from drawings/; CSS invert(1) prints them
+    // as black ink. band/font/accent feed the About page + map room panel.
+    var COVERS = [
+      { // A — cream / Starry Night
+        bg: '#f1ead0', tag: '#111111', tapRGB: '17,17,17', accent: '#f5179a',
+        art: [
+          { src: 'drawings/the-starry-night_vincent-van-gogh_1889.png',          css: 'width:316px;left:37px;top:266px;transform:rotate(-3deg);' },
+          { src: 'drawings/gold-marilyn-monroe_andy-warhol_1962.png',            css: 'width:78px;left:30px;top:148px;transform:rotate(-5deg);' },
+          { src: 'drawings/bird-in-space-constantin-brancusi-1928_line.png',     css: 'width:52px;right:40px;top:142px;transform:rotate(6deg);' },
+          { src: 'drawings/spider_alexander-calder_1939.png',                    css: 'width:152px;left:22px;bottom:138px;transform:rotate(-4deg);' },
+          { src: 'drawings/fountain_marcel-duchamp_1917.png',                    css: 'width:90px;right:34px;bottom:120px;transform:rotate(3deg);' }
+        ] },
+      { // B — yellow / Demoiselles
+        bg: '#ffc400', tag: '#111111', tapRGB: '17,17,17', accent: '#ffc400',
+        art: [
+          { src: 'drawings/les-demoiselles-davignon_pablo-picasso_1907.png',     css: 'width:296px;left:50px;top:244px;transform:rotate(4deg);' },
+          { src: 'drawings/the-object_meret-oppenheim_1936.png',                 css: 'width:88px;left:30px;top:150px;transform:rotate(-6deg);' },
+          { src: 'drawings/bicycle-wheel-marcel-duchamp-1951_line.png',          css: 'width:74px;right:34px;top:146px;transform:rotate(5deg);' },
+          { src: 'drawings/she-goat_pablo-picasso_1950.png',                     css: 'width:118px;left:32px;bottom:122px;transform:rotate(-3deg);' },
+          { src: 'drawings/le-voyage-dans-la-lune_georges-méliès_1902.png', css: 'width:86px;right:34px;bottom:132px;transform:rotate(2deg);' }
+        ] },
+      { // C — pink / Dance (cream tagline + tap for legibility on the pink)
+        bg: '#ec0e8f', tag: '#f1ead0', tapRGB: '241,234,208', accent: '#ec0e8f',
+        art: [
+          { src: 'drawings/dance-i-henri-matisse-1909_line.png',                 css: 'width:326px;left:32px;top:256px;transform:rotate(-2deg);' },
+          { src: 'drawings/drowning-girl-roy-lichtenstein-1963_line.png',        css: 'width:92px;left:30px;top:146px;transform:rotate(-5deg);' },
+          { src: 'drawings/flag_jasper-johns_1954-55.png',                       css: 'width:92px;right:32px;top:150px;transform:rotate(4deg);' },
+          { src: 'drawings/the-lovers_rene-magritte_1928.png',                   css: 'width:192px;left:24px;bottom:138px;transform:rotate(-3deg);' },
+          { src: 'drawings/the-moon_tarsila-do-amaral_1928.png',                 css: 'width:108px;right:32px;bottom:142px;transform:rotate(2deg);' }
+        ] }
     ];
-    var ACTIVE_COMBO = ENTRY_COMBOS[0];   // the session's chosen "issue" palette (entry + about share it)
-    function applyEntryCombo() {
-      var S0 = $('S0'); if (!S0) return;
-      var n = ENTRY_COMBOS.length, idx = Math.floor(Math.random() * n), last = -1;
+    var ACTIVE_COMBO = COVERS[0];   // the session's chosen "issue" palette (entry + about share it)
+    function renderEntryCover() {
+      var S0 = $('S0'), cover = $('cover'); if (!S0 || !cover) return;
+      var n = COVERS.length, idx = Math.floor(Math.random() * n), last = -1;
       try { last = parseInt(localStorage.getItem('ltf_entry_combo'), 10); } catch (e) {}
       if (n > 1 && idx === last) idx = (idx + 1) % n;
       try { localStorage.setItem('ltf_entry_combo', idx); } catch (e) {}
-      var c = ENTRY_COMBOS[idx];
+      var c = COVERS[idx];
       ACTIVE_COMBO = c;
       S0.style.background = c.bg;
-      var img = $('entry-hero');
-      if (img) {
-        img.style.filter = (c.line === 'dark') ? 'invert(1) brightness(.22) contrast(1.1)' : 'brightness(1.4) contrast(1.05)';
-        img.style.opacity = (c.line === 'dark') ? '0.5' : '0.62';
+      var ink = '#111111';
+      var html =
+        '<p class="cover-word" style="position:absolute;top:44px;left:0;right:0;color:' + ink + ';font-size:54px;">LISTEN TO<br>FRANK</p>' +
+        '<p class="cover-stamp" style="position:absolute;top:186px;left:0;right:0;color:' + ink + ';font-size:13px;">IN MOMA</p>';
+      for (var i = 0; i < c.art.length; i++) {
+        html += '<img alt="" src="' + c.art[i].src + '" style="' + c.art[i].css + '">';
       }
-      $('entry-band').style.background = c.band;
-      $('entry-word').style.color = c.font;
-      var tag = $('entry-tag');
-      tag.style.color = c.tag;
-      // "tap anywhere" follows the ground's luminance so it stays legible on any combo.
-      var tap = $('entry-tap');
-      if (tap) tap.style.color = 'rgba(' + aboutTextRGB(c.bg) + ',.5)';
-      // tagline gets a scrim either way so it reads over busy line-art:
-      // a dark shadow under light type, a light halo under dark type.
-      tag.style.textShadow = (aboutTextRGB(c.bg) === '255,255,255')
-        ? '0 1px 12px rgba(0,0,0,.45)' : '0 0 10px rgba(255,255,255,.6)';
+      html +=
+        '<p style="position:absolute;left:0;right:0;bottom:62px;color:' + c.tag + ';font-size:15px;text-align:center;font-weight:300;letter-spacing:.3px;line-height:1.9;margin:0;">A little history. A little gossip.<br>A few sideways theories.</p>' +
+        '<p style="position:absolute;left:0;right:0;bottom:30px;color:rgba(' + c.tapRGB + ',.5);font-size:12px;letter-spacing:2.5px;text-align:center;margin:0;">tap anywhere</p>';
+      cover.innerHTML = html;
+      scaleEntryCover();
+    }
+    // Fit the 390x800 canvas to the viewport ("contain") — the letterbox
+    // disappears into the paper color, which fills the whole screen.
+    function scaleEntryCover() {
+      var cover = $('cover'); if (!cover) return;
+      var s = Math.min((window.innerWidth || 390) / 390, (window.innerHeight || 800) / 800);
+      cover.style.transform = 'translate(-50%,-50%) scale(' + s + ')';
     }
     // About shares the session's combo. Body text auto-picks light or dark for
     // legibility against the ground (by relative luminance), independent of the
@@ -532,32 +501,24 @@
       return lum > 0.55 ? '20,20,20' : '255,255,255';
     }
     function applyAboutCombo() {
+      // About = the "back cover": same paper as the dealt front cover, black
+      // ink wordmark (no masthead band, no colored type), body text in the
+      // cover's own tagline color (black on cream/yellow, cream on pink).
       var c = ACTIVE_COMBO; if (!c) return;
       var S3 = $('S3'); if (!S3) return;
       S3.style.background = c.bg;
-      var band = $('about-band'); if (band) band.style.background = c.band;
-      var word = $('about-word'); if (word) { word.style.color = c.font; word.style.webkitTextStroke = '0'; }
-      var close = $('about-close'); if (close) close.style.color = c.font;
-      var rgb = aboutTextRGB(c.bg);
+      var band = $('about-band'); if (band) band.style.background = 'transparent';
+      var word = $('about-word'); if (word) { word.style.color = '#111111'; word.style.webkitTextStroke = '0'; }
+      var close = $('about-close'); if (close) close.style.color = '#111111';
+      var rgb = c.tapRGB;
       var body = document.querySelectorAll('#S3 .about-body');
       for (var i = 0; i < body.length; i++) body[i].style.color = 'rgba(' + rgb + ',.86)';
       var label = $('about-label'); if (label) label.style.color = 'rgba(' + rgb + ',.55)';
       var email = $('about-email'); if (email) { email.style.color = 'rgba(' + rgb + ',.82)'; email.style.borderColor = 'rgba(' + rgb + ',.4)'; }
     }
-    // Size the wordmark to the largest that holds one line at this width.
-    function fitEntryTitle() {
-      var el = $('entry-word'); if (!el) return;
-      var avail = (window.innerWidth || 375) - 20;   // ~10px breathing room each side
-      var fs = 30; el.style.fontSize = fs + 'px';
-      while (fs < 64 && el.getBoundingClientRect().width <= avail) { fs += 1; el.style.fontSize = fs + 'px'; }
-      while (fs > 16 && el.getBoundingClientRect().width > avail) { fs -= 1; el.style.fontSize = fs + 'px'; }
-    }
-    applyEntryCombo();
+    renderEntryCover();
     applyAboutCombo();   // About echoes the same issue palette
-    loadEntryList(showEntry);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitEntryTitle);
-    setTimeout(fitEntryTitle, 60); setTimeout(fitEntryTitle, 400);
-    window.addEventListener('resize', fitEntryTitle);
+    window.addEventListener('resize', scaleEntryCover);
 
     // ── Search helpers ────────────────────────────────────────────────────
     function normalizeForSearch(str) {
