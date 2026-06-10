@@ -12,7 +12,7 @@
  *      iOS will refuse to play a cached MP3 that doesn't honor Range.
  */
 
-const CACHE_VERSION = 'frank-v76';
+const CACHE_VERSION = 'frank-v77';
 const SHELL_CACHE = CACHE_VERSION + '-shell';
 const AUDIO_CACHE = CACHE_VERSION + '-audio';
 const VENDOR_CACHE = CACHE_VERSION + '-vendor';
@@ -26,7 +26,23 @@ const SHELL_URLS = [
   '/icon-512.png',
   '/kawaracaps.otf',
   '/entry/manifest.json',
-  '/drawings/manifest.json'
+  '/drawings/manifest.json',
+  // entry-cover drawings (the first thing every visitor sees — keep offline)
+  '/drawings/the-starry-night_vincent-van-gogh_1889.png',
+  '/drawings/gold-marilyn-monroe_andy-warhol_1962.png',
+  '/drawings/bird-in-space-constantin-brancusi-1928_line.png',
+  '/drawings/spider_alexander-calder_1939.png',
+  '/drawings/fountain_marcel-duchamp_1917.png',
+  '/drawings/les-demoiselles-davignon_pablo-picasso_1907.png',
+  '/drawings/the-object_meret-oppenheim_1936.png',
+  '/drawings/bicycle-wheel-marcel-duchamp-1951_line.png',
+  '/drawings/she-goat_pablo-picasso_1950.png',
+  '/drawings/le-voyage-dans-la-lune_georges-méliès_1902.png',
+  '/drawings/dance-i-henri-matisse-1909_line.png',
+  '/drawings/drowning-girl-roy-lichtenstein-1963_line.png',
+  '/drawings/flag_jasper-johns_1954-55.png',
+  '/drawings/the-lovers_rene-magritte_1928.png',
+  '/drawings/the-moon_tarsila-do-amaral_1928.png'
 ];
 
 // v3 is plain vanilla JS — no external libraries needed. (Previously this
