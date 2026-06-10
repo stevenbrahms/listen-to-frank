@@ -449,7 +449,9 @@
           { src: 'drawings/the-object_meret-oppenheim_1936.png',                 css: 'width:88px;left:30px;top:150px;transform:rotate(-6deg);' },
           { src: 'drawings/bicycle-wheel-marcel-duchamp-1951_line.png',          css: 'width:74px;right:34px;top:146px;transform:rotate(5deg);' },
           { src: 'drawings/she-goat_pablo-picasso_1950.png',                     css: 'width:118px;left:32px;bottom:122px;transform:rotate(-3deg);' },
-          { src: 'drawings/le-voyage-dans-la-lune_georges-méliès_1902.png', css: 'width:86px;right:34px;bottom:132px;transform:rotate(2deg);' }
+          // NB: percent-encoded NFD ("e" + combining accent) to byte-match the
+          // repo filename — GitHub Pages is unicode-normalization-sensitive.
+          { src: 'drawings/le-voyage-dans-la-lune_georges-me%CC%81lie%CC%80s_1902.png', css: 'width:86px;right:34px;bottom:132px;transform:rotate(2deg);' }
         ] },
       { // C — pink / Dance (cream tagline + tap for legibility on the pink)
         bg: '#ec0e8f', tag: '#f1ead0', tapRGB: '241,234,208', accent: '#ec0e8f',
