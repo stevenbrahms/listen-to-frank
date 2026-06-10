@@ -12,7 +12,7 @@
  *      iOS will refuse to play a cached MP3 that doesn't honor Range.
  */
 
-const CACHE_VERSION = 'frank-v77';
+const CACHE_VERSION = 'frank-v78';
 const SHELL_CACHE = CACHE_VERSION + '-shell';
 const AUDIO_CACHE = CACHE_VERSION + '-audio';
 const VENDOR_CACHE = CACHE_VERSION + '-vendor';
@@ -37,7 +37,9 @@ const SHELL_URLS = [
   '/drawings/the-object_meret-oppenheim_1936.png',
   '/drawings/bicycle-wheel-marcel-duchamp-1951_line.png',
   '/drawings/she-goat_pablo-picasso_1950.png',
-  '/drawings/le-voyage-dans-la-lune_georges-méliès_1902.png',
+  // percent-encoded NFD ("e" + combining accent) to byte-match the repo
+  // filename — GitHub Pages is unicode-normalization-sensitive
+  '/drawings/le-voyage-dans-la-lune_georges-me%CC%81lie%CC%80s_1902.png',
   '/drawings/dance-i-henri-matisse-1909_line.png',
   '/drawings/drowning-girl-roy-lichtenstein-1963_line.png',
   '/drawings/flag_jasper-johns_1954-55.png',
