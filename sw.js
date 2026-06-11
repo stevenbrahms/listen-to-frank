@@ -12,7 +12,7 @@
  *      iOS will refuse to play a cached MP3 that doesn't honor Range.
  */
 
-const CACHE_VERSION = 'frank-v90';
+const CACHE_VERSION = 'frank-v91';
 const SHELL_CACHE = CACHE_VERSION + '-shell';
 const AUDIO_CACHE = CACHE_VERSION + '-audio';
 const VENDOR_CACHE = CACHE_VERSION + '-vendor';
@@ -44,7 +44,20 @@ const SHELL_URLS = [
   '/drawings/drowning-girl-roy-lichtenstein-1963_line.png',
   '/drawings/flag_jasper-johns_1954-55.png',
   '/drawings/the-lovers_rene-magritte_1928.png',
-  '/drawings/the-moon_tarsila-do-amaral_1928.png'
+  '/drawings/the-moon_tarsila-do-amaral_1928.png',
+  // desktop margin crews (entry must work offline there too)
+  '/drawings/the-dream_henri-rousseau_1910.png',
+  '/drawings/bird-head_max-ernst_1934-35.png',
+  '/drawings/i-and-the-village_marc-chagall_1911.png',
+  '/drawings/white-on-white_kazimir-malevich_1918.png',
+  '/drawings/spatial-construction-no.-12_aleksandr-rodchenko_1920.png',
+  '/drawings/moonbird_joan-miro_1966.png',
+  '/drawings/composition-with-red-blue-black-yellow-and-gray-piet-mondrian-1921_line.png',
+  '/drawings/wire-sculptures-retrospective_ruth-asawa_1950s-1970s.png',
+  '/drawings/le-temps_ben-vautier_1961.png',
+  '/drawings/bag-piece-1964-performed-during-perpetual-fluxfest-cinematheque-new-york-june-27-1965-yoko-ono-1965_line.png',
+  '/drawings/the-ten-largest-no-7-adulthood_hilma-af-klint_1907.png',
+  '/drawings/current-bridget-riley-1964_line.png'
 ];
 
 // v3 is plain vanilla JS — no external libraries needed. (Previously this
