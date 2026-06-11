@@ -1,3 +1,5 @@
+> ⚠️ **STALE (pre-v3, Netlify era).** Current reference: `README — what changed and how to deploy.md` + `3_Website/CLAUDE.md`.
+
 # Listen to Frank - Project Status
 
 **Last Updated:** January 15, 2026
