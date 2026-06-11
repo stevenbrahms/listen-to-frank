@@ -123,6 +123,9 @@
     }
     .loading-pulse { animation: pulse-ring 0.9s ease-in-out infinite !important; }
 
+    /* Update toast — sits above the now-playing bar when it's up */
+    #update-toast { bottom: max(24px, env(safe-area-inset-bottom)); }
+    #app.np-on ~ #update-toast { bottom: calc(max(24px, env(safe-area-inset-bottom)) + 96px); }
     /* About back-cover drawing — desktop only */
     #about-art { display: none; }
     /* Search */
@@ -1430,9 +1433,48 @@
   </script>
 
   <script>
+    // Register the service worker, and when a NEW version finishes installing
+    // behind the current one, offer a one-tap refresh instead of making people
+    // discover the close-and-reopen-twice dance on their own.
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js').catch(function () {});
+        navigator.serviceWorker.register('/sw.js').then(function (reg) {
+          function offer(sw) {
+            if (!sw) return;
+            var toast = document.getElementById('update-toast');
+            if (!toast) {
+              toast = document.createElement('div');
+              toast.id = 'update-toast';
+              toast.setAttribute('role', 'button');
+              toast.setAttribute('tabindex', '0');
+              toast.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);z-index:90;background:#16140f;color:rgba(220,213,198,.9);border:0.5px solid #3b352a;border-radius:2px;padding:11px 18px;font-size:13px;letter-spacing:2px;cursor:pointer;white-space:nowrap;box-shadow:0 6px 24px rgba(0,0,0,.45);';
+              toast.textContent = 'frank got better — tap to refresh';
+              document.body.appendChild(toast);
+            }
+            toast.onclick = function () {
+              toast.textContent = 'refreshing…';
+              sw.postMessage({ type: 'skip-waiting' });
+            };
+          }
+          // an update may already be waiting from a previous visit…
+          offer(reg.waiting);
+          // …or arrive while the page is open.
+          reg.addEventListener('updatefound', function () {
+            var sw = reg.installing;
+            if (!sw) return;
+            sw.addEventListener('statechange', function () {
+              if (sw.state === 'installed' && navigator.serviceWorker.controller) offer(sw);
+            });
+          });
+        }).catch(function () {});
+        // When the new worker takes over, reload once to run on it — but not
+        // on the very first install (claim() also fires controllerchange).
+        var hadController = !!navigator.serviceWorker.controller;
+        var reloaded = false;
+        navigator.serviceWorker.addEventListener('controllerchange', function () {
+          if (!hadController || reloaded) return; reloaded = true;
+          window.location.reload();
+        });
       });
     }
   </script>
