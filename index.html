@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#0f0e0b">
   <meta name="description" content="A little history. A little gossip. A few sideways theories. Frank's audio guide to MoMA.">
   <title>Listen to Frank</title>
 
@@ -42,7 +42,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; overscroll-behavior: none; }
     body {
-      background: #000; color: #fff;
+      background: #0f0e0b; color: #dcd5c6;
       font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
       -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
       overflow: hidden;
@@ -56,7 +56,7 @@
       position: relative;
       width: 100%; max-width: 600px;
       height: 100vh; height: 100dvh;
-      margin: 0 auto; overflow: hidden; background: #000;
+      margin: 0 auto; overflow: hidden; background: #0f0e0b;
     }
     .screen {
       position: absolute; inset: 0;
@@ -75,7 +75,7 @@
     .kawara-logo {
       font-family: 'KawaraCaps', sans-serif;
       font-size: 22px; letter-spacing: 4px; white-space: nowrap;
-      font-weight: normal; -webkit-text-stroke: 0.4px white;
+      font-weight: normal; -webkit-text-stroke: 0.4px #dcd5c6;
       text-rendering: optimizeLegibility; font-kerning: normal;
     }
     .home-logo { cursor: pointer; }
@@ -91,83 +91,83 @@
     #cover img { position: absolute; pointer-events: none; filter: invert(1); }
 
     /* Gallery rows */
-    .row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 0.5px solid #0e0e0e; cursor: pointer; transition: opacity .12s ease, transform .12s ease, background .18s ease; position: relative; }
+    .row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 0.5px solid #181510; cursor: pointer; transition: opacity .12s ease, transform .12s ease, background .18s ease; position: relative; }
     .row:active { opacity: .4; transform: scale(0.985); }
     .row.hidden { display: none; }
     .thumb { flex-shrink: 0; width: 90px; height: 128px; display: flex; align-items: flex-start; justify-content: center; }
-    .thumb img { max-width: 90px; max-height: 128px; object-fit: contain; object-position: top center; display: block; filter: brightness(1.75) contrast(1.2); transition: filter .2s ease, transform .2s ease; }
+    .thumb img { max-width: 90px; max-height: 128px; object-fit: contain; object-position: top center; display: block; filter: brightness(1.75) contrast(1.2) sepia(.25); transition: filter .2s ease, transform .2s ease; }
     .thumb .swatch { width: 68px; height: 94px; align-self: flex-start; opacity: .9; }
     .row-text { flex: 1; padding-top: 2px; min-width: 0; }
     .row-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; gap: 8px; }
-    .row-title { color: rgba(255,255,255,.97); font-size: 20px; letter-spacing: 1.2px; font-weight: 500; transition: color .3s; }
-    .row-gallery { color: rgba(255,255,255,.5); font-size: 16.5px; letter-spacing: .5px; flex-shrink: 0; white-space: nowrap; }
-    .row-artist { color: rgba(255,255,255,.6); font-size: 16.5px; margin: 0 0 6px; letter-spacing: .5px; }
-    .row-hook { color: rgba(255,255,255,.68); font-size: 20px; margin: 0; line-height: 1.6; font-style: italic; font-weight: 300; }
+    .row-title { color: rgba(220,213,198,.97); font-size: 20px; letter-spacing: 1.2px; font-weight: 500; transition: color .3s; }
+    .row-gallery { color: rgba(220,213,198,.5); font-size: 16.5px; letter-spacing: .5px; flex-shrink: 0; white-space: nowrap; }
+    .row-artist { color: rgba(220,213,198,.6); font-size: 16.5px; margin: 0 0 6px; letter-spacing: .5px; }
+    .row-hook { color: rgba(220,213,198,.68); font-size: 20px; margin: 0; line-height: 1.6; font-style: italic; font-weight: 300; }
     @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
-    .playing-dot { display: none; width: 5px; height: 5px; border-radius: 50%; background: #fff; position: absolute; right: 0; top: 50%; transform: translateY(-50%); animation: pulse 1.8s ease-in-out infinite; }
+    .playing-dot { display: none; width: 5px; height: 5px; border-radius: 50%; background: #dcd5c6; position: absolute; right: 0; top: 50%; transform: translateY(-50%); animation: pulse 1.8s ease-in-out infinite; }
     .row.playing .playing-dot { display: block; }
-    .row.playing .row-title { color: rgba(255,255,255,1) !important; }
-    .row.playing .row-artist { color: rgba(255,255,255,.78) !important; }
-    .row.playing .row-hook { color: rgba(255,255,255,.85) !important; }
+    .row.playing .row-title { color: rgba(220,213,198,1) !important; }
+    .row.playing .row-artist { color: rgba(220,213,198,.78) !important; }
+    .row.playing .row-hook { color: rgba(220,213,198,.85) !important; }
     .row.playing .thumb img { opacity: 1 !important; }
 
     /* Heard state: ONLY the text dims a little — the drawing stays full brightness. */
-    .row.heard .row-title { color: rgba(255,255,255,.64); }
-    .row.heard .row-artist { color: rgba(255,255,255,.4); }
-    .row.heard .row-hook { color: rgba(255,255,255,.48); }
+    .row.heard .row-title { color: rgba(220,213,198,.64); }
+    .row.heard .row-artist { color: rgba(220,213,198,.4); }
+    .row.heard .row-hook { color: rgba(220,213,198,.48); }
 
     /* Audio loading pulse */
     @keyframes pulse-ring {
-      0%,100% { border-color: rgba(255,255,255,.2); box-shadow: 0 0 0 0 rgba(255,255,255,0); }
-      50%      { border-color: rgba(255,255,255,.6); box-shadow: 0 0 0 4px rgba(255,255,255,.08); }
+      0%,100% { border-color: rgba(220,213,198,.2); box-shadow: 0 0 0 0 rgba(220,213,198,0); }
+      50%      { border-color: rgba(220,213,198,.6); box-shadow: 0 0 0 4px rgba(220,213,198,.08); }
     }
     .loading-pulse { animation: pulse-ring 0.9s ease-in-out infinite !important; }
 
     /* Search */
     #gallery-word { display: none; }
-    .search-wrap { padding: 4px 16px 9px; background: #000; }
+    .search-wrap { padding: 4px 16px 9px; background: #0f0e0b; }
     .search-row { display: flex; gap: 8px; align-items: stretch; }
     .search-field { position: relative; flex: 1; min-width: 0; display: flex; }
-    .search-input { flex: 1; min-width: 0; background: #0c0c0c; border: 0.5px solid #2e2e2e; color: rgba(255,255,255,.92); font-size: 20px; font-family: 'Inter', sans-serif; padding: 13px 40px 13px 14px; outline: none; border-radius: 2px; }
-    .search-input::placeholder { color: rgba(255,255,255,.42); }
-    .search-input:focus { border-color: #555; }
-    .clear-btn { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; padding: 0; background: transparent; border: 0; color: rgba(255,255,255,.45); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 50%; transition: transform .14s ease, color .18s ease; }
+    .search-input { flex: 1; min-width: 0; background: #16140f; border: 0.5px solid #322d24; color: rgba(220,213,198,.92); font-size: 20px; font-family: 'Inter', sans-serif; padding: 13px 40px 13px 14px; outline: none; border-radius: 2px; }
+    .search-input::placeholder { color: rgba(220,213,198,.42); }
+    .search-input:focus { border-color: #5a5347; }
+    .clear-btn { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; padding: 0; background: transparent; border: 0; color: rgba(220,213,198,.45); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 50%; transition: transform .14s ease, color .18s ease; }
     .clear-btn:active { transform: translateY(-50%) scale(.85); }
     .chips { display: flex; gap: 6px; padding: 9px 0 1px; justify-content: space-between; }
-    .chip { background: transparent; border: 0.5px solid #3a3a3a; color: rgba(255,255,255,.55); font-size: 16.5px; letter-spacing: 1px; padding: 7px 14px; cursor: pointer; font-family: 'Inter', sans-serif; border-radius: 2px; transition: all .12s; white-space: nowrap; }
-    .chip.active { border-color: rgba(255,255,255,.6); color: #fff; background: rgba(255,255,255,.1); }
+    .chip { background: transparent; border: 0.5px solid #3b352a; color: rgba(220,213,198,.55); font-size: 16.5px; letter-spacing: 1px; padding: 7px 14px; cursor: pointer; font-family: 'Inter', sans-serif; border-radius: 2px; transition: all .12s; white-space: nowrap; }
+    .chip.active { border-color: rgba(220,213,198,.6); color: #dcd5c6; background: rgba(220,213,198,.1); }
     .floor-chip { flex: 1; min-width: 0; text-align: center; font-size: 20px; padding: 14px 0; }
 
-    .icon-btn { background: transparent; border: none; cursor: pointer; padding: 0; color: rgba(255,255,255,.62); display: flex; align-items: center; }
-    .rule { height: 0.5px; background: rgba(255,255,255,.18); margin: 0 16px; }
+    .icon-btn { background: transparent; border: none; cursor: pointer; padding: 0; color: rgba(220,213,198,.62); display: flex; align-items: center; }
+    .rule { height: 0.5px; background: rgba(220,213,198,.18); margin: 0 16px; }
 
     /* Now Playing bar */
     #now-playing {
       position: absolute; left: 0; right: 0; bottom: 0; z-index: 40;
       display: flex; align-items: center; gap: 14px;
       padding: 16px 18px max(16px, env(safe-area-inset-bottom));
-      background: rgba(14,14,14,.97); border-top: 0.5px solid rgba(255,255,255,.14);
+      background: rgba(14,14,14,.97); border-top: 0.5px solid rgba(220,213,198,.14);
       cursor: pointer; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
       transform: translateY(130%); opacity: 0; pointer-events: none;
       transition: transform .32s cubic-bezier(.22,1,.36,1), opacity .25s ease;
     }
     #now-playing.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
     #np-thumb { width: 56px; height: 76px; margin: -12px 0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    #np-thumb img { max-width: 56px; max-height: 76px; object-fit: contain; object-position: center; filter: brightness(1.75) contrast(1.2); }
+    #np-thumb img { max-width: 56px; max-height: 76px; object-fit: contain; object-position: center; filter: brightness(1.75) contrast(1.2) sepia(.25); }
     #np-thumb .swatch { width: 46px; height: 64px; opacity: .9; }
     #np-text { flex: 1; min-width: 0; }
-    #np-title { color: rgba(255,255,255,.98); font-size: 19px; letter-spacing: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    #np-artist { color: rgba(255,255,255,.62); font-size: 16.5px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #np-title { color: rgba(220,213,198,.98); font-size: 19px; letter-spacing: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #np-artist { color: rgba(220,213,198,.62); font-size: 16.5px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #np-toggle { flex-shrink: 0; width: 52px; height: 52px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    #np-close { flex-shrink: 0; width: 34px; height: 34px; margin-left: -2px; border: none; background: transparent; color: rgba(255,255,255,.6); font-size: 32.5px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
+    #np-close { flex-shrink: 0; width: 34px; height: 34px; margin-left: -2px; border: none; background: transparent; color: rgba(220,213,198,.6); font-size: 32.5px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
     #np-close:active { opacity: .5; }
     #app.np-on .scrollpad { padding-bottom: 108px !important; }
     /* Map room-info panel isn't a scrollpad, so lift it above the Now Playing bar. */
     #app.np-on #map-info { margin-bottom: 88px; padding-bottom: 14px !important; }
     /* When the selected room has picks, the whole panel is the tap target. */
     #map-info.tappable { cursor: pointer; transition: background .15s ease; }
-    #map-info.tappable:active { background: #0d0d0d; }
-    #map-info-arrow { color: rgba(255,255,255,.55); flex-shrink: 0; display: flex; align-items: center; transition: transform .15s ease, color .15s ease; }
+    #map-info.tappable:active { background: #16140f; }
+    #map-info-arrow { color: rgba(220,213,198,.55); flex-shrink: 0; display: flex; align-items: center; transition: transform .15s ease, color .15s ease; }
     @media (min-width: 720px) {
       #now-playing { padding: 20px 22px; gap: 18px; }
       #np-title { font-size: 20px; }
@@ -181,7 +181,7 @@
     }
 
     /* Offline saving bar */
-    #offline-bar { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; background: rgba(0,0,0,.92); color: #fff; padding: 9px 16px; font-size: 14px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; text-align: center; z-index: 60; pointer-events: none; display: none; }
+    #offline-bar { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; background: rgba(0,0,0,.92); color: #dcd5c6; padding: 9px 16px; font-size: 14px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; text-align: center; z-index: 60; pointer-events: none; display: none; }
 
     /* Tasteful micro-interactions: a gentle press on every control, subtle hover
        lift on devices that have a real pointer. Nothing flashy. */
@@ -198,17 +198,17 @@
     #about-close:active { transform: scale(.9); }
     #play-something:active { opacity: .55; }
     @media (hover: hover) {
-      .row:hover { background: rgba(255,255,255,.03); }
-      .row:hover .thumb img { filter: brightness(1.95) contrast(1.22); transform: translateY(-1px); }
-      .chip:hover { border-color: rgba(255,255,255,.55); color: rgba(255,255,255,.9); }
+      .row:hover { background: rgba(220,213,198,.03); }
+      .row:hover .thumb img { filter: brightness(1.95) contrast(1.22) sepia(.25); transform: translateY(-1px); }
+      .chip:hover { border-color: rgba(220,213,198,.55); color: rgba(220,213,198,.9); }
       #map-info.tappable:hover { background: #0a0a0a; }
-      #map-info.tappable:hover #map-info-arrow { color: #fff; transform: translateX(3px); }
+      #map-info.tappable:hover #map-info-arrow { color: #dcd5c6; transform: translateX(3px); }
       .icon-btn:hover, #player-back:hover, #share-btn:hover,
-      #map-close:hover, #about-close:hover, #np-close:hover, .clear-btn:hover { color: #fff; }
-      #btn-play:hover, #np-toggle:hover { border-color: rgba(255,255,255,.85); }
+      #map-close:hover, #about-close:hover, #np-close:hover, .clear-btn:hover { color: #dcd5c6; }
+      #btn-play:hover, #np-toggle:hover { border-color: rgba(220,213,198,.85); }
       #btn-back10:hover, #btn-fwd30:hover { opacity: 1; }
-      #tx-btn:hover { border-color: rgba(255,255,255,.7); color: #fff; }
-      .search-input:hover { border-color: #444; }
+      #tx-btn:hover { border-color: rgba(220,213,198,.7); color: #dcd5c6; }
+      .search-input:hover { border-color: #4a443a; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, .screen, #now-playing, .row, .thumb img { transition: none !important; animation: none !important; }
@@ -282,10 +282,10 @@
     </div>
 
     <!-- ── SCREEN 1: GALLERY ── -->
-    <div class="screen" id="S1" style="background:#000;">
-      <div id="gallery-head" style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;background:#000;">
+    <div class="screen" id="S1" style="background:#0f0e0b;">
+      <div id="gallery-head" style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;background:#0f0e0b;">
         <div id="gallery-topbar" style="display:flex;align-items:center;justify-content:flex-end;padding:0 16px 0;margin-bottom:2px;">
-          <button class="icon-btn" id="about-btn" title="About" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;padding:2px;display:flex;">
+          <button class="icon-btn" id="about-btn" title="About" style="background:none;border:none;color:rgba(220,213,198,.7);cursor:pointer;padding:2px;display:flex;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="3" y1="9" x2="21" y2="9" vector-effect="non-scaling-stroke"/><line x1="3" y1="15" x2="21" y2="15" vector-effect="non-scaling-stroke"/></svg>
           </button>
         </div>
@@ -300,7 +300,7 @@
             </div>
           </div>
           <div id="floor-group">
-          <div id="floor-label" style="font-size:11.5px;letter-spacing:.22em;color:rgba(255,255,255,.42);padding:10px 2px 0;">FLOOR</div>
+          <div id="floor-label" style="font-size:11.5px;letter-spacing:.22em;color:rgba(220,213,198,.42);padding:10px 2px 0;">FLOOR</div>
           <div class="chips" style="padding-top:5px;">
             <div style="display:flex;gap:5px;">
               <button class="chip" data-floor="1">1</button>
@@ -317,13 +317,13 @@
       </div>
 
       <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
-        <div id="play-something" style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:0.5px solid #222;cursor:pointer;">
-          <span style="color:rgba(255,255,255,.6);font-size:16.5px;letter-spacing:2px;">PLAY SOMETHING</span>
-          <span style="color:rgba(255,255,255,.5);display:inline-flex;align-items:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></span>
+        <div id="play-something" style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:0.5px solid #27231c;cursor:pointer;">
+          <span style="color:rgba(220,213,198,.6);font-size:16.5px;letter-spacing:2px;">PLAY SOMETHING</span>
+          <span style="color:rgba(220,213,198,.5);display:inline-flex;align-items:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></span>
         </div>
         <div id="gallery-list"></div>
-        <p id="no-results" style="display:none;color:rgba(255,255,255,.5);font-size:17.5px;padding:20px 0;font-style:italic;">nothing here yet — try a gallery number, a floor, or a title.</p>
-        <p id="count-line" style="color:rgba(255,255,255,.4);font-size:14px;letter-spacing:1.5px;padding:18px 0 0;text-transform:uppercase;"></p>
+        <p id="no-results" style="display:none;color:rgba(220,213,198,.5);font-size:17.5px;padding:20px 0;font-style:italic;">nothing here yet — try a gallery number, a floor, or a title.</p>
+        <p id="count-line" style="color:rgba(220,213,198,.4);font-size:14px;letter-spacing:1.5px;padding:18px 0 0;text-transform:uppercase;"></p>
       </div>
     </div>
 
@@ -332,45 +332,45 @@
       <div id="player-bg" style="background:#1A2F4E;position:relative;height:100%;display:flex;flex-direction:column;">
         <img id="player-ghost" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:.09;pointer-events:none;z-index:0;" />
         <div class="pcol" style="padding:max(16px,env(safe-area-inset-top)) 16px 0;flex-shrink:0;position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;">
-          <button id="player-back" style="background:transparent;border:none;color:rgba(255,255,255,.7);font-size:15px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:9px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="5" y1="12" x2="20" y2="12" vector-effect="non-scaling-stroke"/><polyline points="11,6 5,12 11,18" vector-effect="non-scaling-stroke"/></svg>back</button>
+          <button id="player-back" style="background:transparent;border:none;color:rgba(220,213,198,.7);font-size:15px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:9px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="5" y1="12" x2="20" y2="12" vector-effect="non-scaling-stroke"/><polyline points="11,6 5,12 11,18" vector-effect="non-scaling-stroke"/></svg>back</button>
         </div>
         <div class="pcol" style="flex:1;padding:20px 16px 0;position:relative;z-index:2;display:flex;flex-direction:column;overflow:hidden;">
           <div style="flex-shrink:0;">
-            <p id="player-title" style="color:#fff;font-size:41.5px;line-height:1.2;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
-            <p id="player-artist" style="color:rgba(255,255,255,.72);font-size:20px;margin:13px 0 0;letter-spacing:1px;"></p>
-            <p id="player-hook" style="color:rgba(255,255,255,.78);font-size:22.5px;margin:18px 0 0;line-height:1.7;font-weight:300;font-style:italic;display:none;"></p>
+            <p id="player-title" style="color:#dcd5c6;font-size:41.5px;line-height:1.2;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
+            <p id="player-artist" style="color:rgba(220,213,198,.72);font-size:20px;margin:13px 0 0;letter-spacing:1px;"></p>
+            <p id="player-hook" style="color:rgba(220,213,198,.78);font-size:22.5px;margin:18px 0 0;line-height:1.7;font-weight:300;font-style:italic;display:none;"></p>
           </div>
           <div id="tx-area" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-top:16px;display:none;">
-            <p id="tx-text" style="color:rgba(255,255,255,.86);font-size:22.5px;line-height:1.85;margin:0;font-weight:300;"></p>
+            <p id="tx-text" style="color:rgba(220,213,198,.86);font-size:22.5px;line-height:1.85;margin:0;font-weight:300;"></p>
           </div>
           <div id="player-spacer" style="flex:1;"></div>
         </div>
         <div style="background:rgba(0,0,0,.6);padding:16px 16px max(28px,env(safe-area-inset-bottom));flex-shrink:0;position:relative;z-index:2;">
           <div class="pcol">
-          <div id="prog-track" style="height:4px;background:rgba(255,255,255,.22);margin-bottom:8px;overflow:hidden;cursor:pointer;border-radius:2px;">
-            <div id="prog-bar" style="height:100%;width:0%;background:rgba(255,255,255,.92);"></div>
+          <div id="prog-track" style="height:4px;background:rgba(220,213,198,.22);margin-bottom:8px;overflow:hidden;cursor:pointer;border-radius:2px;">
+            <div id="prog-bar" style="height:100%;width:0%;background:rgba(220,213,198,.92);"></div>
           </div>
           <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-            <span id="prog-cur" style="color:rgba(255,255,255,.6);font-size:15px;">0:00</span>
-            <span id="prog-dur" style="color:rgba(255,255,255,.6);font-size:15px;">0:00</span>
+            <span id="prog-cur" style="color:rgba(220,213,198,.6);font-size:15px;">0:00</span>
+            <span id="prog-dur" style="color:rgba(220,213,198,.6);font-size:15px;">0:00</span>
           </div>
-          <div id="audio-error" style="display:none;color:#fff;font-size:15px;text-align:center;border:1px solid rgba(255,255,255,.5);padding:7px;margin-bottom:12px;letter-spacing:.03em;"></div>
+          <div id="audio-error" style="display:none;color:#dcd5c6;font-size:15px;text-align:center;border:1px solid rgba(220,213,198,.5);padding:7px;margin-bottom:12px;letter-spacing:.03em;"></div>
           <div style="display:flex;justify-content:center;align-items:center;gap:38px;margin-bottom:16px;">
             <button id="btn-back10" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.85;position:relative;" title="back 10s">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75"><polygon points="19 20 9 12 19 4 19 20" vector-effect="non-scaling-stroke"/><line x1="5" y1="19" x2="5" y2="5" vector-effect="non-scaling-stroke"/></svg>
-              <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,.65);">10</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dcd5c6" stroke-width="1.75"><polygon points="19 20 9 12 19 4 19 20" vector-effect="non-scaling-stroke"/><line x1="5" y1="19" x2="5" y2="5" vector-effect="non-scaling-stroke"/></svg>
+              <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(220,213,198,.65);">10</span>
             </button>
             <button id="btn-play" style="width:56px;height:56px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;">
-              <svg id="play-ico" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.75" stroke-linejoin="miter"><polygon points="6,4 6,20 19.86,12" vector-effect="non-scaling-stroke"/></svg>
+              <svg id="play-ico" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#dcd5c6" stroke-width="1.75" stroke-linejoin="miter"><polygon points="6,4 6,20 19.86,12" vector-effect="non-scaling-stroke"/></svg>
             </button>
             <button id="btn-fwd30" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.85;position:relative;" title="forward 30s">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.75"><polygon points="5 4 15 12 5 20 5 4" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/></svg>
-              <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,.65);">30</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dcd5c6" stroke-width="1.75"><polygon points="5 4 15 12 5 20 5 4" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/></svg>
+              <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(220,213,198,.65);">30</span>
             </button>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <button id="tx-btn" style="background:transparent;border:1px solid rgba(255,255,255,.4);border-radius:2px;color:rgba(255,255,255,.75);font-size:15px;letter-spacing:1.5px;cursor:pointer;padding:8px 15px;font-family:'Inter',sans-serif;">read along</button>
-            <button id="share-btn" style="background:transparent;border:none;color:rgba(255,255,255,.6);cursor:pointer;padding:4px;" title="Share">
+            <button id="tx-btn" style="background:transparent;border:1px solid rgba(220,213,198,.4);border-radius:2px;color:rgba(220,213,198,.75);font-size:15px;letter-spacing:1.5px;cursor:pointer;padding:8px 15px;font-family:'Inter',sans-serif;">read along</button>
+            <button id="share-btn" style="background:transparent;border:none;color:rgba(220,213,198,.6);cursor:pointer;padding:4px;" title="Share">
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             </button>
           </div>
@@ -383,48 +383,48 @@
     <!-- Shares the session's entry "issue" combo (applyAboutCombo): page = bg color,
          a full-width masthead band carries the wordmark, body text auto-picks light
          or dark for legibility against the ground. -->
-    <div class="screen" id="S3" style="background:#000;">
+    <div class="screen" id="S3" style="background:#0f0e0b;">
       <div style="flex-shrink:0;">
-        <div id="about-band" style="position:relative;padding:calc(env(safe-area-inset-top, 0px) + 15px) 16px 16px;margin-bottom:30px;background:#000;">
+        <div id="about-band" style="position:relative;padding:calc(env(safe-area-inset-top, 0px) + 15px) 16px 16px;margin-bottom:30px;background:#0f0e0b;">
           <div class="pcol" style="display:flex;align-items:center;justify-content:flex-start;">
-          <p id="about-word" class="kawara-logo home-logo" style="color:#fff;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
-          <button id="about-close" style="margin-left:auto;flex-shrink:0;background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
+          <p id="about-word" class="kawara-logo home-logo" style="color:#dcd5c6;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
+          <button id="about-close" style="margin-left:auto;flex-shrink:0;background:transparent;border:none;color:rgba(220,213,198,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
           </div>
         </div>
       </div>
       <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
         <div class="pcol">
-        <p class="about-body" style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Go find something on a wall. Or just start somewhere.</p>
-        <p class="about-body" style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Frank talks. A little history, a little gossip, a few sideways theories. None of it precious.</p>
-        <p class="about-body" style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0 0 36px;font-weight:300;">You don't need to know anything going in. That's the whole point.</p>
+        <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Go find something on a wall. Or just start somewhere.</p>
+        <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Frank talks. A little history, a little gossip, a few sideways theories. None of it precious.</p>
+        <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 36px;font-weight:300;">You don't need to know anything going in. That's the whole point.</p>
         <div style="margin-bottom:44px;">
-          <p class="about-body" style="color:rgba(255,255,255,.8);font-size:20px;line-height:1.85;margin:0;font-weight:300;">Everything's free while we're getting started.</p>
+          <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0;font-weight:300;">Everything's free while we're getting started.</p>
         </div>
         <div>
-          <p id="about-label" style="color:rgba(255,255,255,.5);font-size:15px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
-          <a id="about-email" href="mailto:hello@listentofrank.art" style="color:rgba(255,255,255,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(255,255,255,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">hello@listentofrank.art<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></a>
+          <p id="about-label" style="color:rgba(220,213,198,.5);font-size:15px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
+          <a id="about-email" href="mailto:hello@listentofrank.art" style="color:rgba(220,213,198,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(220,213,198,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">hello@listentofrank.art<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></a>
         </div>
         </div>
       </div>
     </div>
 
     <!-- ── SCREEN 4: MAP ── -->
-    <div class="screen" id="S4" style="background:#000;">
-      <div style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;background:#000;">
+    <div class="screen" id="S4" style="background:#0f0e0b;">
+      <div style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;background:#0f0e0b;">
         <div style="display:flex;align-items:center;justify-content:flex-end;padding:0 16px 0;margin-bottom:12px;">
-          <button id="map-close" style="background:transparent;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
+          <button id="map-close" style="background:transparent;border:none;color:rgba(220,213,198,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
         </div>
-        <div style="font-size:11.5px;letter-spacing:.22em;color:rgba(255,255,255,.42);padding:0 16px 6px;">FLOOR</div>
+        <div style="font-size:11.5px;letter-spacing:.22em;color:rgba(220,213,198,.42);padding:0 16px 6px;">FLOOR</div>
         <div id="floor-tabs" style="display:flex;gap:6px;padding:0 16px;"></div>
-        <div id="floor-theme-label" style="padding:7px 16px;font-size:14px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;"></div>
+        <div id="floor-theme-label" style="padding:7px 16px;font-size:14px;color:rgba(220,213,198,.5);letter-spacing:.2em;text-transform:uppercase;"></div>
       </div>
       <div id="map-container" class="scrollpad" style="flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:8px 10px 0;"></div>
-      <div id="map-info" style="display:none;padding:14px 16px max(16px,env(safe-area-inset-bottom));border-top:1px solid #2a2a2a;flex-shrink:0;background:#000;" role="button" tabindex="0">
+      <div id="map-info" style="display:none;padding:14px 16px max(16px,env(safe-area-inset-bottom));border-top:1px solid #2f2a22;flex-shrink:0;background:#0f0e0b;" role="button" tabindex="0">
         <div style="display:flex;align-items:center;gap:14px;">
           <div style="flex:1;min-width:0;">
-            <div id="map-room-floor" style="font-size:12.5px;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;"></div>
-            <div id="map-room-name" style="font-size:22.5px;color:#fff;font-weight:400;line-height:1.3;margin-bottom:5px;"></div>
-            <div id="map-room-note" style="font-size:17px;color:rgba(255,255,255,.68);line-height:1.6;"></div>
+            <div id="map-room-floor" style="font-size:12.5px;color:rgba(220,213,198,.5);letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;"></div>
+            <div id="map-room-name" style="font-size:22.5px;color:#dcd5c6;font-weight:400;line-height:1.3;margin-bottom:5px;"></div>
+            <div id="map-room-note" style="font-size:17px;color:rgba(220,213,198,.68);line-height:1.6;"></div>
           </div>
           <div id="map-info-arrow" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></div>
         </div>
@@ -541,7 +541,7 @@
       var c = (bg || '#000000').replace('#', '');
       var r = parseInt(c.substr(0, 2), 16), g = parseInt(c.substr(2, 2), 16), b = parseInt(c.substr(4, 2), 16);
       var lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-      return lum > 0.55 ? '20,20,20' : '255,255,255';
+      return lum > 0.55 ? '20,20,20' : '237,232,221';
     }
     function applyAboutCombo() {
       // About = the "back cover": same paper as the dealt front cover, black
@@ -638,7 +638,7 @@
     function makeSwatch(a) {
       var sw = document.createElement('div');
       sw.className = 'swatch';
-      sw.style.background = a.color || '#222';
+      sw.style.background = a.color || '#27231c';
       return sw;
     }
     // Gallery badge text. Floors 1/4/5 tagged "Floor N" are hallway/landing
@@ -866,8 +866,8 @@
     function setNpIcon() {
       var b = $('np-toggle'); if (!b) return;
       b.innerHTML = audio.paused
-        ? '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.75" stroke-linejoin="miter"><polygon points="6,4 6,20 19.86,12" vector-effect="non-scaling-stroke"/></svg>'
-        : '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.75"><line x1="9" y1="5" x2="9" y2="19" vector-effect="non-scaling-stroke"/><line x1="15" y1="5" x2="15" y2="19" vector-effect="non-scaling-stroke"/></svg>';
+        ? '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#dcd5c6" stroke-width="1.75" stroke-linejoin="miter"><polygon points="6,4 6,20 19.86,12" vector-effect="non-scaling-stroke"/></svg>'
+        : '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#dcd5c6" stroke-width="1.75"><line x1="9" y1="5" x2="9" y2="19" vector-effect="non-scaling-stroke"/><line x1="15" y1="5" x2="15" y2="19" vector-effect="non-scaling-stroke"/></svg>';
     }
     // Bar background = the track's color; if that color is light, lay a
     // translucent black layer behind the text so white text stays readable.
@@ -932,7 +932,7 @@
         $('player-spacer').style.display = 'none';
         $('player-title').style.fontSize = '25px';
         $('player-hook').style.display = 'none';
-        var b = $('tx-btn'); b.textContent = 'close'; b.style.color = 'rgba(255,255,255,.65)'; b.style.borderColor = 'rgba(255,255,255,.3)';
+        var b = $('tx-btn'); b.textContent = 'close'; b.style.color = 'rgba(220,213,198,.65)'; b.style.borderColor = 'rgba(220,213,198,.3)';
       } else { closeTx(); }
     }
     function closeTx() {
@@ -941,7 +941,7 @@
       $('player-spacer').style.display = 'flex';
       $('player-title').style.fontSize = '41.5px';
       if (current && current.hook) $('player-hook').style.display = 'block';
-      var b = $('tx-btn'); b.textContent = 'read along'; b.style.color = 'rgba(255,255,255,.5)'; b.style.borderColor = 'rgba(255,255,255,.18)';
+      var b = $('tx-btn'); b.textContent = 'read along'; b.style.color = 'rgba(220,213,198,.5)'; b.style.borderColor = 'rgba(220,213,198,.18)';
     }
 
     function shareTrack() {
@@ -951,7 +951,7 @@
       if (navigator.share) { navigator.share(data).catch(function () {}); }
       else if (navigator.clipboard) {
         navigator.clipboard.writeText(url).then(function () {
-          var b = $('share-btn'), o = b.style.color; b.style.color = 'rgba(255,255,255,.85)';
+          var b = $('share-btn'), o = b.style.color; b.style.color = 'rgba(220,213,198,.85)';
           setTimeout(function () { b.style.color = o; }, 1200);
         }).catch(function () { prompt('Copy link:', url); });
       } else { prompt('Copy link:', url); }
@@ -1147,7 +1147,7 @@
       }
       $('floor-theme-label').textContent = '';
       $('map-info').style.display = 'none';
-      $('map-container').innerHTML = '<div style="padding:64px 20px;text-align:center;color:rgba(255,255,255,.55);font-size:17.5px;letter-spacing:1px;font-style:italic;line-height:1.7;">Select a floor above<br>to see Frank\'s picks</div>';
+      $('map-container').innerHTML = '<div style="padding:64px 20px;text-align:center;color:rgba(220,213,198,.55);font-size:17.5px;letter-spacing:1px;font-style:italic;line-height:1.7;">Select a floor above<br>to see Frank\'s picks</div>';
     }
     function setFloorMap(f) {
       mapFloor = f; selectedRoom = null;
@@ -1163,7 +1163,7 @@
     function renderFloorMap(f) {
       var fd = FLOOR_DATA[f]; if (!fd) return;
       var PAD = 4, frankList = FRANK_ROOMS[f] || [];
-      var BRIGHT = '#cfcfcf';   // highlight tone for active galleries (dialed back from pure #fff)
+      var BRIGHT = '#cfc8ba';   // highlight tone for active galleries (dialed back from pure #dcd5c6)
       var svg = document.createElementNS(SVGNS, 'svg');
       svg.setAttribute('viewBox', '0 0 ' + fd.vbW + ' ' + fd.vbH);
       svg.style.cssText = 'width:100%;display:block;';
@@ -1182,7 +1182,7 @@
         // A content room (gallery or special space) only lights up when Frank
         // actually covers a work there — otherwise it stays dim + non-clickable.
         var noContent = isContent && !hasFrank;
-        var sc = isNav ? '#222' : isAmen ? '#3a3a3a' : noContent ? '#4a4a4a' : BRIGHT;
+        var sc = isNav ? '#27231c' : isAmen ? '#3b352a' : noContent ? '#4a463d' : BRIGHT;
         var sw = isNav ? 0.4 : noContent ? 0.5 : 0.7;
         var fz = r.w < 32 ? 5.5 : r.w < 50 ? 6.5 : 7;
         var clickable = !isNav && !noContent;
@@ -1199,7 +1199,7 @@
           var t = document.createElementNS(SVGNS, 'text');
           t.setAttribute('x', r.x + PAD);
           t.setAttribute('y', r.y + PAD + fz + i * (fz + 1.5));
-          t.setAttribute('fill', isSel ? '#000' : isNav ? '#333' : isAmen ? '#5a5a5a' : noContent ? '#6a6a6a' : BRIGHT);
+          t.setAttribute('fill', isSel ? '#000' : isNav ? '#38332a' : isAmen ? '#5a554b' : noContent ? '#6a655a' : BRIGHT);
           t.setAttribute('font-size', fz);
           t.setAttribute('font-family', 'Inter,Helvetica Neue,Arial,sans-serif');
           t.setAttribute('letter-spacing', '0.02em');
@@ -1254,10 +1254,10 @@
         $('map-info-arrow').style.display = 'none';
         // Empty rooms stay neutral dark (signals "nothing here").
         info.style.background = '#000';
-        info.style.borderTop = '1px solid #2a2a2a';
-        $('map-room-floor').style.color = 'rgba(255,255,255,.5)';
-        $('map-room-name').style.color = '#fff';
-        $('map-room-note').style.color = 'rgba(255,255,255,.68)';
+        info.style.borderTop = '1px solid #2f2a22';
+        $('map-room-floor').style.color = 'rgba(220,213,198,.5)';
+        $('map-room-name').style.color = '#dcd5c6';
+        $('map-room-note').style.color = 'rgba(220,213,198,.68)';
       }
       info.style.display = 'block';
     }
