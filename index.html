@@ -112,9 +112,6 @@
     .row.playing .thumb img { opacity: 1 !important; }
 
     /* Heard state: ONLY the text dims a little — the drawing stays full brightness. */
-    .row.heard .row-title { color: rgba(220,213,198,.64); }
-    .row.heard .row-artist { color: rgba(220,213,198,.4); }
-    .row.heard .row-hook { color: rgba(220,213,198,.48); }
 
     /* Audio loading pulse */
     @keyframes pulse-ring {
@@ -664,13 +661,10 @@
     // ── Heard state ───────────────────────────────────────────────────────
     function getHeard() { try { return JSON.parse(localStorage.getItem('ltf_heard') || '[]'); } catch (e) { return []; } }
     function markHeard(id) { var h = getHeard(); if (h.indexOf(id) < 0) { h.push(id); try { localStorage.setItem('ltf_heard', JSON.stringify(h)); } catch (e) {} } }
-    function applyHeard() {
-      var h = getHeard();
-      ARTS.forEach(function (a) {
-        var row = ROW_OF[a.id];
-        if (row) row.classList.toggle('heard', h.indexOf(a.id) >= 0);
-      });
-    }
+    // Heard-state dimming retired 2026-06-10 (read as inconsistency in the
+    // desktop grid). markHeard() still records history in localStorage in case
+    // a deliberate "heard" treatment (e.g. a small dot) comes back later.
+    function applyHeard() {}
 
     // ── Gallery rendering ─────────────────────────────────────────────────
     function drawingUrl(a) {
