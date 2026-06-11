@@ -296,10 +296,16 @@
       /* Now-playing — full-width bottom bar, content at the gallery margins. */
       #now-playing { position: fixed; padding: 16px 64px max(16px, env(safe-area-inset-bottom)); gap: 22px; }
 
-      /* Map — full-bleed; header rows and info panel at the same margins. */
+      /* Map — full-bleed; header rows and info panel at the same margins.
+         The info panel is FIXED with a constant height so selecting rooms
+         (1-line vs 2-line notes, shown vs hidden) never reflows the map —
+         the floor plan stays pixel-stable while you tap around. */
       #S4 { position: fixed; inset: 0; }
       #S4 > div:first-child > div { padding-left: 64px !important; padding-right: 64px !important; }
-      #map-container { padding: 8px 64px 12px !important; }
+      #map-container { padding: 8px 64px 140px !important; }
+      #map-info { position: fixed; left: 0; right: 0; bottom: 0; min-height: 124px;
+                  box-sizing: border-box; z-index: 30; }
+      #app.np-on #map-info { bottom: 96px; margin-bottom: 0 !important; }
       /* fit the whole floor in the viewport — the SVG letterboxes via
          preserveAspectRatio, so width+height 100% means "contain". */
       #map-container svg { width: 100% !important; height: 100% !important; }
