@@ -1093,72 +1093,82 @@
     var mapFloor = null, selectedRoom = null, mapInited = false;
 
     var FLOOR_DATA = {
-      1: { theme: 'Lobby & Garden', vbW: 300, vbH: 300, rooms: [
-        { id: 'entrance', x: 10, y: 5, w: 280, h: 18, label: '53rd St Entrance', type: 'corridor' },
-        { id: 'garden', x: 10, y: 28, w: 175, h: 95, label: 'Sculpture Garden', type: 'gallery', g: 'Sculpture Garden' },
-        { id: '1north', x: 10, y: 128, w: 175, h: 45, label: '1 North', type: 'gallery', g: '1 North' },
-        { id: '1west', x: 10, y: 178, w: 175, h: 50, label: '1 West', type: 'gallery' },
-        { id: 'film', x: 192, y: 28, w: 98, h: 85, label: 'Film Center', type: 'amenity' },
-        { id: 'store', x: 192, y: 118, w: 98, h: 45, label: 'Museum Store', type: 'amenity' },
-        { id: 'artlab', x: 192, y: 168, w: 98, h: 60, label: 'Art Lab', type: 'amenity' },
-        { id: 'member', x: 10, y: 233, w: 175, h: 32, label: 'Member Desk · Checkroom', type: 'amenity' },
-        { id: 'hall1', x: 192, y: 233, w: 98, h: 32, label: 'Hallway', type: 'gallery', g: 'Floor 1' },
-        { id: 'exit54', x: 10, y: 270, w: 280, h: 15, label: '54th St Exit', type: 'corridor' }
+      1: { theme: 'Lobby & Garden', vbW: 300, vbH: 150, rooms: [
+        { id: 'exit54', x: 8, y: 6, w: 284, h: 14, label: '54th St Exit', type: 'corridor' },
+        { id: 'garden', x: 150, y: 24, w: 142, h: 44, label: 'Sculpture Garden', type: 'gallery', g: 'Sculpture Garden' },
+        { id: '1north', x: 8, y: 34, w: 34, h: 48, label: '1 North', type: 'gallery', g: '1 North' },
+        { id: '1west', x: 8, y: 86, w: 34, h: 40, label: '1 West', type: 'gallery' },
+        { id: 'member', x: 46, y: 60, w: 60, h: 30, label: 'Member Desk\nCheckroom', type: 'amenity' },
+        { id: 'store', x: 46, y: 94, w: 48, h: 32, label: 'Museum\nStore', type: 'amenity' },
+        { id: 'hall1', x: 110, y: 60, w: 34, h: 66, label: 'Hallway', type: 'gallery', g: 'Floor 1' },
+        { id: 'film', x: 150, y: 74, w: 50, h: 36, label: 'Film\nCenter', type: 'amenity' },
+        { id: 'artlab', x: 252, y: 74, w: 40, h: 52, label: 'Art Lab', type: 'amenity' },
+        { id: 'entrance', x: 8, y: 128, w: 284, h: 14, label: '53rd St Entrance', type: 'corridor' }
       ]},
-      2: { theme: 'Collection 1970s–Present', vbW: 300, vbH: 310, rooms: [
-        { id: 'r201', x: 10, y: 10, w: 48, h: 52, label: '201', type: 'gallery' }, { id: 'r202', x: 62, y: 10, w: 48, h: 52, label: '202', type: 'gallery' },
-        { id: 'r203', x: 114, y: 10, w: 48, h: 52, label: '203', type: 'gallery' }, { id: 'r204', x: 166, y: 10, w: 48, h: 52, label: '204', type: 'gallery' },
-        { id: 'r205', x: 218, y: 10, w: 72, h: 52, label: '205', type: 'gallery' }, { id: 'r206', x: 10, y: 66, w: 48, h: 52, label: '206', type: 'gallery' },
-        { id: 'r207', x: 62, y: 66, w: 48, h: 52, label: '207', type: 'gallery' }, { id: 'r208', x: 114, y: 66, w: 48, h: 52, label: '208', type: 'gallery' },
-        { id: 'r209', x: 166, y: 66, w: 48, h: 52, label: '209', type: 'gallery' }, { id: 'r210', x: 218, y: 66, w: 35, h: 52, label: '210', type: 'gallery' },
-        { id: 'r211', x: 257, y: 66, w: 33, h: 52, label: '211', type: 'gallery' }, { id: 'r212', x: 10, y: 122, w: 48, h: 52, label: '212', type: 'gallery' },
-        { id: 'r213', x: 62, y: 122, w: 48, h: 52, label: '213', type: 'gallery' }, { id: 'r214', x: 114, y: 122, w: 48, h: 52, label: '214', type: 'gallery' },
-        { id: 'r215', x: 166, y: 122, w: 48, h: 52, label: '215', type: 'gallery' }, { id: 'r216', x: 218, y: 122, w: 72, h: 52, label: '216', type: 'gallery' },
-        { id: 'atrium', x: 10, y: 179, w: 145, h: 70, label: 'Atrium', type: 'special' }, { id: '2south', x: 160, y: 179, w: 130, h: 70, label: '2 South', type: 'gallery' },
-        { id: 'cafe2', x: 10, y: 254, w: 120, h: 48, label: 'Café 2', type: 'amenity' }, { id: 'store2', x: 134, y: 254, w: 75, h: 48, label: 'Store', type: 'amenity' },
-        { id: 'creativity', x: 213, y: 254, w: 77, h: 48, label: 'Creativity Lab', type: 'amenity' }
+      2: { theme: 'Collection 1970s\u2013Present', vbW: 300, vbH: 156, rooms: [
+        { id: 'r207', x: 8, y: 8, w: 34, h: 34, label: '207', type: 'gallery' }, { id: 'r206', x: 45, y: 8, w: 34, h: 34, label: '206', type: 'gallery' },
+        { id: 'r205', x: 82, y: 8, w: 26, h: 34, label: '205', type: 'gallery' }, { id: 'r203', x: 111, y: 8, w: 30, h: 34, label: '203', type: 'gallery' },
+        { id: 'r204', x: 144, y: 8, w: 28, h: 34, label: '204', type: 'gallery' },
+        { id: 'creativity', x: 175, y: 8, w: 44, h: 34, label: 'Creativity\nLab', type: 'amenity' },
+        { id: 'r208', x: 8, y: 46, w: 34, h: 30, label: '208', type: 'gallery' },
+        { id: 'r202', x: 111, y: 46, w: 30, h: 30, label: '202', type: 'gallery' }, { id: 'r201', x: 144, y: 46, w: 28, h: 30, label: '201', type: 'gallery' },
+        { id: 'atrium', x: 175, y: 46, w: 42, h: 56, label: 'Atrium', type: 'special' },
+        { id: 'r209', x: 8, y: 80, w: 34, h: 30, label: '209', type: 'gallery' },
+        { id: 'r216', x: 111, y: 80, w: 30, h: 30, label: '216', type: 'gallery' },
+        { id: 'r210', x: 8, y: 114, w: 26, h: 34, label: '210', type: 'gallery' }, { id: 'r211', x: 37, y: 114, w: 26, h: 34, label: '211', type: 'gallery' },
+        { id: 'r212', x: 66, y: 114, w: 26, h: 34, label: '212', type: 'gallery' },
+        { id: 'r215', x: 111, y: 114, w: 30, h: 34, label: '215', type: 'gallery' },
+        { id: 'r213', x: 144, y: 114, w: 24, h: 34, label: '213', type: 'gallery' }, { id: 'r214', x: 171, y: 114, w: 24, h: 34, label: '214', type: 'gallery' },
+        { id: '2south', x: 198, y: 106, w: 40, h: 42, label: '2 South', type: 'gallery' },
+        { id: 'store2', x: 241, y: 106, w: 23, h: 42, label: 'Store', type: 'amenity' },
+        { id: 'cafe2', x: 266, y: 106, w: 26, h: 42, label: 'Caf\u00e9 2', type: 'amenity' }
       ]},
-      3: { theme: 'Architecture · Design · Photo', vbW: 300, vbH: 350, rooms: [
-        { id: '3north', x: 10, y: 10, w: 160, h: 155, label: '3 North', type: 'gallery', g: '3 North' }, { id: '3east', x: 178, y: 10, w: 112, h: 155, label: '3 East', type: 'gallery' },
-        { id: '3south', x: 10, y: 172, w: 160, h: 110, label: '3 South', type: 'gallery' }, { id: '3w', x: 10, y: 288, w: 70, h: 55, label: '3W', type: 'gallery' },
-        { id: 'lounge3', x: 178, y: 172, w: 112, h: 50, label: 'Lounge', type: 'amenity' },
-        { id: 'stair3', x: 178, y: 270, w: 112, h: 73, label: 'Stairs / Elevator', type: 'corridor' }
+      3: { theme: 'Architecture \u00b7 Design \u00b7 Photo', vbW: 300, vbH: 128, rooms: [
+        { id: '3north', x: 60, y: 8, w: 110, h: 50, label: '3 North', type: 'gallery', g: '3 North' },
+        { id: 'lounge3', x: 246, y: 8, w: 46, h: 34, label: 'Lounge', type: 'amenity' },
+        { id: '3east', x: 180, y: 50, w: 112, h: 44, label: '3 East', type: 'gallery' },
+        { id: '3south', x: 60, y: 76, w: 90, h: 44, label: '3 South', type: 'gallery' },
+        { id: '3w', x: 8, y: 70, w: 34, h: 44, label: '3W', type: 'gallery' }
       ]},
-      4: { theme: 'Collection 1940s–1970s', vbW: 300, vbH: 440, rooms: [
-        { id: 'r400', x: 10, y: 8, w: 118, h: 80, label: '400', type: 'gallery' }, { id: 'r421', x: 182, y: 8, w: 108, h: 60, label: '421', type: 'gallery' },
-        { id: 'r402', x: 10, y: 94, w: 55, h: 52, label: '402', type: 'gallery' }, { id: 'r401', x: 69, y: 94, w: 60, h: 52, label: '401', type: 'gallery' },
-        { id: 'r420', x: 135, y: 72, w: 155, h: 74, label: '420', type: 'gallery' }, { id: 'r403', x: 10, y: 150, w: 55, h: 52, label: '403', type: 'gallery' },
-        { id: 'r404', x: 69, y: 150, w: 60, h: 52, label: '404', type: 'gallery' }, { id: 'r416', x: 135, y: 150, w: 70, h: 52, label: '416', type: 'gallery' },
-        { id: 'r418', x: 210, y: 150, w: 43, h: 52, label: '418', type: 'gallery' }, { id: 'r419', x: 257, y: 150, w: 33, h: 52, label: '419', type: 'gallery' },
-        { id: 'r405', x: 10, y: 206, w: 55, h: 55, label: '405', type: 'gallery' }, { id: 'r406', x: 69, y: 206, w: 60, h: 55, label: '406', type: 'gallery' },
-        { id: 'r415', x: 135, y: 206, w: 70, h: 55, label: '415', type: 'gallery' }, { id: 'r417', x: 210, y: 206, w: 80, h: 55, label: '417', type: 'gallery' },
-        { id: 'r407', x: 10, y: 265, w: 120, h: 50, label: '407', type: 'gallery' }, { id: 'landing4', x: 215, y: 265, w: 75, h: 40, label: 'Hallway', type: 'gallery', g: 'Floor 4' },
-        { id: 'r408', x: 10, y: 319, w: 55, h: 55, label: '408', type: 'gallery' }, { id: 'r414', x: 69, y: 319, w: 60, h: 55, label: '414', type: 'gallery' },
-        { id: 'r413', x: 135, y: 309, w: 155, h: 65, label: '413', type: 'gallery' }, { id: 'r409', x: 10, y: 378, w: 55, h: 52, label: '409', type: 'gallery' },
-        { id: 'r410', x: 69, y: 378, w: 30, h: 52, label: '410', type: 'gallery' }, { id: 'r411', x: 103, y: 378, w: 30, h: 52, label: '411', type: 'gallery' }, { id: 'r412', x: 137, y: 378, w: 30, h: 52, label: '412', type: 'gallery' },
-        { id: 'elev4a', x: 134, y: 8, w: 42, h: 38, label: '', type: 'corridor' }, { id: 'stairs4', x: 134, y: 50, w: 42, h: 22, label: '', type: 'corridor' },
-        { id: 'elev4b', x: 135, y: 265, w: 75, h: 45, label: '', type: 'corridor' }
+      4: { theme: 'Collection 1940s\u20131970s', vbW: 300, vbH: 208, rooms: [
+        { id: 'r409', x: 8, y: 8, w: 30, h: 38, label: '409', type: 'gallery' }, { id: 'r408', x: 41, y: 8, w: 34, h: 38, label: '408', type: 'gallery' },
+        { id: 'r407', x: 78, y: 8, w: 26, h: 38, label: '407', type: 'gallery' }, { id: 'r405', x: 107, y: 8, w: 28, h: 38, label: '405', type: 'gallery' },
+        { id: 'r403', x: 138, y: 8, w: 34, h: 38, label: '403', type: 'gallery' }, { id: 'r402', x: 175, y: 8, w: 38, h: 38, label: '402', type: 'gallery' },
+        { id: 'r400', x: 216, y: 8, w: 76, h: 38, label: '400', type: 'gallery' },
+        { id: 'r411', x: 8, y: 49, w: 34, h: 30, label: '411', type: 'gallery' }, { id: 'r410', x: 45, y: 49, w: 26, h: 30, label: '410', type: 'gallery' },
+        { id: 'r406', x: 107, y: 49, w: 28, h: 45, label: '406', type: 'gallery' },
+        { id: 'r404', x: 138, y: 49, w: 34, h: 30, label: '404', type: 'gallery' }, { id: 'r401', x: 175, y: 49, w: 38, h: 30, label: '401', type: 'gallery' },
+        { id: 'r412', x: 8, y: 82, w: 34, h: 30, label: '412', type: 'gallery' }, { id: 'r414', x: 45, y: 82, w: 44, h: 63, label: '414', type: 'gallery' },
+        { id: 'r416', x: 138, y: 82, w: 30, h: 45, label: '416', type: 'gallery' },
+        { id: 'r415', x: 107, y: 97, w: 28, h: 32, label: '415', type: 'gallery' },
+        { id: 'r418', x: 107, y: 132, w: 30, h: 26, label: '418', type: 'gallery' }, { id: 'r420', x: 140, y: 132, w: 40, h: 26, label: '420', type: 'gallery' },
+        { id: 'r421', x: 183, y: 132, w: 40, h: 26, label: '421', type: 'gallery' },
+        { id: 'landing4', x: 226, y: 132, w: 40, h: 26, label: 'Hallway', type: 'gallery', g: 'Floor 4' },
+        { id: 'r413', x: 8, y: 163, w: 50, h: 40, label: '413', type: 'gallery' },
+        { id: 'r417', x: 107, y: 163, w: 36, h: 40, label: '417', type: 'gallery' }, { id: 'r419', x: 146, y: 163, w: 30, h: 40, label: '419', type: 'gallery' }
       ]},
-      5: { theme: 'Collection 1880s–1940s', vbW: 300, vbH: 366, rooms: [
-        { id: 'r500', x: 10, y: 8, w: 55, h: 55, label: '500', type: 'gallery' }, { id: 'r501', x: 69, y: 8, w: 55, h: 55, label: '501', type: 'gallery' },
-        { id: 'r502', x: 128, y: 8, w: 55, h: 55, label: '502', type: 'gallery' }, { id: 'r503', x: 187, y: 8, w: 55, h: 55, label: '503', type: 'gallery' },
-        { id: 'r504', x: 246, y: 8, w: 44, h: 55, label: '504', type: 'gallery' }, { id: 'r505', x: 10, y: 67, w: 55, h: 55, label: '505', type: 'gallery' },
-        { id: 'r506', x: 69, y: 67, w: 55, h: 55, label: '506', type: 'gallery' }, { id: 'r507', x: 128, y: 67, w: 55, h: 55, label: '507', type: 'gallery' },
-        { id: 'r508', x: 187, y: 67, w: 55, h: 55, label: '508', type: 'gallery' }, { id: 'r516', x: 246, y: 67, w: 44, h: 55, label: '516', type: 'gallery' },
-        { id: 'r509', x: 10, y: 126, w: 55, h: 55, label: '509', type: 'gallery' }, { id: 'r510', x: 69, y: 126, w: 55, h: 55, label: '510', type: 'gallery' },
-        { id: 'r511', x: 128, y: 126, w: 55, h: 55, label: '511', type: 'gallery' }, { id: 'r512', x: 187, y: 126, w: 55, h: 55, label: '512', type: 'gallery' },
-        { id: 'r513', x: 10, y: 185, w: 55, h: 55, label: '513', type: 'gallery' }, { id: 'r514', x: 69, y: 185, w: 55, h: 55, label: '514', type: 'gallery' },
-        { id: 'r515', x: 128, y: 185, w: 162, h: 55, label: '515', type: 'gallery' }, { id: 'r517', x: 10, y: 244, w: 55, h: 55, label: '517', type: 'gallery' },
-        { id: 'r518', x: 69, y: 244, w: 55, h: 55, label: '518', type: 'gallery' }, { id: 'r519', x: 128, y: 244, w: 55, h: 55, label: '519', type: 'gallery' },
-        { id: 'r520', x: 187, y: 244, w: 55, h: 55, label: '520', type: 'gallery' }, { id: 'r521', x: 10, y: 303, w: 55, h: 55, label: '521', type: 'gallery' },
-        { id: 'r522', x: 69, y: 303, w: 55, h: 55, label: '522', type: 'gallery' }, { id: 'r523', x: 128, y: 303, w: 103, h: 55, label: '523', type: 'gallery' },
-        { id: 'landing5', x: 235, y: 303, w: 55, h: 55, label: 'Hallway', type: 'gallery', g: 'Floor 5' }
+      5: { theme: 'Collection 1880s\u20131940s', vbW: 300, vbH: 208, rooms: [
+        { id: 'r510', x: 8, y: 8, w: 30, h: 38, label: '510', type: 'gallery' }, { id: 'r509', x: 41, y: 8, w: 28, h: 38, label: '509', type: 'gallery' },
+        { id: 'r508', x: 72, y: 8, w: 40, h: 38, label: '508', type: 'gallery' }, { id: 'r507', x: 115, y: 8, w: 26, h: 38, label: '507', type: 'gallery' },
+        { id: 'r505', x: 144, y: 8, w: 28, h: 38, label: '505', type: 'gallery' }, { id: 'r503', x: 175, y: 8, w: 40, h: 38, label: '503', type: 'gallery' },
+        { id: 'r502', x: 218, y: 8, w: 38, h: 38, label: '502', type: 'gallery' }, { id: 'r500', x: 259, y: 8, w: 33, h: 38, label: '500', type: 'gallery' },
+        { id: 'r511', x: 8, y: 49, w: 34, h: 30, label: '511', type: 'gallery' }, { id: 'r506', x: 144, y: 49, w: 28, h: 45, label: '506', type: 'gallery' },
+        { id: 'r504', x: 175, y: 49, w: 40, h: 30, label: '504', type: 'gallery' }, { id: 'r501', x: 218, y: 49, w: 38, h: 30, label: '501', type: 'gallery' },
+        { id: 'r512', x: 8, y: 82, w: 34, h: 30, label: '512', type: 'gallery' }, { id: 'r516', x: 45, y: 82, w: 44, h: 63, label: '516', type: 'gallery' },
+        { id: 'r518', x: 175, y: 82, w: 30, h: 45, label: '518', type: 'gallery' },
+        { id: 'r517', x: 144, y: 97, w: 28, h: 32, label: '517', type: 'gallery' },
+        { id: 'r513', x: 8, y: 115, w: 34, h: 30, label: '513', type: 'gallery' },
+        { id: 'r522', x: 144, y: 132, w: 86, h: 26, label: '522', type: 'gallery' }, { id: 'r523', x: 233, y: 132, w: 26, h: 26, label: '523', type: 'gallery' },
+        { id: 'landing5', x: 262, y: 132, w: 30, h: 26, label: 'Hallway', type: 'gallery', g: 'Floor 5' },
+        { id: 'r515', x: 8, y: 163, w: 26, h: 34, label: '515', type: 'gallery' }, { id: 'r514', x: 37, y: 163, w: 36, h: 40, label: '514', type: 'gallery' },
+        { id: 'r519', x: 144, y: 163, w: 30, h: 40, label: '519', type: 'gallery' }, { id: 'r520', x: 177, y: 163, w: 32, h: 40, label: '520', type: 'gallery' },
+        { id: 'r521', x: 212, y: 163, w: 34, h: 40, label: '521', type: 'gallery' }
       ]},
-      6: { theme: 'Special Exhibitions', vbW: 300, vbH: 372, rooms: [
-        { id: 'cohen', x: 10, y: 8, w: 280, h: 210, label: 'Cohen Center\nSpecial Exhibitions', type: 'gallery', g: 'Floor 6' },
-        { id: 'terrace', x: 10, y: 225, w: 135, h: 100, label: 'Terrace Café', type: 'amenity' },
-        { id: 'outdoor', x: 150, y: 225, w: 140, h: 100, label: 'Outdoor Terrace', type: 'gallery' },
-        { id: 'store6', x: 10, y: 330, w: 280, h: 32, label: 'Store', type: 'amenity' }
+      6: { theme: 'Special Exhibitions', vbW: 300, vbH: 116, rooms: [
+        { id: 'terrace', x: 8, y: 40, w: 40, h: 50, label: 'Terrace\nCaf\u00e9', type: 'amenity' },
+        { id: 'cohen', x: 60, y: 8, w: 150, h: 100, label: 'Cohen Center\nSpecial Exhibitions', type: 'gallery', g: 'Floor 6' },
+        { id: 'store6', x: 216, y: 8, w: 40, h: 30, label: 'Store', type: 'amenity' },
+        { id: 'outdoor', x: 216, y: 42, w: 76, h: 66, label: 'Outdoor Terrace', type: 'gallery' }
       ]}
     };
 
