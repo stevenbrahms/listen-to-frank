@@ -1203,7 +1203,7 @@
       svg.setAttribute('viewBox', '0 0 ' + fd.vbW + ' ' + fd.vbH);
       svg.style.cssText = 'width:100%;display:block;';
       var bg = document.createElementNS(SVGNS, 'rect');
-      bg.setAttribute('x', 0); bg.setAttribute('y', 0); bg.setAttribute('width', fd.vbW); bg.setAttribute('height', fd.vbH); bg.setAttribute('fill', '#000');
+      bg.setAttribute('x', 0); bg.setAttribute('y', 0); bg.setAttribute('width', fd.vbW); bg.setAttribute('height', fd.vbH); bg.setAttribute('fill', '#0f0e0b');
       svg.appendChild(bg);
       fd.rooms.forEach(function (r) {
         // Blank circulation spacers (unlabeled stairs/elevator cores) aren't
@@ -1234,7 +1234,7 @@
           var t = document.createElementNS(SVGNS, 'text');
           t.setAttribute('x', r.x + PAD);
           t.setAttribute('y', r.y + PAD + fz + i * (fz + 1.5));
-          t.setAttribute('fill', isSel ? '#000' : isNav ? '#38332a' : isAmen ? '#5a554b' : noContent ? '#6a655a' : BRIGHT);
+          t.setAttribute('fill', isSel ? '#0f0e0b' : isNav ? '#38332a' : isAmen ? '#5a554b' : noContent ? '#6a655a' : BRIGHT);
           t.setAttribute('font-size', fz);
           t.setAttribute('font-family', 'Inter,Helvetica Neue,Arial,sans-serif');
           t.setAttribute('letter-spacing', '0.02em');
