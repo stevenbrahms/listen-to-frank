@@ -89,6 +89,10 @@
     .cover-stamp { font-family: 'Courier New', monospace; font-weight: 700; text-align: center;
       letter-spacing: .45em; text-indent: .45em; margin: 0; }
     #cover img { position: absolute; pointer-events: none; filter: invert(1); }
+    /* Margin drawings — the cover's desktop-only outer crew. They live in the
+       cover's scaled canvas at negative offsets, so their distance from the
+       cover is constant and they slide off-screen as the window narrows. */
+    .cover-margin { display: none; }
 
     /* Gallery rows */
     .row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 0.5px solid #181510; cursor: pointer; transition: opacity .12s ease, transform .12s ease, background .18s ease; position: relative; }
@@ -267,6 +271,9 @@
       .row-artist { font-size: 14px; margin-bottom: 3px; }
       .row-gallery { font-size: 14px; }
       .row-hook { font-size: 15px; line-height: 1.55; }
+
+      /* Entry — the cover's margin crew appears */
+      .cover-margin { display: block; }
 
       /* About — left-justified colophon on full-bleed paper, featured
          drawing hung in the empty space at right (black ink via invert). */
@@ -517,7 +524,12 @@
           { src: 'drawings/gold-marilyn-monroe_andy-warhol_1962.png',            css: 'width:78px;left:30px;top:148px;transform:rotate(-5deg);' },
           { src: 'drawings/bird-in-space-constantin-brancusi-1928_line.png',     css: 'width:52px;right:40px;top:142px;transform:rotate(6deg);' },
           { src: 'drawings/spider_alexander-calder_1939.png',                    css: 'width:152px;left:22px;bottom:138px;transform:rotate(-4deg);' },
-          { src: 'drawings/fountain_marcel-duchamp_1917.png',                    css: 'width:90px;right:34px;bottom:120px;transform:rotate(3deg);' }
+          { src: 'drawings/fountain_marcel-duchamp_1917.png',                    css: 'width:90px;right:34px;bottom:120px;transform:rotate(3deg);' },
+          // desktop margins (class cover-margin, hidden under 1100px)
+          { m: 1, src: 'drawings/the-dream_henri-rousseau_1910.png',             css: 'width:350px;left:-435px;top:80px;transform:rotate(-2deg);' },
+          { m: 1, src: 'drawings/bird-head_max-ernst_1934-35.png',               css: 'width:100px;left:-245px;bottom:70px;transform:rotate(8deg);' },
+          { m: 1, src: 'drawings/i-and-the-village_marc-chagall_1911.png',       css: 'width:300px;right:-430px;bottom:80px;transform:rotate(3deg);' },
+          { m: 1, src: 'drawings/white-on-white_kazimir-malevich_1918.png',      css: 'width:105px;right:-155px;top:70px;transform:rotate(-7deg);' }
         ] },
       { // B — yellow / Demoiselles
         bg: '#ffc400', tag: '#111111', tapRGB: '17,17,17', accent: '#ffc400',
@@ -528,7 +540,11 @@
           { src: 'drawings/she-goat_pablo-picasso_1950.png',                     css: 'width:118px;left:32px;bottom:122px;transform:rotate(-3deg);' },
           // NB: percent-encoded NFD ("e" + combining accent) to byte-match the
           // repo filename — GitHub Pages is unicode-normalization-sensitive.
-          { src: 'drawings/le-voyage-dans-la-lune_georges-me%CC%81lie%CC%80s_1902.png', css: 'width:86px;right:34px;bottom:132px;transform:rotate(2deg);' }
+          { src: 'drawings/le-voyage-dans-la-lune_georges-me%CC%81lie%CC%80s_1902.png', css: 'width:86px;right:34px;bottom:132px;transform:rotate(2deg);' },
+          { m: 1, src: 'drawings/spatial-construction-no.-12_aleksandr-rodchenko_1920.png', css: 'width:280px;left:-400px;bottom:110px;transform:rotate(-4deg);' },
+          { m: 1, src: 'drawings/moonbird_joan-miro_1966.png',                   css: 'width:110px;left:-375px;top:60px;transform:rotate(-9deg);' },
+          { m: 1, src: 'drawings/composition-with-red-blue-black-yellow-and-gray-piet-mondrian-1921_line.png', css: 'width:255px;right:-380px;top:125px;transform:rotate(2deg);' },
+          { m: 1, src: 'drawings/wire-sculptures-retrospective_ruth-asawa_1950s-1970s.png', css: 'width:95px;right:-165px;bottom:60px;transform:rotate(6deg);' }
         ] },
       { // C — pink / Dance (cream tagline + tap for legibility on the pink)
         bg: '#ec0e8f', tag: '#f1ead0', tapRGB: '241,234,208', accent: '#ec0e8f',
@@ -537,7 +553,11 @@
           { src: 'drawings/drowning-girl-roy-lichtenstein-1963_line.png',        css: 'width:92px;left:30px;top:146px;transform:rotate(-5deg);' },
           { src: 'drawings/flag_jasper-johns_1954-55.png',                       css: 'width:92px;right:32px;top:150px;transform:rotate(4deg);' },
           { src: 'drawings/the-lovers_rene-magritte_1928.png',                   css: 'width:192px;left:24px;bottom:138px;transform:rotate(-3deg);' },
-          { src: 'drawings/the-moon_tarsila-do-amaral_1928.png',                 css: 'width:108px;right:32px;bottom:142px;transform:rotate(2deg);' }
+          { src: 'drawings/the-moon_tarsila-do-amaral_1928.png',                 css: 'width:108px;right:32px;bottom:142px;transform:rotate(2deg);' },
+          { m: 1, src: 'drawings/le-temps_ben-vautier_1961.png',                 css: 'width:235px;left:-385px;top:160px;transform:rotate(-3deg);' },
+          { m: 1, src: 'drawings/bag-piece-1964-performed-during-perpetual-fluxfest-cinematheque-new-york-june-27-1965-yoko-ono-1965_line.png', css: 'width:110px;left:-355px;bottom:60px;transform:rotate(7deg);' },
+          { m: 1, src: 'drawings/the-ten-largest-no-7-adulthood_hilma-af-klint_1907.png', css: 'width:300px;right:-425px;bottom:90px;transform:rotate(2deg);' },
+          { m: 1, src: 'drawings/current-bridget-riley-1964_line.png',           css: 'width:100px;right:-145px;top:75px;transform:rotate(-8deg);' }
         ] }
     ];
     var ACTIVE_COMBO = COVERS[0];   // the session's chosen "issue" palette (entry + about share it)
@@ -555,7 +575,7 @@
         '<p class="cover-word" style="position:absolute;top:44px;left:0;right:0;color:' + ink + ';font-size:54px;">LISTEN TO<br>FRANK</p>' +
         '<p class="cover-stamp" style="position:absolute;top:186px;left:0;right:0;color:' + ink + ';font-size:13px;">IN MOMA</p>';
       for (var i = 0; i < c.art.length; i++) {
-        html += '<img alt="" src="' + c.art[i].src + '" style="' + c.art[i].css + '">';
+        html += '<img alt=""' + (c.art[i].m ? ' class="cover-margin"' : '') + ' src="' + c.art[i].src + '" style="' + c.art[i].css + '">';
       }
       html +=
         '<p style="position:absolute;left:0;right:0;bottom:62px;color:' + c.tag + ';font-size:15px;text-align:center;font-weight:300;letter-spacing:.3px;line-height:1.9;margin:0;">A little history. A little gossip.<br>A few sideways theories.</p>' +
