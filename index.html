@@ -1331,14 +1331,32 @@
       var key = room ? roomKey(room) : id;
       var label = room ? room.label.replace('\n', ' ') : id;
       var here = ARTS.filter(function (a) { return a.gallery === key; });
-      $('map-room-floor').textContent = 'Floor ' + f;
-      $('map-room-name').textContent = label;
+      // Header carries the room once; the headline carries the NEWS — the
+      // work itself when there's one, the count when there are several.
+      var isNum = /^\d/.test(label);
+      $('map-room-floor').textContent = 'Floor ' + f + ' · ' + (isNum ? 'Gallery ' + label : label);
+      var note = $('map-room-note');
+      if (here.length === 1) {
+        $('map-room-name').textContent = here[0].title;
+        note.textContent = (here[0].artist || '') + (here[0].year ? ' · ' + here[0].year : '') + ' — tap to listen';
+        note.style.fontSize = '17px';
+      } else if (here.length) {
+        $('map-room-name').textContent = here.length + ' works in this room';
+        var names = here.slice(0, 3).map(function (a) { return a.title; }).join(' · ');
+        var extra = here.length - 3;
+        note.textContent = names + (extra > 0 ? ' + ' + extra + ' more' : '') + ' — tap for the list';
+        note.style.fontSize = '14px';
+      } else {
+        $('map-room-name').textContent = label;
+        note.style.fontSize = '17px';
+      }
       if (here.length) {
-        var names = here.slice(0, 6).map(function (a) { return a.title; }).join(' · ');
-        $('map-room-note').textContent = 'Frank covers ' + here.length + (here.length === 1 ? ' work' : ' works') + ' here: ' + names + (here.length > 6 ? '…' : '');
         info.dataset.key = key;
+        info.dataset.solo = here.length === 1 ? here[0].id : '';
         info.classList.add('tappable');
-        info.setAttribute('aria-label', 'See Frank’s ' + here.length + (here.length === 1 ? ' pick' : ' picks') + ' in ' + label);
+        info.setAttribute('aria-label', here.length === 1
+          ? 'Listen to ' + here[0].title
+          : 'See Frank’s ' + here.length + ' picks in ' + label);
         $('map-info-arrow').style.display = '';
         // Colored panel in the session's combo accent — text auto-legible.
         var acc = (ACTIVE_COMBO && ACTIVE_COMBO.accent) || '#ec159a';
@@ -1352,11 +1370,12 @@
       } else {
         $('map-room-note').textContent = 'No Frank picks here yet.';
         delete info.dataset.key;
+        delete info.dataset.solo;
         info.classList.remove('tappable');
         info.removeAttribute('aria-label');
         $('map-info-arrow').style.display = 'none';
         // Empty rooms stay neutral dark (signals "nothing here").
-        info.style.background = '#000';
+        info.style.background = '#0f0e0b';
         info.style.borderTop = '1px solid #2f2a22';
         $('map-room-floor').style.color = 'rgba(220,213,198,.5)';
         $('map-room-name').style.color = '#dcd5c6';
@@ -1368,6 +1387,9 @@
       var info = $('map-info');
       var key = info.dataset.key;
       if (!key) return;
+      // "tap to listen": a one-work room opens that work's player directly
+      // instead of detouring through a filtered list of one.
+      if (info.dataset.solo) { openArtwork(info.dataset.solo); return; }
       activeFloor = null;
       document.querySelectorAll('.chip[data-floor]').forEach(function (c) { c.classList.remove('active'); });
       $('search-input').value = key;
