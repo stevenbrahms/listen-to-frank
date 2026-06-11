@@ -289,7 +289,10 @@
       /* Map — full-bleed; header rows and info panel at the same margins. */
       #S4 { position: fixed; inset: 0; }
       #S4 > div:first-child > div { padding-left: 64px !important; padding-right: 64px !important; }
-      #map-container { padding: 8px 64px 0 !important; }
+      #map-container { padding: 8px 64px 12px !important; }
+      /* fit the whole floor in the viewport — the SVG letterboxes via
+         preserveAspectRatio, so width+height 100% means "contain". */
+      #map-container svg { width: 100% !important; height: 100% !important; }
       #map-info { padding-left: 64px !important; padding-right: 64px !important; }
     }
   </style>
