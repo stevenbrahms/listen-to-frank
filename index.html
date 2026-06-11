@@ -365,6 +365,10 @@
       </div>
 
       <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
+        <div id="first-visit-hint" style="display:none;align-items:baseline;gap:12px;padding:13px 0 11px;border-bottom:0.5px solid #27231c;">
+          <span style="flex:1;color:rgba(220,213,198,.55);font-size:15.5px;line-height:1.55;font-style:italic;">Standing in MoMA? Type in the gallery number. Or just wander.</span>
+          <button id="hint-close" style="background:none;border:none;color:rgba(220,213,198,.4);font-size:20px;line-height:1;cursor:pointer;padding:0 2px;" aria-label="Dismiss">&times;</button>
+        </div>
         <div id="play-something" style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:0.5px solid #27231c;cursor:pointer;">
           <span style="color:rgba(220,213,198,.6);font-size:16.5px;letter-spacing:2px;">PLAY SOMETHING</span>
           <span style="color:rgba(220,213,198,.5);display:inline-flex;align-items:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></span>
@@ -627,6 +631,23 @@
     applyAboutCombo();   // About echoes the same issue palette
     window.addEventListener('resize', scaleEntryCover);
 
+    // First-visit whisper above the list — explains the gallery-number move
+    // once, then never again. Any signal they've got it (dismiss, opening a
+    // work, searching) retires it for good. NB: "gallery number" on purpose —
+    // MoMA's own audio guide uses per-WORK numbers, which Frank is not.
+    function dismissHint() {
+      try { localStorage.setItem('ltf_hinted', '1'); } catch (e) {}
+      var h = $('first-visit-hint'); if (h) h.style.display = 'none';
+    }
+    (function () {
+      var seen = null;
+      try { seen = localStorage.getItem('ltf_hinted'); } catch (e) {}
+      if (seen) return;
+      var h = $('first-visit-hint'); if (h) h.style.display = 'flex';
+      var x = $('hint-close'); if (x) x.addEventListener('click', function (e) { e.stopPropagation(); dismissHint(); });
+      var si = $('search-input'); if (si) si.addEventListener('input', dismissHint, { once: true });
+    })();
+
     // ── Search helpers ────────────────────────────────────────────────────
     function normalizeForSearch(str) {
       return (str || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -879,7 +900,7 @@
     }
 
     // ── Player ────────────────────────────────────────────────────────────
-    function openArtwork(id) { window.location.hash = encodeURIComponent(id); }
+    function openArtwork(id) { dismissHint(); window.location.hash = encodeURIComponent(id); }
 
     function showPlayer(a) {
       // Returning to the track that's already loaded? Keep it playing — don't reload.
