@@ -123,6 +123,8 @@
     }
     .loading-pulse { animation: pulse-ring 0.9s ease-in-out infinite !important; }
 
+    /* About back-cover drawing — desktop only */
+    #about-art { display: none; }
     /* Search */
     #gallery-word { display: none; }
     .search-wrap { padding: 4px 16px 9px; background: #0f0e0b; }
@@ -262,6 +264,33 @@
       .row-artist { font-size: 14px; margin-bottom: 3px; }
       .row-gallery { font-size: 14px; }
       .row-hook { font-size: 15px; line-height: 1.55; }
+
+      /* About — left-justified colophon on full-bleed paper, featured
+         drawing hung in the empty space at right (black ink via invert). */
+      #S3 .pcol { max-width: none; margin: 0; }
+      #about-band { padding: calc(env(safe-area-inset-top, 0px) + 26px) 64px 16px !important; }
+      #S3 .scrollpad { padding: 4px 64px 60px !important; }
+      #S3 .about-body { max-width: 560px; }
+      #about-art { display: block; position: absolute; right: 64px; top: 50%;
+                   width: 380px; transform: translateY(-50%) rotate(-2deg);
+                   filter: invert(1); pointer-events: none; z-index: 1; }
+
+      /* Player — left rail (title, meta, controls) + the ghost drawing
+         hung big on the right like a plate. */
+      #S2 .pcol { margin-left: 64px; margin-right: 0; max-width: 520px; }
+      #player-ghost { left: auto !important; right: 4% !important; top: 10% !important;
+                      width: 46% !important; height: 74% !important;
+                      object-fit: contain !important; object-position: center !important;
+                      opacity: .42 !important; }
+
+      /* Now-playing — full-width bottom bar, content at the gallery margins. */
+      #now-playing { position: fixed; padding: 16px 64px max(16px, env(safe-area-inset-bottom)); gap: 22px; }
+
+      /* Map — full-bleed; header rows and info panel at the same margins. */
+      #S4 { position: fixed; inset: 0; }
+      #S4 > div:first-child > div { padding-left: 64px !important; padding-right: 64px !important; }
+      #map-container { padding: 8px 64px 0 !important; }
+      #map-info { padding-left: 64px !important; padding-right: 64px !important; }
     }
   </style>
 </head>
@@ -392,6 +421,7 @@
           </div>
         </div>
       </div>
+      <img id="about-art" alt="" aria-hidden="true">
       <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
         <div class="pcol">
         <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Go find something on a wall. Or just start somewhere.</p>
@@ -558,6 +588,8 @@
       for (var i = 0; i < body.length; i++) body[i].style.color = 'rgba(' + rgb + ',.86)';
       var label = $('about-label'); if (label) label.style.color = 'rgba(' + rgb + ',.55)';
       var email = $('about-email'); if (email) { email.style.color = 'rgba(' + rgb + ',.82)'; email.style.borderColor = 'rgba(' + rgb + ',.4)'; }
+      // Desktop hangs the dealt cover's featured drawing on the empty paper.
+      var art = $('about-art'); if (art && c.art && c.art[0]) art.src = c.art[0].src;
     }
     renderEntryCover();
     applyAboutCombo();   // About echoes the same issue palette
