@@ -12,7 +12,7 @@
  *      iOS will refuse to play a cached MP3 that doesn't honor Range.
  */
 
-const CACHE_VERSION = 'frank-v87';
+const CACHE_VERSION = 'frank-v88';
 const SHELL_CACHE = CACHE_VERSION + '-shell';
 const AUDIO_CACHE = CACHE_VERSION + '-audio';
 const VENDOR_CACHE = CACHE_VERSION + '-vendor';
@@ -74,7 +74,9 @@ self.addEventListener('install', (event) => {
       } catch (e) { /* ignore */ }
     }));
   })());
-  self.skipWaiting();
+  // NOTE: no skipWaiting() here — the new worker WAITS until the page's
+  // update toast posts {type:'skip-waiting'}, so we never yank a running
+  // session (or its audio) out from under the visitor.
 });
 
 // ---------------- activate ----------------
