@@ -673,6 +673,24 @@
     function drawingUrl(a) {
       return (a && DRAWINGS[a.id]) || '';
     }
+    // Small pre-generated copy for list thumbnails — drawings-thumbs/ mirrors
+    // drawings/ filenames. The img onerror falls back to the full drawing, so
+    // a new drawing without a thumb yet still renders.
+    function thumbUrl(a) {
+      var u = drawingUrl(a);
+      return u ? u.replace(/^drawings\//, 'drawings-thumbs/') : '';
+    }
+    function thumbWithFallback(a, full) {
+      var img = document.createElement('img');
+      img.alt = '';
+      img.loading = 'lazy';
+      img.onerror = function () {
+        if (full && img.src.indexOf('drawings-thumbs/') >= 0) img.src = full;
+        else img.replaceWith(makeSwatch(a));
+      };
+      img.src = thumbUrl(a);
+      return img;
+    }
     function makeSwatch(a) {
       var sw = document.createElement('div');
       sw.className = 'swatch';
@@ -695,14 +713,8 @@
 
       var thumb = document.createElement('div');
       thumb.className = 'thumb';
-      var url = drawingUrl(a);
-      if (url) {
-        var img = document.createElement('img');
-        img.alt = '';
-        img.loading = 'lazy';
-        img.onerror = function () { img.replaceWith(makeSwatch(a)); };
-        img.src = url;
-        thumb.appendChild(img);
+      if (drawingUrl(a)) {
+        thumb.appendChild(thumbWithFallback(a, drawingUrl(a)));
       } else {
         thumb.appendChild(makeSwatch(a));
       }
@@ -933,8 +945,7 @@
       $('np-title').textContent = current.title || '';
       $('np-artist').textContent = (current.artist || '') + (current.year ? ' · ' + current.year : '');
       var tb = $('np-thumb'); tb.innerHTML = '';
-      var url = drawingUrl(current);
-      if (url) { var im = document.createElement('img'); im.alt = ''; im.onerror = function () { im.replaceWith(makeSwatch(current)); }; im.src = url; tb.appendChild(im); }
+      if (drawingUrl(current)) tb.appendChild(thumbWithFallback(current, drawingUrl(current)));
       else tb.appendChild(makeSwatch(current));
       setNpIcon();
     }
