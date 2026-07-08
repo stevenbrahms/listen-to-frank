@@ -1612,5 +1612,35 @@
       });
     }
   </script>
+
+  <script>
+    // GoatCounter — privacy-clean visit counter (no cookies, no personal data,
+    // dashboard: https://listentofrank.goatcounter.com). The app is a hash-
+    // routed SPA, so we count by hand: every opened work logs as its own path.
+    window.goatcounter = { no_onload: true };
+    (function () {
+      var last = null;
+      function send() {
+        if (!(window.goatcounter && window.goatcounter.count)) return false;
+        var h = '';
+        try { h = decodeURIComponent(window.location.hash.slice(1)); } catch (e) {}
+        var path = h ? '/' + h : '/';
+        if (path === last) return true;   // hash cleared+reset to same work, etc.
+        last = path;
+        window.goatcounter.count({ path: path, title: h || 'gallery' });
+        return true;
+      }
+      function trySend() {
+        if (send()) return;
+        var n = 0, t = setInterval(function () {   // count.js is async — wait for it
+          if (send() || ++n > 40) clearInterval(t);
+        }, 250);
+      }
+      window.addEventListener('hashchange', trySend);
+      if (document.readyState === 'complete') trySend();
+      else window.addEventListener('load', trySend);
+    })();
+  </script>
+  <script data-goatcounter="https://listentofrank.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
