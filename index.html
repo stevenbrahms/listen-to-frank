@@ -1040,7 +1040,9 @@
 
     function shareTrack() {
       if (!current) return;
-      var url = 'https://listentofrank.art/#' + encodeURIComponent(current.id);
+      // Share the static stub page (og card + transcript for crawlers); it
+      // JS-redirects humans straight into the player at /#<id>.
+      var url = 'https://www.listentofrank.art/w/' + encodeURIComponent(current.id) + '.html';
       var data = { title: current.title + ' by ' + current.artist, text: 'Listen to Frank on "' + current.title + '"', url: url };
       if (navigator.share) { navigator.share(data).catch(function () {}); }
       else if (navigator.clipboard) {
