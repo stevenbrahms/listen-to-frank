@@ -12,9 +12,15 @@
  *      iOS will refuse to play a cached MP3 that doesn't honor Range.
  */
 
-const CACHE_VERSION = 'frank-v137';
+const CACHE_VERSION = 'frank-v138';
+// The audio cache is deliberately NOT tied to CACHE_VERSION. mp3s never change
+// content under one filename except when a take is re-recorded — so ordinary
+// deploys must not throw away ~340MB of cached audio on every phone. Bump
+// AUDIO_VERSION ONLY when an existing mp3 is replaced in place (doctor.py
+// --live checks this for you); bump CACHE_VERSION on every deploy as always.
+const AUDIO_VERSION = 'frank-audio-v1';
 const SHELL_CACHE = CACHE_VERSION + '-shell';
-const AUDIO_CACHE = CACHE_VERSION + '-audio';
+const AUDIO_CACHE = AUDIO_VERSION;
 const VENDOR_CACHE = CACHE_VERSION + '-vendor';
 
 const SHELL_URLS = [
@@ -95,11 +101,13 @@ self.addEventListener('install', (event) => {
 // ---------------- activate ----------------
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
-    // Delete any caches from older versions.
+    // Delete caches from older versions — but keep the audio cache, which has
+    // its own lifecycle (see AUDIO_VERSION above).
+    const keep = [SHELL_CACHE, AUDIO_CACHE, VENDOR_CACHE];
     const names = await caches.keys();
     await Promise.all(
       names
-        .filter((n) => !n.startsWith(CACHE_VERSION))
+        .filter((n) => keep.indexOf(n) === -1)
         .map((n) => caches.delete(n))
     );
     await self.clients.claim();
@@ -132,6 +140,15 @@ async function cacheAllAudio() {
       .filter(Boolean);
 
     const cache = await caches.open(AUDIO_CACHE);
+
+    // Evict cached audio for works no longer in the catalog (retired entries) —
+    // the audio cache persists across versions now, so it needs its own tidy-up.
+    const wanted = {};
+    audioUrls.forEach((u) => { wanted[u] = true; });
+    for (const req of await cache.keys()) {
+      const p = new URL(req.url).pathname;
+      if (!wanted[p]) await cache.delete(req);
+    }
 
     // Figure out what's already cached so progress is meaningful when the
     // page is reopened mid-download.
