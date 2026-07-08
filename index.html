@@ -906,6 +906,7 @@
     function showPlayer(a) {
       // Returning to the track that's already loaded? Keep it playing — don't reload.
       var sameTrack = !!(current && current.id === a.id && audio.src);
+      if (current && current.id !== a.id) savePosition();   // bank the outgoing track's spot
       current = a;
       trackEnded = false;
       ARTS.forEach(function (x) { var r = ROW_OF[x.id]; if (r) r.classList.toggle('playing', x.id === a.id); });
@@ -938,6 +939,7 @@
         $('prog-bar').style.width = (dur ? (audio.currentTime / dur * 100) : 0) + '%';
       } else {
         delete audio.dataset.retried;
+        pendingResume = loadPositions()[a.id] || 0;   // applied at loadedmetadata
         audio.src = a.audioUrl;
         audio.load();
         setPlayIcon(false);
@@ -1053,17 +1055,47 @@
       } else { prompt('Copy link:', url); }
     }
 
+    // ── Resume position (pick up where you left off, per work) ────────────
+    // Saved only once >30s in; cleared when a track finishes. Applied silently
+    // on the next load of that work (no prompt — start over = scrub to 0).
+    var pendingResume = 0, lastPosSave = 0;
+    function loadPositions() { try { return JSON.parse(localStorage.getItem('ltf_pos') || '{}'); } catch (e) { return {}; } }
+    function savePosition() {
+      if (!current || trackEnded || !audio.duration) return;
+      var t = audio.currentTime || 0;
+      var pos = loadPositions();
+      if (t > 30 && t < audio.duration - 5) pos[current.id] = Math.floor(t);
+      else delete pos[current.id];
+      try { localStorage.setItem('ltf_pos', JSON.stringify(pos)); } catch (e) {}
+    }
+    function clearPosition(id) {
+      var pos = loadPositions();
+      delete pos[id];
+      try { localStorage.setItem('ltf_pos', JSON.stringify(pos)); } catch (e) {}
+    }
+    document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') savePosition(); });
+
     // ── Audio element events (retry-on-error preserved) ───────────────────
-    audio.addEventListener('loadedmetadata', function () { $('prog-dur').textContent = fmt(audio.duration); });
+    audio.addEventListener('loadedmetadata', function () {
+      $('prog-dur').textContent = fmt(audio.duration);
+      if (pendingResume && audio.duration && pendingResume < audio.duration - 5) {
+        try { audio.currentTime = pendingResume; } catch (e) {}
+        $('prog-cur').textContent = fmt(audio.currentTime);
+        if (audio.duration) $('prog-bar').style.width = (audio.currentTime / audio.duration * 100) + '%';
+      }
+      pendingResume = 0;
+    });
     audio.addEventListener('timeupdate', function () {
       $('prog-cur').textContent = fmt(audio.currentTime);
       if (audio.duration) $('prog-bar').style.width = (audio.currentTime / audio.duration * 100) + '%';
+      var now = Date.now();
+      if (now - lastPosSave > 5000) { lastPosSave = now; savePosition(); }
     });
     audio.addEventListener('play', function () { setPlayIcon(true); $('audio-error').style.display = 'none'; $('btn-play').classList.remove('loading-pulse'); trackEnded = false; updateNowPlaying(); });
     audio.addEventListener('playing', function () { $('audio-error').style.display = 'none'; $('btn-play').classList.remove('loading-pulse'); });
     audio.addEventListener('waiting', function () { $('btn-play').classList.add('loading-pulse'); });
-    audio.addEventListener('pause', function () { setPlayIcon(false); $('btn-play').classList.remove('loading-pulse'); });
-    audio.addEventListener('ended', function () { setPlayIcon(false); $('prog-bar').style.width = '0%'; $('prog-cur').textContent = '0:00'; trackEnded = true; updateNowPlaying(); });
+    audio.addEventListener('pause', function () { setPlayIcon(false); $('btn-play').classList.remove('loading-pulse'); savePosition(); });
+    audio.addEventListener('ended', function () { setPlayIcon(false); $('prog-bar').style.width = '0%'; $('prog-cur').textContent = '0:00'; trackEnded = true; if (current) clearPosition(current.id); updateNowPlaying(); });
     audio.addEventListener('play', setNpIcon);
     audio.addEventListener('pause', setNpIcon);
     audio.addEventListener('ended', setNpIcon);
@@ -1089,6 +1121,9 @@
           artist: a.artist + (a.year ? ', ' + a.year : ''),
           album: 'Listen to Frank',
           artwork: [
+            // the work's share card (line drawing on its color) — lock screens
+            // center-crop the 1200×630; icons stay as fallbacks
+            { src: 'og/' + a.id + '.jpg', sizes: '1200x630', type: 'image/jpeg' },
             { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
             { src: 'icon-512.png', sizes: '512x512', type: 'image/png' }
           ]
