@@ -4,6 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#0f0e0b">
+  <script>
+    // First-paint chrome. iOS Safari samples the page color at FIRST PAINT and
+    // sticks with it behind the status bar (this app never scrolls the document,
+    // so it never resamples). On deep links the entry cover must never be that
+    // first paint: a share stub hands us the work's color via sessionStorage
+    // (same-origin) and we paint it before anything renders; a bare deep link
+    // falls back to the warm dark. The entry screen is skipped entirely
+    // (html.deeplink hides #S0 — it's a boot-only screen anyway).
+    (function () {
+      var c = null;
+      try { c = sessionStorage.getItem('ltf_chrome'); sessionStorage.removeItem('ltf_chrome'); } catch (e) {}
+      if (!c && window.location.hash) c = '#0f0e0b';
+      if (!c) return;
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute('content', c);
+      document.documentElement.className += ' deeplink';
+      var s = document.createElement('style');
+      s.textContent = 'html,body{background:' + c + '}';
+      document.head.appendChild(s);
+    })();
+  </script>
   <meta name="description" content="A little history. A little gossip. A few sideways theories. An audio guide to MoMA.">
   <title>Listen to Frank</title>
 
@@ -68,6 +89,9 @@
     .screen.on { opacity: 1; visibility: visible; z-index: 2; transform: translateY(0); }
     /* Entry, Player & About break out of the column to fill the whole screen. */
     #S0, #S2, #S3 { position: fixed; inset: 0; }
+    /* Deep-link sessions never show the entry cover (its color must not be the
+       first paint iOS samples for the status bar). go(0) lifts the class. */
+    html.deeplink #S0 { display: none !important; }
     /* …but their inner content stays in the centered column. */
     .pcol { width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; }
 
@@ -894,6 +918,7 @@
         if (s) s.classList.toggle('on', i === n);
       }
       currentScreen = n;
+      if (n === 0) document.documentElement.classList.remove('deeplink');
       if (n === 0 || n === 3) setChrome((ACTIVE_COMBO && ACTIVE_COMBO.bg) || '#0f0e0b');
       else if (n === 2 && current) setChrome(npFlatColor(current.color));
       else setChrome('#0f0e0b');
