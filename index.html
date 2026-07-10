@@ -940,7 +940,7 @@
       trackEnded = false;
       ARTS.forEach(function (x) { var r = ROW_OF[x.id]; if (r) r.classList.toggle('playing', x.id === a.id); });
 
-      $('player-bg').style.background = npBackground(a.color || '#111');   // darken light colors so the white title + ghost stay legible
+      $('player-bg').style.background = npFlatColor(a.color || '#111');   // flat darkened hex (not a gradient-over-raw): keeps the white title + ghost legible AND makes background-COLOR the darkened value, so the iOS in-app status bar samples the right tone (a gradient leaves background-color raw)
       $('player-title').textContent = a.title || '';
       $('player-artist').textContent = (a.artist || '') + (a.year ? ', ' + a.year : '');
       var hk = $('player-hook');
