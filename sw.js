@@ -12,13 +12,13 @@
  *      iOS will refuse to play a cached MP3 that doesn't honor Range.
  */
 
-const CACHE_VERSION = 'frank-v164';
+const CACHE_VERSION = 'frank-v165';
 // The audio cache is deliberately NOT tied to CACHE_VERSION. mp3s never change
 // content under one filename except when a take is re-recorded — so ordinary
 // deploys must not throw away ~340MB of cached audio on every phone. Bump
 // AUDIO_VERSION ONLY when an existing mp3 is replaced in place (doctor.py
 // --live checks this for you); bump CACHE_VERSION on every deploy as always.
-const AUDIO_VERSION = 'frank-audio-v18';
+const AUDIO_VERSION = 'frank-audio-v19';
 const SHELL_CACHE = CACHE_VERSION + '-shell';
 const AUDIO_CACHE = AUDIO_VERSION;
 const VENDOR_CACHE = CACHE_VERSION + '-vendor';
