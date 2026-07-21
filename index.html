@@ -1107,6 +1107,12 @@
       if (!t) return '';
       var tmp = document.createElement('div'); tmp.innerHTML = t;
       t = (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
+      // Drop a leading "Okay/OK/Alright [so]" warm-up FIRST — otherwise it eats a
+      // sentence slot below and the teaser can collapse to a bare fragment
+      // (e.g. "Okay. 1916." → "1916."). Trimming first lets the "+ one more
+      // sentence" rule pull in real content. Mirrors hook() in build-stubs.py.
+      var w = t.replace(/^(?:okay|ok|alright)\b[\s,.:;…—-]*(?:so\b[\s,.:;…—-]*)?/i, '');
+      if (w) t = w.charAt(0).toUpperCase() + w.slice(1);
       // Sentence = up to a .!? that's followed by whitespace or end-of-string
       // (look-AHEAD, supported everywhere) — so abbreviations, decimals and
       // "So...word" ellipses don't split mid-phrase. Mirrors build-stubs.py.
@@ -1114,11 +1120,7 @@
       while ((m = re.exec(t)) !== null) { s.push(m[0].trim()); if (s.length >= 2) break; }
       var out = s[0] || t;
       if (out.length < 40 && s[1]) out += ' ' + s[1];
-      out = out.slice(0, 200).trim();
-      // Drop a leading "Okay"/"OK" warm-up so the teaser opens on the good part.
-      var trimmed = out.replace(/^(?:okay|ok)\b[\s,.:;…—-]*(?:so\b[\s,.:;…—-]*)?/i, '');
-      if (trimmed) out = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
-      return out;
+      return out.slice(0, 200).trim();
     }
 
     function shareTrack() {
