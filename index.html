@@ -1099,12 +1099,40 @@
       var b = $('tx-btn'); b.textContent = 'read along'; b.style.color = 'rgba(220,213,198,.5)'; b.style.borderColor = 'rgba(220,213,198,.18)';
     }
 
+    // The transcript's opening line — mirrors hook() in build-stubs.py so the
+    // share text matches the link-card's teaser. First sentence; if it's very
+    // short, add the second; capped. Avoids regex look-behind (older iOS Safari
+    // chokes on it), and strips any tags out of the transcript HTML.
+    function shareHook(t) {
+      if (!t) return '';
+      var tmp = document.createElement('div'); tmp.innerHTML = t;
+      t = (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
+      // Sentence = up to a .!? that's followed by whitespace or end-of-string
+      // (look-AHEAD, supported everywhere) — so abbreviations, decimals and
+      // "So...word" ellipses don't split mid-phrase. Mirrors build-stubs.py.
+      var re = /[\s\S]*?[.!?]+(?=\s|$)/g, m, s = [];
+      while ((m = re.exec(t)) !== null) { s.push(m[0].trim()); if (s.length >= 2) break; }
+      var out = s[0] || t;
+      if (out.length < 40 && s[1]) out += ' ' + s[1];
+      out = out.slice(0, 200).trim();
+      // Drop a leading "Okay"/"OK" warm-up so the teaser opens on the good part.
+      var trimmed = out.replace(/^(?:okay|ok)\b[\s,.:;…—-]*(?:so\b[\s,.:;…—-]*)?/i, '');
+      if (trimmed) out = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+      return out;
+    }
+
     function shareTrack() {
       if (!current) return;
       // Share the static stub page (og card + transcript for crawlers); it
       // JS-redirects humans straight into the player at /#<id>.
       var url = 'https://www.listentofrank.art/w/' + encodeURIComponent(current.id) + '.html';
-      var data = { title: current.title + ' by ' + current.artist, text: 'Listen to Frank on "' + current.title + '"', url: url };
+      // Message text = the opening hook + a tiny tag, so it entices AND still
+      // makes sense when the link-preview card doesn't render.
+      var hook = shareHook(current.transcript);
+      var text = hook
+        ? '“' + hook + '”\n— Frank on ' + current.title
+        : 'Listen to Frank on “' + current.title + '”';
+      var data = { title: current.title + ' by ' + current.artist, text: text, url: url };
       if (navigator.share) { navigator.share(data).catch(function () {}); }
       else if (navigator.clipboard) {
         navigator.clipboard.writeText(url).then(function () {
