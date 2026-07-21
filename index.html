@@ -1471,7 +1471,7 @@
         $('map-room-name').textContent = here.length + ' works in this room';
         var names = here.slice(0, 3).map(function (a) { return a.title; }).join(' · ');
         var extra = here.length - 3;
-        note.textContent = names + (extra > 0 ? ' + ' + extra + ' more' : '') + ' — tap for the list';
+        note.textContent = names + (extra > 0 ? ' + ' + extra + ' more' : '');
         note.style.fontSize = '14px';
       } else {
         $('map-room-name').textContent = label;
