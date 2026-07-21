@@ -918,7 +918,7 @@
       currentScreen = n;
       if (n === 0) document.documentElement.classList.remove('deeplink');
       if (n === 0 || n === 3) setChrome((ACTIVE_COMBO && ACTIVE_COMBO.bg) || '#0f0e0b');
-      else if (n === 2 && current) setChrome(npFlatColor(current.color));
+      else if (n === 2 && current) setChrome(npBottomColor(current.color));   // player only: tint the browser chrome (incl. the bottom Safari toolbar) to the DARKER player tone, so it matches the player controls instead of glowing the bright top color as a 3rd shade
       else setChrome('#0f0e0b');
       if (n !== 2) closeTx();
       if (n === 1) { applyHeard(); applyFilters(); }
