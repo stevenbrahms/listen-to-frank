@@ -1465,7 +1465,7 @@
       var note = $('map-room-note');
       if (here.length === 1) {
         $('map-room-name').textContent = here[0].title;
-        note.textContent = (here[0].artist || '') + (here[0].year ? ' · ' + here[0].year : '') + ' — tap to listen';
+        note.textContent = (here[0].artist || '') + (here[0].year ? ' · ' + here[0].year : '');
         note.style.fontSize = '17px';
       } else if (here.length) {
         $('map-room-name').textContent = here.length + ' works in this room';
