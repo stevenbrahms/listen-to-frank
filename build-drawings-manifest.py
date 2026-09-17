@@ -39,6 +39,12 @@ ALIASES = {
     "signac.png": "signac",      # Opus 217 (Fénéon)
     # Standard-named drawing whose artwork uses a legacy audio id (no artist/year).
     "identical-twins_diane-arbus_1967.png": "identical-twins",
+    # RETITLED WORK (added 2026-08-03): the artwork was renamed Abstract Painting ->
+    # NUMBER 107 and its audio followed (number-107_ad-reinhardt_1950.mp3), but the
+    # drawing file kept the OLD title, so similarity matching can never find it. The
+    # July manifest carried a stale row that hid this; regenerating surfaced it and
+    # blocked doctor. Alias, rather than rename, to avoid re-pushing image files.
+    "abstract-painting-ad-reinhardt-1950_line.png": "number-107",
 }
 
 def strip_acc(s):
