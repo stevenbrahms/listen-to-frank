@@ -1,7 +1,7 @@
 {
   "name": "Listen to Frank",
   "short_name": "Frank",
-  "description": "Tell Frank what you're looking at. Listen to his honest take on art.",
+  "description": "A free, unofficial audio guide to MoMA. A little history, a little gossip, a few sideways theories.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f0e0b",
