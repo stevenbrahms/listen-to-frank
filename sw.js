@@ -12,7 +12,7 @@
  *      iOS will refuse to play a cached MP3 that doesn't honor Range.
  */
 
-const CACHE_VERSION = 'frank-v370';
+const CACHE_VERSION = 'frank-v371';
 // The audio cache is deliberately NOT tied to CACHE_VERSION. mp3s never change
 // content under one filename except when a take is re-recorded — so ordinary
 // deploys must not throw away ~340MB of cached audio on every phone. Bump
@@ -37,7 +37,7 @@ const SHELL_URLS = [
   '/drawings/dance-i-henri-matisse-1909_line.png',
   '/drawings/gold-marilyn-monroe_andy-warhol_1962.png',
   '/drawings/flag_jasper-johns_1954-55.png',
-  '/drawings/fountain_marcel-duchamp_1917.png',
+  '/drawings/guitar_pablo-picasso_1914.png',
   // percent-encoded NFD ("e" + combining accent) to byte-match the repo
   // filename — GitHub Pages is unicode-normalization-sensitive
   '/drawings/le-voyage-dans-la-lune_georges-me%CC%81lie%CC%80s_1902.png',
