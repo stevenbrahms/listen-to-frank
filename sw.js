@@ -18,7 +18,7 @@ const CACHE_VERSION = 'frank-v366';
 // deploys must not throw away ~340MB of cached audio on every phone. Bump
 // AUDIO_VERSION ONLY when an existing mp3 is replaced in place (doctor.py
 // --live checks this for you); bump CACHE_VERSION on every deploy as always.
-const AUDIO_VERSION = 'frank-audio-v173';
+const AUDIO_VERSION = 'frank-audio-v174';
 const SHELL_CACHE = CACHE_VERSION + '-shell';
 const AUDIO_CACHE = AUDIO_VERSION;
 const VENDOR_CACHE = CACHE_VERSION + '-vendor';
