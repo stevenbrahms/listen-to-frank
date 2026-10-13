@@ -12,7 +12,7 @@
  *      iOS will refuse to play a cached MP3 that doesn't honor Range.
  */
 
-const CACHE_VERSION = 'frank-v361';
+const CACHE_VERSION = 'frank-v362';
 // The audio cache is deliberately NOT tied to CACHE_VERSION. mp3s never change
 // content under one filename except when a take is re-recorded — so ordinary
 // deploys must not throw away ~340MB of cached audio on every phone. Bump
@@ -207,15 +207,13 @@ async function handleAudio(request) {
   let cached = await cache.match(cacheKey);
 
   if (!cached) {
-    // Try to fetch the full file (no Range) so we can cache a complete copy.
+    // Not saved yet: STREAM it straight from the network (Range and all) so
+    // playback starts on the first bytes instead of after the whole ~2 MB
+    // file arrives — on weak museum signal that wait was 10–20 s of silence
+    // (2026-10-13). The full copy is saved afterwards, one file at a time,
+    // by prefetchAudio(): the page asks for it once a listen is 'playing'.
     try {
-      const fullRes = await fetch(cacheKey);
-      if (fullRes && fullRes.ok && fullRes.status === 200) {
-        try { await cache.put(cacheKey, fullRes.clone()); } catch (e) { /* quota */ }
-        cached = fullRes;
-      } else if (fullRes) {
-        return fullRes;
-      }
+      return await fetch(request);
     } catch (e) {
       // Offline and not cached — best we can do is bubble up a 503 so the
       // <audio> element fires an error event the page can react to.

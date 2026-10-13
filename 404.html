@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#ffbf00">
+<title>Listen to Frank</title>
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<!--
+  GitHub Pages serves this for ANY address that doesn't exist (old share links
+  to retired works, typos). Instead of GitHub's bare "404" page it loads the real
+  site (/index.html) over itself, on the home screen — no separate design to
+  maintain. The HTTP status stays 404, so search engines still drop dead links.
+  Added 2026-10-13. Same technique as the w/<id>.html pages (build-stubs.py).
+-->
+<script>
+fetch('/index.html').then(function (r) { if (!r.ok) throw 0; return r.text(); }).then(function (t) {
+  t = t.replace(/<head>/i, '<head>\n  <base href="/">');
+  t = t.replace(/[ \t]*<link rel="canonical"[^>]*>\n?/gi, '');
+  t = t.replace(/<\/head>/i, '  <meta name="robots" content="noindex">\n</head>');
+  document.open(); document.write(t); document.close();
+}).catch(function () { location.replace('/'); });
+</script>
+<style>html,body{background:#ffbf00;margin:0}</style>
+</head>
+<body>
+<noscript><p style="font:300 18px/1.7 system-ui;padding:48px 24px"><a href="/">Listen to Frank — an unofficial audio guide to MoMA</a></p></noscript>
+</body>
+</html>

@@ -1560,19 +1560,25 @@
     function wireServiceWorker() {
       if (!('serviceWorker' in navigator)) return;
       // Since 2026-10-13 the whole library (~385 MB) is NOT downloaded on the
-      // first visit any more. A work's audio is saved when it's played, and
-      // once a listen actually starts the rest of THAT GALLERY's audio is
-      // fetched quietly (prefetchRoom), so the next wall works offline.
+      // first visit any more. Once a listen actually starts, that work is
+      // saved and then the rest of THAT GALLERY's audio, quietly, one file at
+      // a time (prefetchRoom), so the next wall works offline.
       audio.addEventListener('playing', function () { if (current) prefetchRoom(current); });
     }
+    // The playing work goes FIRST (the sw streams unsaved audio, then saves
+    // the full copy through this same one-at-a-time queue), then the room.
     var prefetchedRooms = {};
     function prefetchRoom(a) {
+      if (!('serviceWorker' in navigator)) return;
+      var toUrl = function (x) { return '/' + x.audioUrl.replace(/^\/+/, ''); };
+      var urls = a.audioUrl ? [toUrl(a)] : [];
       var g = String(a.gallery || '').trim();
-      if (!g || prefetchedRooms[g] || !('serviceWorker' in navigator)) return;
-      prefetchedRooms[g] = true;
-      var urls = ARTS.filter(function (x) {
-        return x.id !== a.id && x.audioUrl && String(x.gallery || '').trim() === g;
-      }).slice(0, 12).map(function (x) { return '/' + x.audioUrl.replace(/^\/+/, ''); });
+      if (g && !prefetchedRooms[g]) {
+        prefetchedRooms[g] = true;
+        urls = urls.concat(ARTS.filter(function (x) {
+          return x.id !== a.id && x.audioUrl && String(x.gallery || '').trim() === g;
+        }).slice(0, 12).map(toUrl));
+      }
       if (!urls.length) return;
       navigator.serviceWorker.ready.then(function (reg) {
         var sw = reg.active; if (sw) sw.postMessage({ type: 'prefetch-audio', urls: urls });
