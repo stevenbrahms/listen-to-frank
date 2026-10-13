@@ -560,6 +560,9 @@
       { // the one cover (2026-10-13): Kodak yellow front, pink back — the
         // two papers the launch films are printed on (6_Instagram/LAUNCH_PLAN.md)
         bg: '#ffbf00', aboutBg: '#f25bb3', tag: '#111111', tapRGB: '17,17,17', accent: '#ffbf00',
+        // About's hung drawing (desktop) — its own, so it never repeats the
+        // cover's Demoiselles (owner, 2026-10-13: Cézanne's The Bather)
+        aboutArt: 'drawings/the-bather_paul-cezanne_1885.png',
         art: [
           { src: 'drawings/les-demoiselles-davignon_pablo-picasso_1907.png',     css: 'width:296px;left:50px;top:244px;transform:rotate(4deg);' },
           { src: 'drawings/the-object_meret-oppenheim_1936.png',                 css: 'width:88px;left:30px;top:150px;transform:rotate(-6deg);' },
@@ -648,7 +651,8 @@
       for (var k = 0; k < soc.length; k++) { soc[k].style.color = 'rgba(' + rgb + ',.82)'; soc[k].style.borderColor = 'rgba(' + rgb + ',.4)'; }
       var email = $('about-email'); if (email) { email.style.color = 'rgba(' + rgb + ',.82)'; email.style.borderColor = 'rgba(' + rgb + ',.4)'; }
       // Desktop hangs the dealt cover's featured drawing on the empty paper.
-      var art = $('about-art'); if (art && c.art && c.art[0]) { art.setAttribute('data-src', c.art[0].src); hydrateCover(); }
+      var art = $('about-art'); var artSrc = c.aboutArt || (c.art && c.art[0] && c.art[0].src);
+      if (art && artSrc) { art.setAttribute('data-src', artSrc); hydrateCover(); }
     }
     renderEntryCover();
     applyAboutCombo();   // About echoes the same issue palette
