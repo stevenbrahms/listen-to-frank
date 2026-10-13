@@ -50,6 +50,8 @@
   <meta name="twitter:description" content="A free, unofficial audio guide to MoMA. 200+ works: a little history, a little gossip, a few sideways theories. Not affiliated. Frank just really likes it here.">
   <meta name="twitter:image" content="https://www.listentofrank.art/og-cover.png">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
@@ -434,7 +436,7 @@
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dcd5c6" stroke-width="1.75"><polygon points="19 20 9 12 19 4 19 20" vector-effect="non-scaling-stroke"/><line x1="5" y1="19" x2="5" y2="5" vector-effect="non-scaling-stroke"/></svg>
               <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(220,213,198,.65);">10</span>
             </button>
-            <button id="btn-play" style="width:56px;height:56px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+            <button id="btn-play" aria-label="Play" style="width:56px;height:56px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;">
               <svg id="play-ico" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#dcd5c6" stroke-width="1.75" stroke-linejoin="miter"><polygon points="6,4 6,20 19.86,12" vector-effect="non-scaling-stroke"/></svg>
             </button>
             <button id="btn-fwd30" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.85;position:relative;" title="forward 30s">
@@ -582,13 +584,30 @@
         '<p class="cover-stamp" style="position:absolute;top:186px;left:0;right:0;color:' + ink + ';font-size:13px;">IN MOMA</p>' +
         '<p style="position:absolute;top:207px;left:0;right:0;color:' + ink + ';font-size:10px;letter-spacing:2px;opacity:.5;text-align:center;margin:0;">AN UNOFFICIAL AUDIO GUIDE</p>';
       for (var i = 0; i < c.art.length; i++) {
-        html += '<img alt=""' + (c.art[i].m ? ' class="cover-margin"' : '') + ' src="' + c.art[i].src + '" style="' + c.art[i].css + '">';
+        html += '<img alt=""' + (c.art[i].m ? ' class="cover-margin"' : '') + ' data-src="' + c.art[i].src + '" style="' + c.art[i].css + '">';
       }
       html +=
         '<p style="position:absolute;left:0;right:0;bottom:62px;color:' + c.tag + ';font-size:15px;text-align:center;font-weight:300;letter-spacing:.3px;line-height:1.9;margin:0;">A little history. A little gossip.<br>A few sideways theories.</p>' +
         '<p style="position:absolute;left:0;right:0;bottom:30px;color:rgba(' + c.tapRGB + ',.5);font-size:12px;letter-spacing:2.5px;text-align:center;margin:0;">tap anywhere</p>';
       cover.innerHTML = html;
       scaleEntryCover();
+      hydrateCover();
+    }
+    // Images load only when they'll actually be seen (2026-10-13 speed pass;
+    // nothing looks different): the desktop margin drawings + About's hung
+    // drawing only at >=1100px (they're display:none below that but browsers
+    // download them anyway), and on a deep link (share/search arrival, cover
+    // hidden) the cover waits until someone actually goes home.
+    function hydrateCover() {
+      var deep = document.documentElement.classList.contains('deeplink');
+      var wide = !!(window.matchMedia && window.matchMedia('(min-width: 1100px)').matches);
+      var imgs = document.querySelectorAll('#cover img[data-src], #about-art[data-src]');
+      for (var i = 0; i < imgs.length; i++) {
+        var im = imgs[i], deskOnly = im.classList.contains('cover-margin') || im.id === 'about-art';
+        if (deskOnly ? !wide : deep) continue;
+        im.src = im.getAttribute('data-src');
+        im.removeAttribute('data-src');
+      }
     }
     // Fit the 390x800 canvas to the viewport ("contain") — the letterbox
     // disappears into the paper color, which fills the whole screen.
@@ -626,11 +645,11 @@
       for (var k = 0; k < soc.length; k++) { soc[k].style.color = 'rgba(' + rgb + ',.82)'; soc[k].style.borderColor = 'rgba(' + rgb + ',.4)'; }
       var email = $('about-email'); if (email) { email.style.color = 'rgba(' + rgb + ',.82)'; email.style.borderColor = 'rgba(' + rgb + ',.4)'; }
       // Desktop hangs the dealt cover's featured drawing on the empty paper.
-      var art = $('about-art'); if (art && c.art && c.art[0]) art.src = c.art[0].src;
+      var art = $('about-art'); if (art && c.art && c.art[0]) { art.setAttribute('data-src', c.art[0].src); hydrateCover(); }
     }
     renderEntryCover();
     applyAboutCombo();   // About echoes the same issue palette
-    window.addEventListener('resize', scaleEntryCover);
+    window.addEventListener('resize', function () { scaleEntryCover(); hydrateCover(); });
 
     // First-visit whisper above the list — explains the gallery-number move
     // once, then never again. Any signal they've got it (dismiss, opening a
@@ -894,7 +913,7 @@
         if (s) s.classList.toggle('on', i === n);
       }
       currentScreen = n;
-      if (n === 0) document.documentElement.classList.remove('deeplink');
+      if (n === 0) { document.documentElement.classList.remove('deeplink'); hydrateCover(); }
       if (n === 0) setChrome((ACTIVE_COMBO && ACTIVE_COMBO.bg) || '#0f0e0b');
       else if (n === 3) setChrome((ACTIVE_COMBO && (ACTIVE_COMBO.aboutBg || ACTIVE_COMBO.bg)) || '#0f0e0b');
       else if (n === 2 && current) setChrome(npBottomColor(current.color));   // player only: tint the browser chrome (incl. the bottom Safari toolbar) to the DARKER player tone, so it matches the player controls instead of glowing the bright top color as a 3rd shade
@@ -960,6 +979,7 @@
 
     function setPlayIcon(playing) {
       var ico = $('play-ico');
+      var btn = $('btn-play'); if (btn) btn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
       ico.innerHTML = playing
         ? '<line x1="9" y1="5" x2="9" y2="19" vector-effect="non-scaling-stroke"/><line x1="15" y1="5" x2="15" y2="19" vector-effect="non-scaling-stroke"/>'
         : '<polygon points="6,4 6,20 19.86,12" vector-effect="non-scaling-stroke"/>';
@@ -1537,11 +1557,23 @@
     // ── Service worker offline-cache progress ─────────────────────────────
     function wireServiceWorker() {
       if (!('serviceWorker' in navigator)) return;
-      // Audio still precaches for offline use silently — we no longer surface a
-      // progress bar for it (the black "Saving audio for offline use" banner).
+      // Since 2026-10-13 the whole library (~385 MB) is NOT downloaded on the
+      // first visit any more. A work's audio is saved when it's played, and
+      // once a listen actually starts the rest of THAT GALLERY's audio is
+      // fetched quietly (prefetchRoom), so the next wall works offline.
+      audio.addEventListener('playing', function () { if (current) prefetchRoom(current); });
+    }
+    var prefetchedRooms = {};
+    function prefetchRoom(a) {
+      var g = String(a.gallery || '').trim();
+      if (!g || prefetchedRooms[g] || !('serviceWorker' in navigator)) return;
+      prefetchedRooms[g] = true;
+      var urls = ARTS.filter(function (x) {
+        return x.id !== a.id && x.audioUrl && String(x.gallery || '').trim() === g;
+      }).slice(0, 12).map(function (x) { return '/' + x.audioUrl.replace(/^\/+/, ''); });
+      if (!urls.length) return;
       navigator.serviceWorker.ready.then(function (reg) {
-        var sw = reg.active || reg.waiting || reg.installing;
-        if (sw) sw.postMessage({ type: 'precache-audio' });
+        var sw = reg.active; if (sw) sw.postMessage({ type: 'prefetch-audio', urls: urls });
       }).catch(function () {});
     }
 

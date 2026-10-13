@@ -12,7 +12,7 @@
  *      iOS will refuse to play a cached MP3 that doesn't honor Range.
  */
 
-const CACHE_VERSION = 'frank-v358';
+const CACHE_VERSION = 'frank-v359';
 // The audio cache is deliberately NOT tied to CACHE_VERSION. mp3s never change
 // content under one filename except when a take is re-recorded — so ordinary
 // deploys must not throw away ~340MB of cached audio on every phone. Bump
@@ -41,11 +41,8 @@ const SHELL_URLS = [
   // percent-encoded NFD ("e" + combining accent) to byte-match the repo
   // filename — GitHub Pages is unicode-normalization-sensitive
   '/drawings/le-voyage-dans-la-lune_georges-me%CC%81lie%CC%80s_1902.png',
-  // desktop margin crews (entry must work offline there too)
-  '/drawings/spatial-construction-no.-12_aleksandr-rodchenko_1920.png',
-  '/drawings/moonbird_joan-miro_1966.png',
-  '/drawings/composition-with-red-blue-black-yellow-and-gray-piet-mondrian-1921_line.png',
-  '/drawings/wire-sculptures-retrospective_ruth-asawa_1950s-1970s.png',
+  // (desktop margin drawings are NOT pre-cached since 2026-10-13: phones
+  // never show them, and the museum visit is a phone visit)
 ];
 
 // v3 is plain vanilla JS — no external libraries needed. (Previously this
@@ -93,81 +90,49 @@ self.addEventListener('activate', (event) => {
         .map((n) => caches.delete(n))
     );
     await self.clients.claim();
-    // Don't await this — let it run in the background.
-    cacheAllAudio();
+    // Don't await this — let it run in the background. (Since 2026-10-13 this
+    // only TIDIES the audio cache; it no longer downloads the whole library.)
+    tidyAudioCache();
   })());
 });
 
-// ---------------- audio pre-cache ----------------
-let audioCachingInProgress = false;
-
-async function cacheAllAudio() {
-  if (audioCachingInProgress) return;
-  audioCachingInProgress = true;
+// ---------------- audio cache ----------------
+// Until 2026-10-13 cacheAllAudio() downloaded EVERY mp3 (~385 MB) on a
+// visitor's first visit — on museum cellular that's their data plan. Now:
+//   * a work is cached when it's played (handleAudio, below);
+//   * once a listen starts, the page asks for the rest of that gallery's audio
+//     ('prefetch-audio'), fetched one file at a time in the background;
+//   * on activate we only evict audio of retired works.
+// Visitors who already have the full library keep it.
+async function tidyAudioCache() {
   try {
-    // Pull the list from artworks.json so we never have to hand-maintain it.
-    let artworks = [];
-    try {
-      const res = await fetch('/artworks.json', { cache: 'reload' });
-      if (res && res.ok) artworks = await res.json();
-    } catch (e) {
-      // No artworks list (probably offline). Nothing to pre-cache; existing
-      // cached entries are still served from the fetch handler.
-      postProgress(0, 0);
-      return;
-    }
-
-    const audioUrls = artworks
-      .map((a) => a && a.audioUrl ? '/' + a.audioUrl.replace(/^\/+/, '') : null)
-      .filter(Boolean);
-
-    const cache = await caches.open(AUDIO_CACHE);
-
-    // Evict cached audio for works no longer in the catalog (retired entries) —
-    // the audio cache persists across versions now, so it needs its own tidy-up.
+    const res = await fetch('/artworks.json', { cache: 'reload' });
+    if (!res || !res.ok) return;
+    const artworks = await res.json();
     const wanted = {};
-    audioUrls.forEach((u) => { wanted[u] = true; });
+    artworks.forEach((a) => { if (a && a.audioUrl) wanted['/' + a.audioUrl.replace(/^\/+/, '')] = true; });
+    const cache = await caches.open(AUDIO_CACHE);
     for (const req of await cache.keys()) {
-      const p = new URL(req.url).pathname;
-      if (!wanted[p]) await cache.delete(req);
+      if (!wanted[new URL(req.url).pathname]) await cache.delete(req);
     }
+  } catch (e) { /* offline — try again next activation */ }
+}
 
-    // Figure out what's already cached so progress is meaningful when the
-    // page is reopened mid-download.
-    let done = 0;
-    const todo = [];
-    for (const url of audioUrls) {
-      const hit = await cache.match(url);
-      if (hit) done++; else todo.push(url);
+let prefetchQueue = Promise.resolve();
+function prefetchAudio(urls) {
+  prefetchQueue = prefetchQueue.then(async () => {
+    const cache = await caches.open(AUDIO_CACHE);
+    for (const raw of urls || []) {
+      try {
+        const url = new URL(raw, self.location.origin);
+        if (url.origin !== self.location.origin || !url.pathname.startsWith('/audio/')) continue;
+        if (await cache.match(url.pathname)) continue;
+        const res = await fetch(url.pathname);
+        if (res && res.ok && res.status === 200) await cache.put(url.pathname, res);
+      } catch (e) { /* skip — it'll be fetched when played */ }
     }
-    const total = audioUrls.length;
-    postProgress(done, total);
-
-    if (todo.length === 0) return;
-
-    // Download in small batches so we don't try to open 158 sockets at once.
-    const BATCH = 4;
-    for (let i = 0; i < todo.length; i += BATCH) {
-      const batch = todo.slice(i, i + BATCH);
-      await Promise.allSettled(batch.map(async (url) => {
-        try {
-          const res = await fetch(url, { cache: 'reload' });
-          if (res && res.ok) {
-            await cache.put(url, res.clone());
-          }
-        } catch (e) {
-          // skip — we'll retry next visit
-        } finally {
-          done++;
-          postProgress(Math.min(done, total), total);
-        }
-      }));
-    }
-  } catch (e) {
-    // swallow — we'll try again on the next page load
-  } finally {
-    audioCachingInProgress = false;
-  }
+  }).catch(() => {});
+  return prefetchQueue;
 }
 
 async function postProgress(done, total) {
@@ -182,8 +147,10 @@ async function postProgress(done, total) {
 // ---------------- message handler ----------------
 self.addEventListener('message', (event) => {
   if (!event.data) return;
-  if (event.data.type === 'precache-audio') {
-    cacheAllAudio();
+  if (event.data.type === 'prefetch-audio') {
+    event.waitUntil(prefetchAudio(event.data.urls));
+  } else if (event.data.type === 'precache-audio') {
+    // Old pages (pre-2026-10-13) still send this — deliberately ignored now.
   } else if (event.data.type === 'skip-waiting') {
     self.skipWaiting();
   }
