@@ -1105,8 +1105,9 @@
     function shareTrack() {
       if (!current) return;
       gcEvent('share');
-      // Share the static stub page (og card + transcript for crawlers); it
-      // JS-redirects humans straight into the player at /#<id>.
+      // Share the work's own page (og card + transcript for crawlers); since
+      // 2026-10-13 it loads this app over itself, opened on the work, instead
+      // of redirecting — so search engines index it (see build-stubs.py).
       var url = 'https://www.listentofrank.art/w/' + encodeURIComponent(current.id) + '.html';
       // Message text = the opening hook + a tiny tag, so it entices AND still
       // makes sense when the link-preview card doesn't render.
