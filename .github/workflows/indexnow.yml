@@ -1,0 +1,103 @@
+# Tell search engines (Bing, and through IndexNow Yandex/Seznam/Naver) about
+# work pages that were added, re-recorded or removed — automatically, on every
+# push that touches w/, whoever deploys (gh api or the GitHub web UI).
+# Set up 2026-10-13. Local master: 3_Website/github-setup/indexnow.yml.
+#
+# It waits until GitHub Pages has actually published THIS commit before
+# pinging, so engines never fetch a stale page. The key file
+# <KEY>.txt at the repo root proves we own the domain — never delete it.
+#
+# Manual run (Actions tab → this workflow → Run workflow): leave "urls" empty
+# to resubmit every page in sitemap.xml, or paste specific URLs.
+
+name: Tell search engines about changed pages (IndexNow)
+
+on:
+  push:
+    branches: [main]
+    paths: ['w/**']
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: 'Space-separated URLs to submit (empty = every page in sitemap.xml)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  pages: read
+
+env:
+  SITE: https://www.listentofrank.art
+  HOST: www.listentofrank.art
+  KEY: 32710da5119238fc62318c35aa063ceb
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Collect changed work pages
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          INPUT_URLS: ${{ github.event.inputs.urls }}
+        run: |
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            if [ -n "$INPUT_URLS" ]; then
+              printf '%s\n' $INPUT_URLS > urls.txt
+            else
+              grep -o '<loc>[^<]*</loc>' sitemap.xml | sed -e 's#<loc>##' -e 's#</loc>##' > urls.txt
+            fi
+          else
+            if ! git cat-file -e "$BEFORE" 2>/dev/null; then BEFORE="$(git rev-parse HEAD~1)"; fi
+            git diff --name-only "$BEFORE" "$GITHUB_SHA" -- 'w/*.html' | sed "s#^#$SITE/#" > urls.txt
+          fi
+          echo "Pages to submit: $(wc -l < urls.txt)"
+          cat urls.txt
+
+      - name: Wait for GitHub Pages to publish this commit
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 40); do
+            read -r status commit < <(gh api "repos/$GITHUB_REPOSITORY/pages/builds/latest" --jq '"\(.status) \(.commit)"' 2>/dev/null || echo "unknown none")
+            echo "check $i: build $status for ${commit:0:8}"
+            if [ "$status" = "built" ] && git merge-base --is-ancestor "$GITHUB_SHA" "$commit" 2>/dev/null; then
+              echo "Published."; exit 0
+            fi
+            sleep 15
+          done
+          echo "Pages build not confirmed after 10 min — submitting anyway."
+
+      - name: Submit to IndexNow
+        run: |
+          python3 - <<'PY'
+          import json, os, sys, time, urllib.request
+          urls = [u.strip() for u in open("urls.txt") if u.strip()]
+          if not urls:
+              print("No work pages changed — nothing to submit."); sys.exit(0)
+          body = json.dumps({
+              "host": os.environ["HOST"], "key": os.environ["KEY"],
+              "keyLocation": f'{os.environ["SITE"]}/{os.environ["KEY"]}.txt',
+              "urlList": urls[:10000],
+          }).encode()
+          ok = False
+          for endpoint in ("https://api.indexnow.org/indexnow", "https://www.bing.com/indexnow"):
+              for attempt in range(3):
+                  req = urllib.request.Request(endpoint, data=body, headers={"Content-Type": "application/json; charset=utf-8"})
+                  try:
+                      with urllib.request.urlopen(req, timeout=30) as r:
+                          print(f"{endpoint}: HTTP {r.status}"); ok = ok or r.status in (200, 202); break
+                  except urllib.error.HTTPError as e:
+                      print(f"{endpoint}: HTTP {e.code} {e.read()[:200]!r}")
+                  except Exception as e:
+                      print(f"{endpoint}: {e}")
+                  time.sleep(20)
+          print(f"Submitted {len(urls)} page(s)." if ok else "Submission FAILED.")
+          sys.exit(0 if ok else 1)
+          PY
