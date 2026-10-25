@@ -1833,12 +1833,22 @@
       window.addEventListener('hashchange', route);
     }
 
+    // The list opens on Frank's headliners, then runs by date (the
+    // artworks.json order). Owner's pick, 2026-10-25. Bird in Space is in the
+    // Floor 6 Brancusi show, which closes 2027-02-27: swap it out then.
+    var FEATURED = ['starry-night-1889', 'water-lilies-claude-monet-1914-26', 'girl-before-a-mirror-1932',
+                    'flag-1954-55', 'bird-in-space-1928', 'les-demoiselles-davignon-1907', 'campbells-soup-cans-1962'];
+    function featuredFirst(list) {
+      var top = FEATURED.map(function (id) { return list.find(function (a) { return a.id === id; }); }).filter(Boolean);
+      return top.concat(list.filter(function (a) { return FEATURED.indexOf(a.id) < 0; }));
+    }
+
     // ── Boot ──────────────────────────────────────────────────────────────
     function boot(data, drawings) {
       ALL = data || [];
       DRAWINGS = drawings || {};
       aboutArt = ALL.find(function (a) { return a.isAbout || a.id === 'about-listen-to-frank'; }) || null;
-      ARTS = ALL.filter(function (a) { return !(a.isAbout || a.id === 'about-listen-to-frank'); });
+      ARTS = featuredFirst(ALL.filter(function (a) { return !(a.isAbout || a.id === 'about-listen-to-frank'); }));
       ARTS.forEach(function (a) { a._floor = galleryToFloor(a.gallery); BY_ID[a.id] = a; });
       if (aboutArt) BY_ID[aboutArt.id] = aboutArt;
 
