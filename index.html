@@ -1645,7 +1645,7 @@
           t.setAttribute('letter-spacing', '0.02em');
           t.style.pointerEvents = 'none'; t.style.userSelect = 'none';
           t.textContent = line;
-          t.setAttribute('data-fit', vert ? h - PAD * 2 : w - PAD - 2);
+          t.setAttribute('data-fit', vert ? h - PAD * 2 : w - PAD * 2);   // same margin both sides
           g.appendChild(t);
         });
         svg.appendChild(g);
