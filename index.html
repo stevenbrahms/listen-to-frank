@@ -495,6 +495,7 @@
           <p id="about-label" style="color:rgba(220,213,198,.5);font-size:15px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
           <a id="about-email" href="mailto:hello@listentofrank.art" style="color:rgba(220,213,198,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(220,213,198,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">hello@listentofrank.art<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></a>
         </div>
+        <p id="about-legal" style="color:rgba(220,213,198,.5);font-size:12.5px;line-height:1.65;margin:52px 0 0;max-width:34em;">Listen to Frank is an independent project. It isn't affiliated with, endorsed by or sponsored by The Museum of Modern Art; "MoMA" is only used to say where the art is. The line drawings are made after the works, for commentary. If you hold rights to anything here and want it changed or removed, use the email above and it'll be handled quickly. &copy; 2026 Listen to Frank.</p>
         </div>
       </div>
     </div>
@@ -668,6 +669,7 @@
       var soc = document.querySelectorAll('#S3 .about-social');
       for (var k = 0; k < soc.length; k++) { soc[k].style.color = 'rgba(' + rgb + ',.82)'; soc[k].style.borderColor = 'rgba(' + rgb + ',.4)'; }
       var email = $('about-email'); if (email) { email.style.color = 'rgba(' + rgb + ',.82)'; email.style.borderColor = 'rgba(' + rgb + ',.4)'; }
+      var legal = $('about-legal'); if (legal) legal.style.color = 'rgba(' + rgb + ',.82)';   // small print, still readable on the paper
       // Desktop hangs the dealt cover's featured drawing on the empty paper.
       var art = $('about-art'); var artSrc = c.aboutArt || (c.art && c.art[0] && c.art[0].src);
       if (art && artSrc) { art.setAttribute('data-src', artSrc); hydrateCover(); }
