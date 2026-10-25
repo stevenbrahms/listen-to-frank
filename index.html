@@ -669,7 +669,10 @@
     }
     renderEntryCover();
     applyAboutCombo();   // About echoes the same issue palette
-    window.addEventListener('resize', function () { scaleEntryCover(); hydrateCover(); });
+    window.addEventListener('resize', function () {
+      scaleEntryCover(); hydrateCover();
+      if (currentScreen === 4 && mapFloor) renderFloorMap(mapFloor);   // re-fit (and maybe re-turn) the map
+    });
 
     // First-visit whisper above the list — explains the gallery-number move
     // once, then never again. Any signal they've got it (dismiss, opening a
@@ -1162,7 +1165,9 @@
       var np = $('now-playing'); if (!np) return;
       var show = !!current && !trackEnded && currentScreen !== 0 && currentScreen !== 2;
       np.classList.toggle('show', show);
-      document.getElementById('app').classList.toggle('np-on', show);
+      var app = document.getElementById('app'), wasOn = app.classList.contains('np-on');
+      app.classList.toggle('np-on', show);
+      if (wasOn !== show && currentScreen === 4 && mapFloor) renderFloorMap(mapFloor);   // map fit reserves room for this bar
       if (!show) return;
       np.style.background = npBackground(current.color);   // track color, darkened if light
       $('np-title').textContent = current.title || '';
@@ -1390,18 +1395,13 @@
         { id: 'garden', x: 145, y: 25, w: 147, h: 44, label: 'Sculpture Garden', type: 'gallery', g: 'Sculpture Garden' },
         { id: '1north', x: 8, y: 34, w: 34, h: 48, label: '1 North', type: 'gallery', g: '1 North' },
         { id: '1west', x: 8, y: 85, w: 34, h: 40, label: '1 West', type: 'gallery' },
-        { id: 'member', x: 45, y: 60, w: 60, h: 30, label: 'Member Desk\nCheckroom', type: 'amenity' },
-        { id: 'store', x: 45, y: 93, w: 48, h: 32, label: 'Museum\nStore', type: 'amenity' },
         { id: 'hall1', x: 108, y: 60, w: 34, h: 65, label: 'Hallway', type: 'gallery', g: 'Floor 1' },
-        { id: 'film', x: 145, y: 72, w: 50, h: 36, label: 'Film\nCenter', type: 'amenity' },
-        { id: 'artlab', x: 252, y: 72, w: 40, h: 53, label: 'Art Lab', type: 'amenity' },
         { id: 'entrance', x: 8, y: 128, w: 284, h: 14, label: '53rd St Entrance', type: 'corridor' }
       ]},
       2: { theme: 'Collection 1970s\u2013Present', vbW: 300, vbH: 153, rooms: [
         { id: 'r207', x: 8, y: 8, w: 34, h: 34, label: '207', type: 'gallery' }, { id: 'r206', x: 45, y: 8, w: 34, h: 34, label: '206', type: 'gallery' },
         { id: 'r205', x: 82, y: 8, w: 26, h: 34, label: '205', type: 'gallery' }, { id: 'r203', x: 111, y: 8, w: 30, h: 34, label: '203', type: 'gallery' },
         { id: 'r204', x: 144, y: 8, w: 28, h: 34, label: '204', type: 'gallery' },
-        { id: 'creativity', x: 175, y: 8, w: 44, h: 34, label: 'Creativity\nLab', type: 'amenity' },
         { id: 'r208', x: 8, y: 45, w: 34, h: 30, label: '208', type: 'gallery' },
         { id: 'r202', x: 111, y: 45, w: 30, h: 30, label: '202', type: 'gallery' }, { id: 'r201', x: 144, y: 45, w: 28, h: 30, label: '201', type: 'gallery' },
         { id: 'atrium', x: 175, y: 45, w: 44, h: 63, label: 'Atrium', type: 'special' },
@@ -1411,13 +1411,10 @@
         { id: 'r212', x: 66, y: 111, w: 26, h: 34, label: '212', type: 'gallery' },
         { id: 'r215', x: 111, y: 111, w: 30, h: 34, label: '215', type: 'gallery' },
         { id: 'r213', x: 144, y: 111, w: 24, h: 34, label: '213', type: 'gallery' }, { id: 'r214', x: 171, y: 111, w: 24, h: 34, label: '214', type: 'gallery' },
-        { id: '2south', x: 198, y: 111, w: 40, h: 34, label: '2 South', type: 'gallery' },
-        { id: 'store2', x: 241, y: 111, w: 23, h: 34, label: 'Store', type: 'amenity' },
-        { id: 'cafe2', x: 267, y: 111, w: 25, h: 34, label: 'Caf\u00e9 2', type: 'amenity' }
+        { id: '2south', x: 198, y: 111, w: 40, h: 34, label: '2 South', type: 'gallery' }
       ]},
       3: { theme: 'Architecture \u00b7 Design \u00b7 Photo', vbW: 300, vbH: 128, rooms: [
         { id: '3north', x: 60, y: 8, w: 110, h: 50, label: '3 North', type: 'gallery', g: '3 North' },
-        { id: 'lounge3', x: 246, y: 8, w: 46, h: 34, label: 'Lounge', type: 'amenity' },
         { id: '3east', x: 173, y: 45, w: 119, h: 49, label: '3 East', type: 'gallery' },
         { id: '3south', x: 60, y: 76, w: 90, h: 44, label: '3 South', type: 'gallery' },
         { id: '3w', x: 8, y: 70, w: 34, h: 44, label: '3W', type: 'gallery' }
@@ -1457,9 +1454,7 @@
         { id: 'r521', x: 212, y: 161, w: 34, h: 40, label: '521', type: 'gallery' }
       ]},
       6: { theme: 'Special Exhibitions', vbW: 300, vbH: 116, rooms: [
-        { id: 'terrace', x: 8, y: 40, w: 40, h: 50, label: 'Terrace\nCaf\u00e9', type: 'amenity' },
         { id: 'cohen', x: 60, y: 8, w: 150, h: 100, label: 'Cohen Center\nSpecial Exhibitions', type: 'gallery', g: 'Floor 6' },
-        { id: 'store6', x: 213, y: 8, w: 40, h: 30, label: 'Store', type: 'amenity' },
         { id: 'outdoor', x: 213, y: 41, w: 79, h: 67, label: 'Outdoor Terrace', type: 'gallery' }
       ]}
     };
@@ -1528,15 +1523,33 @@
       $('map-info').style.display = 'none';
       renderFloorMap(f);
     }
+    // Phones held upright get each floor turned on its side so it fills the
+    // screen (rooms ~1.4x bigger to tap); anything wider than tall keeps the
+    // landscape plan. Desktop sizes the map in its own media query.
+    function mapFit(fd) {
+      if (window.innerWidth >= 1100) return { rot: false };
+      var mc = $('map-container'), cs = getComputedStyle(mc);
+      var aw = mc.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      // room bar (and now-playing bar) sit below — reserve them so the map
+      // doesn't jump when a room is tapped
+      var reserve = 100 + ($('app').classList.contains('np-on') ? 88 : 0);
+      var ah = window.innerHeight - mc.getBoundingClientRect().top - parseFloat(cs.paddingTop) - reserve;
+      if (aw <= 0 || ah <= 0) return { rot: false };
+      if (ah <= aw) return { rot: false };   // held sideways: full-width landscape plan, as before
+      var W = fd.vbH, H = fd.vbW, k = Math.min(aw / W, ah / H);
+      return { rot: true, w: Math.floor(W * k), h: Math.floor(H * k) };
+    }
     function renderFloorMap(f) {
       var fd = FLOOR_DATA[f]; if (!fd) return;
       var PAD = 4, frankList = FRANK_ROOMS[f] || [];
       var BRIGHT = '#cfc8ba';   // highlight tone for active galleries (dialed back from pure #dcd5c6)
+      var fit = mapFit(fd), rot = fit.rot;
+      var VW = rot ? fd.vbH : fd.vbW, VH = rot ? fd.vbW : fd.vbH;
       var svg = document.createElementNS(SVGNS, 'svg');
-      svg.setAttribute('viewBox', '0 0 ' + fd.vbW + ' ' + fd.vbH);
-      svg.style.cssText = 'width:100%;display:block;';
+      svg.setAttribute('viewBox', '0 0 ' + VW + ' ' + VH);
+      svg.style.cssText = fit.w ? 'display:block;margin:0 auto;width:' + fit.w + 'px;height:' + fit.h + 'px;' : 'width:100%;display:block;';
       var bg = document.createElementNS(SVGNS, 'rect');
-      bg.setAttribute('x', 0); bg.setAttribute('y', 0); bg.setAttribute('width', fd.vbW); bg.setAttribute('height', fd.vbH); bg.setAttribute('fill', '#0f0e0b');
+      bg.setAttribute('x', 0); bg.setAttribute('y', 0); bg.setAttribute('width', VW); bg.setAttribute('height', VH); bg.setAttribute('fill', '#0f0e0b');
       svg.appendChild(bg);
       fd.rooms.forEach(function (r) {
         // Blank circulation spacers (unlabeled stairs/elevator cores) aren't
@@ -1552,27 +1565,51 @@
         var noContent = isContent && !hasFrank;
         var sc = isNav ? '#27231c' : isAmen ? '#3b352a' : noContent ? '#4a463d' : BRIGHT;
         var sw = isNav ? 0.4 : noContent ? 0.5 : 0.7;
-        var fz = r.w < 32 ? 5.5 : r.w < 50 ? 6.5 : 7;
+        // turned 90° clockwise: the plan's top edge becomes the right edge
+        var x = rot ? fd.vbH - (r.y + r.h) : r.x, y = rot ? r.x : r.y;
+        var w = rot ? r.h : r.w, h = rot ? r.w : r.h;
+        var vert = rot && isNav && h > w * 3;   // street strips now run down a side — label them sideways
+        var fz = vert ? 7 : w < 32 ? 5.5 : w < 50 ? 6.5 : 7;
         var clickable = !isNav && !noContent;
         var g = document.createElementNS(SVGNS, 'g');
         if (clickable) { g.setAttribute('data-room-id', r.id); g.style.cursor = 'pointer'; }
         var rect = document.createElementNS(SVGNS, 'rect');
-        rect.setAttribute('x', r.x); rect.setAttribute('y', r.y); rect.setAttribute('width', r.w); rect.setAttribute('height', r.h);
+        rect.setAttribute('x', x); rect.setAttribute('y', y); rect.setAttribute('width', w); rect.setAttribute('height', h);
         rect.setAttribute('fill', isSel ? BRIGHT : 'transparent');
         rect.setAttribute('stroke', isSel ? BRIGHT : sc);
         rect.setAttribute('stroke-width', sw);
         g.appendChild(rect);
-        (r.label ? r.label.split('\n') : []).forEach(function (line, i) {
+        var lines = r.label ? r.label.split('\n') : [];
+        // Turned rooms are narrower than the labels were written for — wrap
+        // words onto new lines when a line clearly won't fit (~0.6em a char).
+        if (rot && !vert) {
+          var room = w - PAD * 2;
+          lines = lines.reduce(function (out, line) {
+            line.split(' ').forEach(function (word) {
+              var last = out.length ? out[out.length - 1] : null;
+              if (last !== null && (last + ' ' + word).length * fz * 0.6 <= room) out[out.length - 1] = last + ' ' + word;
+              else out.push(word);
+            });
+            return out;
+          }, []);
+        }
+        lines.forEach(function (line, i) {
           if (!line) return;
           var t = document.createElementNS(SVGNS, 'text');
-          t.setAttribute('x', r.x + PAD);
-          t.setAttribute('y', r.y + PAD + fz + i * (fz + 1.5));
+          if (vert) {
+            t.setAttribute('x', x + 3); t.setAttribute('y', y + PAD);
+            t.setAttribute('transform', 'rotate(90 ' + (x + 3) + ' ' + (y + PAD) + ')');
+          } else {
+            t.setAttribute('x', x + PAD);
+            t.setAttribute('y', y + PAD + fz + i * (fz + 1.5));
+          }
           t.setAttribute('fill', isSel ? '#0f0e0b' : isNav ? '#38332a' : isAmen ? '#5a554b' : noContent ? '#6a655a' : BRIGHT);
           t.setAttribute('font-size', fz);
           t.setAttribute('font-family', 'Inter,Helvetica Neue,Arial,sans-serif');
           t.setAttribute('letter-spacing', '0.02em');
           t.style.pointerEvents = 'none'; t.style.userSelect = 'none';
           t.textContent = line;
+          t.setAttribute('data-fit', vert ? h - PAD * 2 : w - PAD - 2);
           g.appendChild(t);
         });
         svg.appendChild(g);
@@ -1580,6 +1617,11 @@
       var mc = $('map-container');
       mc.innerHTML = '';
       mc.appendChild(svg);
+      // last resort: shrink any single word still wider than its room
+      svg.querySelectorAll('text[data-fit]').forEach(function (t) {
+        var room = +t.getAttribute('data-fit'), len = t.getComputedTextLength();
+        if (len > room && room > 0) t.setAttribute('font-size', (+t.getAttribute('font-size') * room / len).toFixed(2));
+      });
       svg.addEventListener('click', function (e) {
         var g = e.target.closest ? e.target.closest('[data-room-id]') : null;
         if (!g) { g = e.target.parentNode; if (!g || !g.getAttribute || !g.getAttribute('data-room-id')) g = null; }
