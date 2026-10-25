@@ -202,6 +202,7 @@
     /* When the selected room has picks, the whole panel is the tap target. */
     #map-info { flex-direction: column; justify-content: center; }
     #player-where.off { color: rgba(220,213,198,.6) !important; font-weight: 400 !important; }
+    #player-where.tap { cursor: pointer; }
     #map-info.tappable { cursor: pointer; transition: background .15s ease; }
     #map-info.tappable:active { background: #16140f; }
     #map-info-arrow { color: rgba(220,213,198,.55); flex-shrink: 0; display: flex; align-items: center; transition: transform .15s ease, color .15s ease; }
@@ -762,9 +763,27 @@
       if (/ps1/i.test(g)) return 'MoMA PS1, Queens';
       if (/garden/i.test(g)) return 'Floor 1 · Sculpture Garden';
       var m = g.match(/^floor\s+(\d)$/i);
-      if (m) return 'Floor ' + m[1] + (m[1] === '6' ? '' : ' · Hallway');
+      if (m) return 'Floor ' + m[1] + (m[1] === '6' ? ' · Special Exhibitions' : ' · Hallway');
       var f = galleryToFloor(g);
       return f ? 'Floor ' + f + ' · Gallery ' + g : g;
+    }
+
+    // The map room a work hangs in, if it's drawn on a floor plan.
+    function mapSpot(a) {
+      var fd = a._floor && FLOOR_DATA[a._floor]; if (!fd) return null;
+      var r = fd.rooms.find(function (r) { return roomKey(r) === a.gallery; });
+      return r ? { floor: a._floor, room: r.id } : null;
+    }
+    // Player gallery line -> the map, on that floor, with the room selected.
+    // The hash is dropped silently so closing the map can route back to the
+    // work (same track keeps playing).
+    function openMapAtCurrent() {
+      var spot = current && mapSpot(current); if (!spot) return;
+      mapReturn = current.id;
+      history.replaceState(null, '', location.pathname + location.search);
+      go(4);
+      setFloorMap(spot.floor);
+      selectRoom(spot.room, spot.floor);
     }
 
     // ── Heard state ───────────────────────────────────────────────────────
@@ -1061,9 +1080,16 @@
       $('player-bg').style.background = npFlatColor(a.color || '#111');   // flat darkened hex (not a gradient-over-raw): keeps the white title + ghost legible AND makes background-COLOR the darkened value, so the iOS in-app status bar samples the right tone (a gradient leaves background-color raw)
       $('player-controls').style.background = npBottomColor(a.color || '#111');   // consistent two-tone: bottom band = a fixed darker step of the SAME hue as the top, so the top/bottom split reads equally on every work
       $('player-title').textContent = a.title || '';
-      $('player-artist').textContent = (a.artist || '') + (a.year ? ', ' + a.year : '');
-      $('player-where').textContent = whereLabel(a);
-      $('player-where').classList.toggle('off', !('' + (a.gallery || '')).trim());
+      // year stays in one piece ("1910–12" never splits across lines)
+      var pa = $('player-artist'); pa.textContent = (a.artist || '') + (a.year ? ', ' : '');
+      if (a.year) { var py = document.createElement('span'); py.style.whiteSpace = 'nowrap'; py.textContent = listYear(a); pa.appendChild(py); }
+      var pw = $('player-where'), spot = mapSpot(a);
+      pw.textContent = whereLabel(a) + (spot ? '\u00a0\u00a0→' : '');
+      pw.classList.toggle('off', !('' + (a.gallery || '')).trim());
+      // A room on the map? The line becomes a link to it.
+      pw.classList.toggle('tap', !!spot);
+      if (spot) { pw.setAttribute('role', 'button'); pw.setAttribute('tabindex', '0'); pw.setAttribute('aria-label', 'Show ' + whereLabel(a) + ' on the map'); }
+      else { pw.removeAttribute('role'); pw.removeAttribute('tabindex'); pw.removeAttribute('aria-label'); }
       var hk = $('player-hook');
       if (a.hook) { hk.textContent = a.hook; hk.style.display = 'block'; } else { hk.style.display = 'none'; }
       $('tx-text').innerHTML = a.transcript || '';
@@ -1392,6 +1418,8 @@
     // ── Map ───────────────────────────────────────────────────────────────
     var SVGNS = 'http://www.w3.org/2000/svg';
     var mapFloor = null, selectedRoom = null, mapInited = false;
+    var mapReturn = null;   // work id to go back to when the map was opened from its player
+    var mapLast = null;     // { floor, room } you last went into — MAP reopens there
 
     var FLOOR_DATA = {
       1: { theme: 'Lobby & Garden', vbW: 300, vbH: 150, rooms: [
@@ -1501,8 +1529,12 @@
         buildMapActivity();
         buildFloorTabs();
         setFloorMap(5);   // FIRST visit defaults to Floor 5 (main painting galleries)
+      } else if (mapLast) {
+        // back from a room you went into: same floor, that room still lit
+        setFloorMap(mapLast.floor);
+        selectRoom(mapLast.room, mapLast.floor);
       } else {
-        showBlankMap();   // later visits open blank until a floor is tapped
+        showBlankMap();   // otherwise later visits open blank until a floor is tapped
       }
     }
     function showBlankMap() {
@@ -1633,6 +1665,8 @@
       });
     }
     function selectRoom(id, f) {
+      // second tap on the lit room goes in — same as tapping the yellow bar
+      if (selectedRoom === id && $('map-info').dataset.key) { applyMapFilter(); return; }
       selectedRoom = selectedRoom === id ? null : id;
       renderFloorMap(f);
       var info = $('map-info');
@@ -1680,9 +1714,11 @@
       info.style.display = 'flex';
     }
     function applyMapFilter() {
+      mapReturn = null;
       var info = $('map-info');
       var key = info.dataset.key;
       if (!key) return;
+      mapLast = { floor: mapFloor, room: selectedRoom };
       // "tap to listen": a one-work room opens that work's player directly
       // instead of detouring through a filtered list of one.
       if (info.dataset.solo) { openArtwork(info.dataset.solo); return; }
@@ -1741,8 +1777,13 @@
       });
       $('about-btn').addEventListener('click', function () { go(3); });
       $('about-close').addEventListener('click', function () { go(1); });
-      $('map-close').addEventListener('click', function () { go(1); });
-      $('chip-map').addEventListener('click', function () { go(4); });
+      $('map-close').addEventListener('click', function () {
+        var back = mapReturn; mapReturn = null;
+        if (back) openArtwork(back); else go(1);   // came from a work? go back to it
+      });
+      $('chip-map').addEventListener('click', function () { mapReturn = null; go(4); });
+      $('player-where').addEventListener('click', openMapAtCurrent);
+      $('player-where').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openMapAtCurrent(); } });
       // Picks from what's on screen — the room, floor or search you narrowed
       // to — and from everything when nothing is narrowed.
       $('play-something').addEventListener('click', function () {
