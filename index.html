@@ -201,6 +201,7 @@
     #app.np-on #map-info { margin-bottom: 88px; padding-bottom: 14px !important; }
     /* When the selected room has picks, the whole panel is the tap target. */
     #map-info { flex-direction: column; justify-content: center; }
+    #player-where.off { color: rgba(220,213,198,.6) !important; font-weight: 400 !important; }
     #map-info.tappable { cursor: pointer; transition: background .15s ease; }
     #map-info.tappable:active { background: #16140f; }
     #map-info-arrow { color: rgba(220,213,198,.55); flex-shrink: 0; display: flex; align-items: center; transition: transform .15s ease, color .15s ease; }
@@ -403,7 +404,7 @@
         </div>
         <p id="count-line" style="display:none;color:rgba(220,213,198,.4);font-size:14px;letter-spacing:1.5px;padding:16px 0 0;margin:0;text-transform:uppercase;"></p>
         <div id="gallery-list"></div>
-        <p id="no-results" style="display:none;color:rgba(220,213,198,.5);font-size:17.5px;padding:20px 0;font-style:italic;">nothing here yet — try a gallery number, a floor, or a title.</p>
+        <p id="no-results" style="display:none;color:rgba(220,213,198,.5);font-size:17.5px;padding:20px 0;font-style:italic;">nothing here yet — try an artist, a title, a gallery number or a floor.</p>
       </div>
     </div>
 
@@ -417,7 +418,8 @@
         <div class="pcol" style="flex:1;padding:20px 16px 0;position:relative;z-index:2;display:flex;flex-direction:column;overflow:hidden;">
           <div style="flex-shrink:0;">
             <p id="player-title" style="color:#dcd5c6;font-size:41.5px;line-height:1.2;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
-            <p id="player-artist" style="color:rgba(220,213,198,.72);font-size:20px;margin:13px 0 0;letter-spacing:1px;"></p>
+            <p id="player-artist" style="color:#dcd5c6;font-size:20px;margin:13px 0 0;letter-spacing:1px;"></p>
+            <p id="player-where" style="color:#dcd5c6;font-size:14px;font-weight:500;margin:12px 0 0;letter-spacing:.2em;text-transform:uppercase;"></p>
             <p id="player-hook" style="color:rgba(220,213,198,.78);font-size:22.5px;margin:18px 0 0;line-height:1.7;font-weight:300;font-style:italic;display:none;"></p>
           </div>
           <div id="tx-area" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-top:16px;display:none;">
@@ -743,6 +745,21 @@
       return null;
     }
 
+    // Where the work hangs, for the player — same wording as the map bar.
+    // No gallery means it isn't in MoMA's galleries (off view, or not
+    // MoMA's at all, like Nighthawks), so say exactly that — dimmed, since
+    // there's nothing to go find.
+    function whereLabel(a) {
+      var g = ('' + (a.gallery || '')).trim();
+      if (!g) return 'Not on view at MoMA';
+      if (/ps1/i.test(g)) return 'MoMA PS1, Queens';
+      if (/garden/i.test(g)) return 'Floor 1 · Sculpture Garden';
+      var m = g.match(/^floor\s+(\d)$/i);
+      if (m) return 'Floor ' + m[1] + (m[1] === '6' ? '' : ' · Hallway');
+      var f = galleryToFloor(g);
+      return f ? 'Floor ' + f + ' · Gallery ' + g : g;
+    }
+
     // ── Heard state ───────────────────────────────────────────────────────
     function getHeard() { try { return JSON.parse(localStorage.getItem('ltf_heard') || '[]'); } catch (e) { return []; } }
     function markHeard(id) { var h = getHeard(); if (h.indexOf(id) < 0) { h.push(id); try { localStorage.setItem('ltf_heard', JSON.stringify(h)); } catch (e) {} } }
@@ -863,11 +880,55 @@
     }
 
     // ── Filtering (search + floor chip) ───────────────────────────────────
+    var _STOP = { the:1, a:1, an:1, of:1, by:1, and:1, in:1, at:1, with:1, on:1, to:1 };
+    function _words(str) { return normalizeForSearch(str).replace(/[^a-z0-9#]+/g, ' ').trim(); }
+    // One searchable string per work: title (full + list form), artist, year, gallery.
+    function _hay(a) {
+      if (a._hay == null) {
+        a._hay = _words([a.title, a.listTitle, a.artist, a.listArtist, a.year, a.gallery].join(' '));
+        a._hayWords = a._hay.split(' ');
+        a._haySquash = a._hay.replace(/ /g, '');
+      }
+      return a._hay;
+    }
+    // "floor 5", "5th floor", "fifth floor", "level five" -> 5
+    function _floorQuery(normQ) {
+      var m = normQ.match(/^(?:floor|level|fl)\s*([1-6])$/) || normQ.match(/^([1-6])\s*(?:floor|fl)$/);
+      return m ? +m[1] : null;
+    }
+    // Typo distance (optimal string alignment: a swapped pair counts as one).
+    function _osa(s, t) {
+      var d = [], i, j;
+      for (i = 0; i <= s.length; i++) { d[i] = [i]; }
+      for (j = 0; j <= t.length; j++) d[0][j] = j;
+      for (i = 1; i <= s.length; i++) for (j = 1; j <= t.length; j++) {
+        var c = s[i - 1] === t[j - 1] ? 0 : 1;
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + c);
+        if (i > 1 && j > 1 && s[i - 1] === t[j - 2] && s[i - 2] === t[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+      }
+      return d[s.length][t.length];
+    }
+    // Close-spelling fallback, only used when nothing matches exactly:
+    // every word typed must be in the work or one/two letters off a word in it.
+    function fuzzyMatches(a, ctx) {
+      if (activeFloor != null && a._floor !== activeFloor) return false;
+      var hay = _hay(a);
+      return ctx.tokens.length > 0 && ctx.tokens.every(function (t) {
+        if (hay.indexOf(t) >= 0) return true;
+        var max = t.length >= 7 ? 2 : t.length >= 5 ? 1 : 0;   // short words must be exact ("cafe" isn't "case")
+        return max > 0 && a._hayWords.some(function (w) {
+          return w[0] === t[0] && Math.abs(w.length - t.length) <= max && _osa(t, w) <= max;
+        });
+      });
+    }
     function matches(a, ctx) {
       if (activeFloor != null && a._floor !== activeFloor) return false;
       if (!ctx.q) return true;
+      if (ctx.floorQ) return a._floor === ctx.floorQ;
       var gal = ('' + (a.gallery || '')).toLowerCase().trim();
       if (ctx.galleryQ && gal === ctx.galleryQ) return true;
+      // A 3-digit number is a gallery, not part of a year ("202" isn't 2020).
+      if (/^\d{3}$/.test(ctx.galleryQ)) return false;
       // "hallway" matches the floor-landing works shown with a "Hallway · N" badge
       if (ctx.q.indexOf('hallway') >= 0 && /^floor\s+[145]\b/.test(gal)) return true;
       if (normalizeForSearch(a.title).indexOf(ctx.qNorm) >= 0) return true;
@@ -878,6 +939,11 @@
         if (ctx.normQ !== ctx.q && gal.indexOf(ctx.normQ) >= 0) return true;
         if (ctx.normRev && gal.indexOf(ctx.normRev) >= 0) return true;
       }
+      var hay = _hay(a);
+      // several words, split across title and artist ("matisse dance")
+      if (ctx.tokens.length >= 2 && ctx.tokens.every(function (t) { return hay.indexOf(t) >= 0; })) return true;
+      // run-together names ("vangogh", "lesdemoiselles")
+      if (ctx.squash.length >= 5 && a._haySquash.indexOf(ctx.squash) >= 0) return true;
       return false;
     }
     function applyFilters() {
@@ -890,20 +956,34 @@
         normQ: _normalizeDigitWords(raw),
         normRev: normTokens.length >= 2 ? normTokens.slice().reverse().join(' ') : ''
       };
-      var shown = 0;
+      ctx.floorQ = _floorQuery(ctx.normQ);
+      var qWords = _words(raw);
+      ctx.tokens = qWords ? qWords.split(' ').filter(function (t) { return !_STOP[t]; }) : [];
+      ctx.squash = qWords.replace(/ /g, '');
+      var shown = 0, fuzzy = false;
       ARTS.forEach(function (a) {
         var ok = matches(a, ctx);
         var row = ROW_OF[a.id];
         if (row) row.classList.toggle('hidden', !ok);
         if (ok) shown++;
       });
+      if (!shown && raw && !ctx.floorQ && !ctx.galleryQ) {
+        ARTS.forEach(function (a) {
+          var ok = fuzzyMatches(a, ctx);
+          var row = ROW_OF[a.id];
+          if (row) row.classList.toggle('hidden', !ok);
+          if (ok) shown++;
+        });
+        fuzzy = shown > 0;
+      }
       $('no-results').style.display = shown ? 'none' : 'block';
       // Count only answers a question on a narrowed list (room, floor,
       // search) of several — on the full archive or a single work it's
       // just a number in the way.
+      // Close-spelling results always say so, even a single one.
       var cl = $('count-line');
-      cl.textContent = shown + ' works';
-      cl.style.display = (raw || activeFloor != null) && shown > 1 ? 'block' : 'none';
+      cl.textContent = fuzzy ? (shown > 1 ? shown + ' close matches' : 'Close match') : shown + ' works';
+      cl.style.display = fuzzy || ((raw || activeFloor != null) && shown > 1) ? 'block' : 'none';
       var clr = $('clear-btn');
       if (clr) clr.style.display = ($('search-input').value || '') ? 'flex' : 'none';
     }
@@ -975,6 +1055,8 @@
       $('player-controls').style.background = npBottomColor(a.color || '#111');   // consistent two-tone: bottom band = a fixed darker step of the SAME hue as the top, so the top/bottom split reads equally on every work
       $('player-title').textContent = a.title || '';
       $('player-artist').textContent = (a.artist || '') + (a.year ? ', ' + a.year : '');
+      $('player-where').textContent = whereLabel(a);
+      $('player-where').classList.toggle('off', !('' + (a.gallery || '')).trim());
       var hk = $('player-hook');
       if (a.hook) { hk.textContent = a.hook; hk.style.display = 'block'; } else { hk.style.display = 'none'; }
       $('tx-text').innerHTML = a.transcript || '';
