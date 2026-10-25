@@ -362,7 +362,7 @@
     <div class="screen" id="S1" style="background:#0f0e0b;">
       <div id="gallery-head" style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;background:#0f0e0b;">
         <div id="gallery-topbar" style="display:flex;align-items:center;justify-content:flex-end;padding:0 16px 0;margin-bottom:2px;">
-          <button class="icon-btn" id="about-btn" title="About" style="background:none;border:none;color:rgba(220,213,198,.7);cursor:pointer;padding:2px;display:flex;">
+          <button class="icon-btn" id="about-btn" title="About" aria-label="About Listen to Frank" style="background:none;border:none;color:rgba(220,213,198,.7);cursor:pointer;padding:2px;display:flex;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="3" y1="9" x2="21" y2="9" vector-effect="non-scaling-stroke"/><line x1="3" y1="15" x2="21" y2="15" vector-effect="non-scaling-stroke"/></svg>
           </button>
         </div>
@@ -452,7 +452,7 @@
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <button id="tx-btn" style="background:transparent;border:1px solid rgba(220,213,198,.4);border-radius:2px;color:rgba(220,213,198,.75);font-size:15px;letter-spacing:1.5px;cursor:pointer;padding:8px 15px;font-family:'Inter',sans-serif;">read along</button>
-            <button id="share-btn" style="background:transparent;border:none;color:rgba(220,213,198,.6);cursor:pointer;padding:4px;" title="Share">
+            <button id="share-btn" aria-label="Share this work" style="background:transparent;border:none;color:rgba(220,213,198,.6);cursor:pointer;padding:4px;" title="Share">
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             </button>
           </div>
@@ -470,7 +470,7 @@
         <div id="about-band" style="position:relative;padding:calc(env(safe-area-inset-top, 0px) + 15px) 16px 16px;margin-bottom:30px;background:#0f0e0b;">
           <div class="pcol" style="display:flex;align-items:center;justify-content:flex-start;">
           <p id="about-word" class="kawara-logo home-logo" style="color:#dcd5c6;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
-          <button id="about-close" style="margin-left:auto;flex-shrink:0;background:transparent;border:none;color:rgba(220,213,198,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
+          <button id="about-close" aria-label="Close About" style="margin-left:auto;flex-shrink:0;background:transparent;border:none;color:rgba(220,213,198,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
           </div>
         </div>
       </div>
@@ -502,7 +502,7 @@
     <div class="screen" id="S4" style="background:#0f0e0b;">
       <div style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;background:#0f0e0b;">
         <div style="display:flex;align-items:center;justify-content:flex-end;padding:0 16px 0;margin-bottom:12px;">
-          <button id="map-close" style="background:transparent;border:none;color:rgba(220,213,198,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
+          <button id="map-close" aria-label="Close map" style="background:transparent;border:none;color:rgba(220,213,198,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
         </div>
         <div style="font-size:11.5px;letter-spacing:.22em;color:rgba(220,213,198,.42);padding:0 16px 6px;">FLOOR</div>
         <div id="floor-tabs" style="display:flex;gap:6px;padding:0 16px;"></div>
@@ -552,6 +552,10 @@
     var trackEnded = false;   // true once a track finishes → hides the Now Playing bar
     var txOpen = false;
     var booted = false;
+    // A tap on the cover before the catalog has loaded (slow museum Wi-Fi)
+    // is remembered and honoured the moment it arrives, not dropped.
+    var wantIn = false;
+    document.getElementById('S0').addEventListener('click', function () { if (!booted) wantIn = true; });
 
     var audio = document.getElementById('audio');
     var $ = function (id) { return document.getElementById(id); };
@@ -1739,7 +1743,13 @@
       $('about-close').addEventListener('click', function () { go(1); });
       $('map-close').addEventListener('click', function () { go(1); });
       $('chip-map').addEventListener('click', function () { go(4); });
-      $('play-something').addEventListener('click', function () { if (ARTS.length) openArtwork(ARTS[Math.floor(Math.random() * ARTS.length)].id); });
+      // Picks from what's on screen — the room, floor or search you narrowed
+      // to — and from everything when nothing is narrowed.
+      $('play-something').addEventListener('click', function () {
+        var pool = ARTS.filter(function (a) { var r = ROW_OF[a.id]; return r && !r.classList.contains('hidden'); });
+        if (!pool.length) pool = ARTS;
+        if (pool.length) openArtwork(pool[Math.floor(Math.random() * pool.length)].id);
+      });
       $('search-input').addEventListener('input', function () { clearActiveFloor(); applyFilters(); });
       $('clear-btn').addEventListener('click', function () { clearSearch(true); applyFilters(); });
       document.querySelectorAll('.chip[data-floor]').forEach(function (c) {
@@ -1798,7 +1808,7 @@
 
       var hash = decodeURIComponent(window.location.hash.slice(1));
       if (hash && BY_ID[hash] && !BY_ID[hash].isAbout) showPlayer(BY_ID[hash]);
-      else go(0);
+      else go(wantIn ? 1 : 0);
     }
 
     Promise.all([
