@@ -121,17 +121,20 @@
     .cover-margin { display: none; }
 
     /* Gallery rows */
-    .row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 0.5px solid #181510; cursor: pointer; transition: opacity .12s ease, transform .12s ease, background .18s ease; position: relative; }
+    .row { display: flex; gap: 14px; align-items: center; padding: 13px 0; border-bottom: 0.5px solid #181510; cursor: pointer; transition: opacity .12s ease, transform .12s ease, background .18s ease; position: relative; }
     .row:active { opacity: .4; transform: scale(0.985); }
     .row.hidden { display: none; }
-    .thumb { flex-shrink: 0; width: 90px; height: 128px; display: flex; align-items: flex-start; justify-content: center; }
-    .thumb img { max-width: 90px; max-height: 128px; object-fit: contain; object-position: top center; display: block; filter: brightness(1.75) contrast(1.2) sepia(.25); transition: filter .2s ease, transform .2s ease; }
-    .thumb .swatch { width: 68px; height: 94px; align-self: flex-start; opacity: .9; }
-    .row-text { flex: 1; padding-top: 2px; min-width: 0; }
-    .row-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; gap: 8px; }
-    .row-title { color: rgba(220,213,198,.97); font-size: 20px; letter-spacing: 1.2px; font-weight: 500; transition: color .3s; }
-    .row-gallery { color: rgba(220,213,198,.5); font-size: 16.5px; letter-spacing: .5px; flex-shrink: 0; white-space: nowrap; }
-    .row-artist { color: rgba(220,213,198,.6); font-size: 16.5px; margin: 0 0 6px; letter-spacing: .5px; transition: color .3s; }
+    .thumb { flex-shrink: 0; width: 90px; height: 128px; display: flex; align-items: center; justify-content: center; }
+    .thumb img { max-width: 90px; max-height: 128px; object-fit: contain; object-position: center; display: block; filter: brightness(1.75) contrast(1.2) sepia(.25); transition: filter .2s ease, transform .2s ease; }
+    .thumb .swatch { width: 68px; height: 94px; opacity: .9; }
+    .row-text { flex: 1; min-width: 0; }
+    .row-text > :last-child { margin-bottom: 0; }   /* keeps the text block truly centered on the drawing */
+    .row-title { color: rgba(220,213,198,.97); font-size: 18px; letter-spacing: 1.2px; font-weight: 500; margin-bottom: 3px; transition: color .3s;
+                 display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .row-artist { color: rgba(220,213,198,.6); font-size: 16.5px; margin: 0 0 2px; letter-spacing: .5px; transition: color .3s; }
+    .row-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .row-year, .row-gallery { color: rgba(220,213,198,.5); font-size: 16.5px; letter-spacing: .5px; white-space: nowrap; }
+    .row-year { min-width: 0; overflow: hidden; text-overflow: ellipsis; }   /* backstop: a future long date cuts, never wraps */
     .row-hook { color: rgba(220,213,198,.68); font-size: 20px; margin: 0; line-height: 1.6; font-style: italic; font-weight: 300; }
     @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
     .playing-dot { display: none; width: 5px; height: 5px; border-radius: 50%; background: #dcd5c6; position: absolute; right: 0; top: 50%; transform: translateY(-50%); animation: pulse 1.8s ease-in-out infinite; }
@@ -197,6 +200,7 @@
     /* Map room-info panel isn't a scrollpad, so lift it above the Now Playing bar. */
     #app.np-on #map-info { margin-bottom: 88px; padding-bottom: 14px !important; }
     /* When the selected room has picks, the whole panel is the tap target. */
+    #map-info { flex-direction: column; justify-content: center; }
     #map-info.tappable { cursor: pointer; transition: background .15s ease; }
     #map-info.tappable:active { background: #16140f; }
     #map-info-arrow { color: rgba(220,213,198,.55); flex-shrink: 0; display: flex; align-items: center; transition: transform .15s ease, color .15s ease; }
@@ -258,10 +262,10 @@
       .thumb { width: 106px; height: 150px; }
       .thumb img { max-width: 106px; max-height: 150px; }
       .thumb .swatch { width: 80px; height: 110px; }
-      .row-title { font-size: 25px; }
+      .row-title { font-size: 22.5px; }
       .row-artist { font-size: 20px; }
       .row-hook { font-size: 25px; line-height: 1.6; }
-      .row-gallery { font-size: 20px; }
+      .row-year, .row-gallery { font-size: 20px; }
       .search-input { font-size: 24px; padding: 16px 44px 16px 19px; }
       .chip { font-size: 20px; padding: 9px 19px; }
     }
@@ -291,9 +295,9 @@
       .thumb { width: 58px; height: 78px; }
       .thumb img { max-width: 58px; max-height: 78px; }
       .thumb .swatch { width: 46px; height: 64px; }
-      .row-title { font-size: 17px; }
-      .row-artist { font-size: 14px; margin-bottom: 3px; }
-      .row-gallery { font-size: 14px; }
+      .row-title { font-size: 15.5px; }
+      .row-artist { font-size: 14px; margin-bottom: 2px; }
+      .row-year, .row-gallery { font-size: 14px; }
       .row-hook { font-size: 15px; line-height: 1.55; }
 
       /* Entry — the cover's margin crew appears */
@@ -322,8 +326,8 @@
 
       /* Map — full-bleed; header rows and info panel at the same margins.
          The info panel is FIXED with a constant height so selecting rooms
-         (1-line vs 2-line notes, shown vs hidden) never reflows the map —
-         the floor plan stays pixel-stable while you tap around. */
+         (shown vs hidden) never reflows the map — the floor plan stays
+         pixel-stable while you tap around. Its two lines sit centered. */
       #S4 { position: fixed; inset: 0; }
       #S4 > div:first-child > div { padding-left: 64px !important; padding-right: 64px !important; }
       #map-container { padding: 8px 64px 140px !important; }
@@ -397,9 +401,9 @@
           <span style="color:rgba(220,213,198,.6);font-size:16.5px;letter-spacing:2px;">PLAY SOMETHING</span>
           <span style="color:rgba(220,213,198,.5);display:inline-flex;align-items:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></span>
         </div>
+        <p id="count-line" style="display:none;color:rgba(220,213,198,.4);font-size:14px;letter-spacing:1.5px;padding:16px 0 0;margin:0;text-transform:uppercase;"></p>
         <div id="gallery-list"></div>
         <p id="no-results" style="display:none;color:rgba(220,213,198,.5);font-size:17.5px;padding:20px 0;font-style:italic;">nothing here yet — try a gallery number, a floor, or a title.</p>
-        <p id="count-line" style="color:rgba(220,213,198,.4);font-size:14px;letter-spacing:1.5px;padding:18px 0 0;text-transform:uppercase;"></p>
       </div>
     </div>
 
@@ -506,9 +510,8 @@
       <div id="map-info" style="display:none;padding:14px 16px max(16px,env(safe-area-inset-bottom));border-top:1px solid #2f2a22;flex-shrink:0;background:#0f0e0b;" role="button" tabindex="0">
         <div style="display:flex;align-items:center;gap:14px;">
           <div style="flex:1;min-width:0;">
-            <div id="map-room-floor" style="font-size:12.5px;color:rgba(220,213,198,.5);letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;"></div>
-            <div id="map-room-name" style="font-size:22.5px;color:#dcd5c6;font-weight:400;line-height:1.3;margin-bottom:5px;"></div>
-            <div id="map-room-note" style="font-size:17px;color:rgba(220,213,198,.68);line-height:1.6;"></div>
+            <div id="map-room-floor" style="font-size:12.5px;color:rgba(220,213,198,.5);letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+            <div id="map-room-name" style="font-size:22.5px;color:#dcd5c6;font-weight:400;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
           </div>
           <div id="map-info-arrow" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></div>
         </div>
@@ -785,6 +788,11 @@
       var m = g.match(/^floor\s+([145])\b/i);
       return m ? 'Hallway · ' + m[1] : g;
     }
+    // Full year on its own line (every one fits); hyphenated ranges get a
+    // proper en dash so "1905-06" and "1914–26" match.
+    function listYear(a) {
+      return ('' + (a.year || '')).replace(/(\d)-(\d)/g, '$1–$2');
+    }
     function buildRow(a) {
       var row = document.createElement('div');
       row.className = 'row';
@@ -801,24 +809,32 @@
       var text = document.createElement('div');
       text.className = 'row-text';
 
-      var meta = document.createElement('div');
-      meta.className = 'row-meta';
-      var t = document.createElement('span');
+      // Four lines max: title (2), artist (1), then year + gallery number.
+      // listTitle / listArtist are hand-picked short forms for the few that
+      // don't fit; the full title and artist stay on the player and in search.
+      var t = document.createElement('div');
       t.className = 'row-title';
-      t.textContent = (a.title || '').toUpperCase();
-      meta.appendChild(t);
+      t.textContent = (a.listTitle || a.title || '').toUpperCase();
+      text.appendChild(t);
+
+      var artist = document.createElement('p');
+      artist.className = 'row-artist';
+      artist.textContent = (a.listArtist || a.artist || '').toUpperCase();
+      text.appendChild(artist);
+
+      var foot = document.createElement('div');
+      foot.className = 'row-foot';
+      var yr = document.createElement('span');
+      yr.className = 'row-year';
+      yr.textContent = listYear(a);
+      foot.appendChild(yr);
       if (a._floor != null) {
         var gal = document.createElement('span');
         gal.className = 'row-gallery';
         gal.textContent = galleryBadge(a);
-        meta.appendChild(gal);
+        foot.appendChild(gal);
       }
-      text.appendChild(meta);
-
-      var artist = document.createElement('p');
-      artist.className = 'row-artist';
-      artist.textContent = (a.artist || '').toUpperCase() + (a.year ? ' · ' + a.year : '');
-      text.appendChild(artist);
+      text.appendChild(foot);
 
       if (a.hook) {
         var hook = document.createElement('p');
@@ -882,7 +898,12 @@
         if (ok) shown++;
       });
       $('no-results').style.display = shown ? 'none' : 'block';
-      $('count-line').textContent = shown + (shown === 1 ? ' artwork' : ' artworks');
+      // Count only answers a question on a narrowed list (room, floor,
+      // search) of several — on the full archive or a single work it's
+      // just a number in the way.
+      var cl = $('count-line');
+      cl.textContent = shown + ' works';
+      cl.style.display = (raw || activeFloor != null) && shown > 1 ? 'block' : 'none';
       var clr = $('clear-btn');
       if (clr) clr.style.display = ($('search-input').value || '') ? 'flex' : 'none';
     }
@@ -1283,81 +1304,81 @@
 
     var FLOOR_DATA = {
       1: { theme: 'Lobby & Garden', vbW: 300, vbH: 150, rooms: [
-        { id: 'exit54', x: 8, y: 6, w: 284, h: 14, label: '54th St Exit', type: 'corridor' },
-        { id: 'garden', x: 150, y: 24, w: 142, h: 44, label: 'Sculpture Garden', type: 'gallery', g: 'Sculpture Garden' },
+        { id: 'exit54', x: 8, y: 8, w: 284, h: 14, label: '54th St Exit', type: 'corridor' },
+        { id: 'garden', x: 145, y: 25, w: 147, h: 44, label: 'Sculpture Garden', type: 'gallery', g: 'Sculpture Garden' },
         { id: '1north', x: 8, y: 34, w: 34, h: 48, label: '1 North', type: 'gallery', g: '1 North' },
-        { id: '1west', x: 8, y: 86, w: 34, h: 40, label: '1 West', type: 'gallery' },
-        { id: 'member', x: 46, y: 60, w: 60, h: 30, label: 'Member Desk\nCheckroom', type: 'amenity' },
-        { id: 'store', x: 46, y: 94, w: 48, h: 32, label: 'Museum\nStore', type: 'amenity' },
-        { id: 'hall1', x: 110, y: 60, w: 34, h: 66, label: 'Hallway', type: 'gallery', g: 'Floor 1' },
-        { id: 'film', x: 150, y: 74, w: 50, h: 36, label: 'Film\nCenter', type: 'amenity' },
-        { id: 'artlab', x: 252, y: 74, w: 40, h: 52, label: 'Art Lab', type: 'amenity' },
+        { id: '1west', x: 8, y: 85, w: 34, h: 40, label: '1 West', type: 'gallery' },
+        { id: 'member', x: 45, y: 60, w: 60, h: 30, label: 'Member Desk\nCheckroom', type: 'amenity' },
+        { id: 'store', x: 45, y: 93, w: 48, h: 32, label: 'Museum\nStore', type: 'amenity' },
+        { id: 'hall1', x: 108, y: 60, w: 34, h: 65, label: 'Hallway', type: 'gallery', g: 'Floor 1' },
+        { id: 'film', x: 145, y: 72, w: 50, h: 36, label: 'Film\nCenter', type: 'amenity' },
+        { id: 'artlab', x: 252, y: 72, w: 40, h: 53, label: 'Art Lab', type: 'amenity' },
         { id: 'entrance', x: 8, y: 128, w: 284, h: 14, label: '53rd St Entrance', type: 'corridor' }
       ]},
-      2: { theme: 'Collection 1970s\u2013Present', vbW: 300, vbH: 156, rooms: [
+      2: { theme: 'Collection 1970s\u2013Present', vbW: 300, vbH: 153, rooms: [
         { id: 'r207', x: 8, y: 8, w: 34, h: 34, label: '207', type: 'gallery' }, { id: 'r206', x: 45, y: 8, w: 34, h: 34, label: '206', type: 'gallery' },
         { id: 'r205', x: 82, y: 8, w: 26, h: 34, label: '205', type: 'gallery' }, { id: 'r203', x: 111, y: 8, w: 30, h: 34, label: '203', type: 'gallery' },
         { id: 'r204', x: 144, y: 8, w: 28, h: 34, label: '204', type: 'gallery' },
         { id: 'creativity', x: 175, y: 8, w: 44, h: 34, label: 'Creativity\nLab', type: 'amenity' },
-        { id: 'r208', x: 8, y: 46, w: 34, h: 30, label: '208', type: 'gallery' },
-        { id: 'r202', x: 111, y: 46, w: 30, h: 30, label: '202', type: 'gallery' }, { id: 'r201', x: 144, y: 46, w: 28, h: 30, label: '201', type: 'gallery' },
-        { id: 'atrium', x: 175, y: 46, w: 42, h: 56, label: 'Atrium', type: 'special' },
-        { id: 'r209', x: 8, y: 80, w: 34, h: 30, label: '209', type: 'gallery' },
-        { id: 'r216', x: 111, y: 80, w: 30, h: 30, label: '216', type: 'gallery' },
-        { id: 'r210', x: 8, y: 114, w: 26, h: 34, label: '210', type: 'gallery' }, { id: 'r211', x: 37, y: 114, w: 26, h: 34, label: '211', type: 'gallery' },
-        { id: 'r212', x: 66, y: 114, w: 26, h: 34, label: '212', type: 'gallery' },
-        { id: 'r215', x: 111, y: 114, w: 30, h: 34, label: '215', type: 'gallery' },
-        { id: 'r213', x: 144, y: 114, w: 24, h: 34, label: '213', type: 'gallery' }, { id: 'r214', x: 171, y: 114, w: 24, h: 34, label: '214', type: 'gallery' },
-        { id: '2south', x: 198, y: 106, w: 40, h: 42, label: '2 South', type: 'gallery' },
-        { id: 'store2', x: 241, y: 106, w: 23, h: 42, label: 'Store', type: 'amenity' },
-        { id: 'cafe2', x: 266, y: 106, w: 26, h: 42, label: 'Caf\u00e9 2', type: 'amenity' }
+        { id: 'r208', x: 8, y: 45, w: 34, h: 30, label: '208', type: 'gallery' },
+        { id: 'r202', x: 111, y: 45, w: 30, h: 30, label: '202', type: 'gallery' }, { id: 'r201', x: 144, y: 45, w: 28, h: 30, label: '201', type: 'gallery' },
+        { id: 'atrium', x: 175, y: 45, w: 44, h: 63, label: 'Atrium', type: 'special' },
+        { id: 'r209', x: 8, y: 78, w: 34, h: 30, label: '209', type: 'gallery' },
+        { id: 'r216', x: 111, y: 78, w: 30, h: 30, label: '216', type: 'gallery' },
+        { id: 'r210', x: 8, y: 111, w: 26, h: 34, label: '210', type: 'gallery' }, { id: 'r211', x: 37, y: 111, w: 26, h: 34, label: '211', type: 'gallery' },
+        { id: 'r212', x: 66, y: 111, w: 26, h: 34, label: '212', type: 'gallery' },
+        { id: 'r215', x: 111, y: 111, w: 30, h: 34, label: '215', type: 'gallery' },
+        { id: 'r213', x: 144, y: 111, w: 24, h: 34, label: '213', type: 'gallery' }, { id: 'r214', x: 171, y: 111, w: 24, h: 34, label: '214', type: 'gallery' },
+        { id: '2south', x: 198, y: 111, w: 40, h: 34, label: '2 South', type: 'gallery' },
+        { id: 'store2', x: 241, y: 111, w: 23, h: 34, label: 'Store', type: 'amenity' },
+        { id: 'cafe2', x: 267, y: 111, w: 25, h: 34, label: 'Caf\u00e9 2', type: 'amenity' }
       ]},
       3: { theme: 'Architecture \u00b7 Design \u00b7 Photo', vbW: 300, vbH: 128, rooms: [
         { id: '3north', x: 60, y: 8, w: 110, h: 50, label: '3 North', type: 'gallery', g: '3 North' },
         { id: 'lounge3', x: 246, y: 8, w: 46, h: 34, label: 'Lounge', type: 'amenity' },
-        { id: '3east', x: 180, y: 50, w: 112, h: 44, label: '3 East', type: 'gallery' },
+        { id: '3east', x: 173, y: 45, w: 119, h: 49, label: '3 East', type: 'gallery' },
         { id: '3south', x: 60, y: 76, w: 90, h: 44, label: '3 South', type: 'gallery' },
         { id: '3w', x: 8, y: 70, w: 34, h: 44, label: '3W', type: 'gallery' }
       ]},
-      4: { theme: 'Collection 1940s\u20131970s', vbW: 300, vbH: 208, rooms: [
+      4: { theme: 'Collection 1940s\u20131970s', vbW: 300, vbH: 209, rooms: [
         { id: 'r409', x: 8, y: 8, w: 30, h: 38, label: '409', type: 'gallery' }, { id: 'r408', x: 41, y: 8, w: 34, h: 38, label: '408', type: 'gallery' },
         { id: 'r407', x: 78, y: 8, w: 26, h: 38, label: '407', type: 'gallery' }, { id: 'r405', x: 107, y: 8, w: 28, h: 38, label: '405', type: 'gallery' },
         { id: 'r403', x: 138, y: 8, w: 34, h: 38, label: '403', type: 'gallery' }, { id: 'r402', x: 175, y: 8, w: 38, h: 38, label: '402', type: 'gallery' },
         { id: 'r400', x: 216, y: 8, w: 76, h: 38, label: '400', type: 'gallery' },
-        { id: 'r411', x: 8, y: 49, w: 34, h: 30, label: '411', type: 'gallery' }, { id: 'r410', x: 45, y: 49, w: 26, h: 30, label: '410', type: 'gallery' },
+        { id: 'r411', x: 8, y: 49, w: 30, h: 30, label: '411', type: 'gallery' }, { id: 'r410', x: 41, y: 49, w: 34, h: 30, label: '410', type: 'gallery' },
         { id: 'r406', x: 107, y: 49, w: 28, h: 45, label: '406', type: 'gallery' },
         { id: 'r404', x: 138, y: 49, w: 34, h: 30, label: '404', type: 'gallery' }, { id: 'r401', x: 175, y: 49, w: 38, h: 30, label: '401', type: 'gallery' },
-        { id: 'r412', x: 8, y: 82, w: 34, h: 30, label: '412', type: 'gallery' }, { id: 'r414', x: 45, y: 82, w: 44, h: 63, label: '414', type: 'gallery' },
-        { id: 'r416', x: 138, y: 82, w: 30, h: 45, label: '416', type: 'gallery' },
+        { id: 'r412', x: 8, y: 82, w: 30, h: 30, label: '412', type: 'gallery' }, { id: 'r414', x: 41, y: 82, w: 48, h: 63, label: '414', type: 'gallery' },
+        { id: 'r416', x: 138, y: 82, w: 34, h: 47, label: '416', type: 'gallery' },
         { id: 'r415', x: 107, y: 97, w: 28, h: 32, label: '415', type: 'gallery' },
-        { id: 'r418', x: 107, y: 132, w: 30, h: 26, label: '418', type: 'gallery' }, { id: 'r420', x: 140, y: 132, w: 40, h: 26, label: '420', type: 'gallery' },
+        { id: 'r418', x: 107, y: 132, w: 28, h: 26, label: '418', type: 'gallery' }, { id: 'r420', x: 138, y: 132, w: 42, h: 26, label: '420', type: 'gallery' },
         { id: 'r421', x: 183, y: 132, w: 40, h: 26, label: '421', type: 'gallery' },
         { id: 'landing4', x: 226, y: 132, w: 40, h: 26, label: 'Hallway', type: 'gallery', g: 'Floor 4' },
-        { id: 'r413', x: 8, y: 163, w: 50, h: 40, label: '413', type: 'gallery' },
-        { id: 'r417', x: 107, y: 163, w: 36, h: 40, label: '417', type: 'gallery' }, { id: 'r419', x: 146, y: 163, w: 30, h: 40, label: '419', type: 'gallery' }
+        { id: 'r413', x: 8, y: 161, w: 50, h: 40, label: '413', type: 'gallery' },
+        { id: 'r417', x: 107, y: 161, w: 28, h: 40, label: '417', type: 'gallery' }, { id: 'r419', x: 138, y: 161, w: 42, h: 40, label: '419', type: 'gallery' }
       ]},
-      5: { theme: 'Collection 1880s\u20131940s', vbW: 300, vbH: 208, rooms: [
+      5: { theme: 'Collection 1880s\u20131940s', vbW: 300, vbH: 209, rooms: [
         { id: 'r510', x: 8, y: 8, w: 30, h: 38, label: '510', type: 'gallery' }, { id: 'r509', x: 41, y: 8, w: 28, h: 38, label: '509', type: 'gallery' },
         { id: 'r508', x: 72, y: 8, w: 40, h: 38, label: '508', type: 'gallery' }, { id: 'r507', x: 115, y: 8, w: 26, h: 38, label: '507', type: 'gallery' },
         { id: 'r505', x: 144, y: 8, w: 28, h: 38, label: '505', type: 'gallery' }, { id: 'r503', x: 175, y: 8, w: 40, h: 38, label: '503', type: 'gallery' },
         { id: 'r502', x: 218, y: 8, w: 38, h: 38, label: '502', type: 'gallery' }, { id: 'r500', x: 259, y: 8, w: 33, h: 38, label: '500', type: 'gallery' },
-        { id: 'r511', x: 8, y: 49, w: 34, h: 30, label: '511', type: 'gallery' }, { id: 'r506', x: 144, y: 49, w: 28, h: 45, label: '506', type: 'gallery' },
+        { id: 'r511', x: 8, y: 49, w: 30, h: 30, label: '511', type: 'gallery' }, { id: 'r506', x: 144, y: 49, w: 28, h: 45, label: '506', type: 'gallery' },
         { id: 'r504', x: 175, y: 49, w: 40, h: 30, label: '504', type: 'gallery' }, { id: 'r501', x: 218, y: 49, w: 38, h: 30, label: '501', type: 'gallery' },
-        { id: 'r512', x: 8, y: 82, w: 34, h: 30, label: '512', type: 'gallery' }, { id: 'r516', x: 45, y: 82, w: 44, h: 63, label: '516', type: 'gallery' },
-        { id: 'r518', x: 175, y: 82, w: 30, h: 45, label: '518', type: 'gallery' },
+        { id: 'r512', x: 8, y: 82, w: 30, h: 30, label: '512', type: 'gallery' }, { id: 'r516', x: 41, y: 82, w: 48, h: 63, label: '516', type: 'gallery' },
+        { id: 'r518', x: 175, y: 82, w: 30, h: 47, label: '518', type: 'gallery' },
         { id: 'r517', x: 144, y: 97, w: 28, h: 32, label: '517', type: 'gallery' },
-        { id: 'r513', x: 8, y: 115, w: 34, h: 30, label: '513', type: 'gallery' },
+        { id: 'r513', x: 8, y: 115, w: 30, h: 30, label: '513', type: 'gallery' },
         { id: 'r522', x: 144, y: 132, w: 86, h: 26, label: '522', type: 'gallery' }, { id: 'r523', x: 233, y: 132, w: 26, h: 26, label: '523', type: 'gallery' },
         { id: 'landing5', x: 262, y: 132, w: 30, h: 26, label: 'Hallway', type: 'gallery', g: 'Floor 5' },
-        { id: 'r515', x: 8, y: 163, w: 26, h: 34, label: '515', type: 'gallery' }, { id: 'r514', x: 37, y: 163, w: 36, h: 40, label: '514', type: 'gallery' },
-        { id: 'r519', x: 144, y: 163, w: 30, h: 40, label: '519', type: 'gallery' }, { id: 'r520', x: 177, y: 163, w: 32, h: 40, label: '520', type: 'gallery' },
-        { id: 'r521', x: 212, y: 163, w: 34, h: 40, label: '521', type: 'gallery' }
+        { id: 'r515', x: 8, y: 161, w: 26, h: 40, label: '515', type: 'gallery' }, { id: 'r514', x: 37, y: 161, w: 36, h: 40, label: '514', type: 'gallery' },
+        { id: 'r519', x: 144, y: 161, w: 30, h: 40, label: '519', type: 'gallery' }, { id: 'r520', x: 177, y: 161, w: 32, h: 40, label: '520', type: 'gallery' },
+        { id: 'r521', x: 212, y: 161, w: 34, h: 40, label: '521', type: 'gallery' }
       ]},
       6: { theme: 'Special Exhibitions', vbW: 300, vbH: 116, rooms: [
         { id: 'terrace', x: 8, y: 40, w: 40, h: 50, label: 'Terrace\nCaf\u00e9', type: 'amenity' },
         { id: 'cohen', x: 60, y: 8, w: 150, h: 100, label: 'Cohen Center\nSpecial Exhibitions', type: 'gallery', g: 'Floor 6' },
-        { id: 'store6', x: 216, y: 8, w: 40, h: 30, label: 'Store', type: 'amenity' },
-        { id: 'outdoor', x: 216, y: 42, w: 76, h: 66, label: 'Outdoor Terrace', type: 'gallery' }
+        { id: 'store6', x: 213, y: 8, w: 40, h: 30, label: 'Store', type: 'amenity' },
+        { id: 'outdoor', x: 213, y: 41, w: 79, h: 67, label: 'Outdoor Terrace', type: 'gallery' }
       ]}
     };
 
@@ -1493,25 +1514,13 @@
       var key = room ? roomKey(room) : id;
       var label = room ? room.label.replace('\n', ' ') : id;
       var here = ARTS.filter(function (a) { return a.gallery === key; });
-      // Header carries the room once; the headline carries the NEWS — the
-      // work itself when there's one, the count when there are several.
+      // Two fixed lines — where you are, how many works — so the bar never
+      // changes height as you tap from room to room.
       var isNum = /^\d/.test(label);
       $('map-room-floor').textContent = 'Floor ' + f + ' · ' + (isNum ? 'Gallery ' + label : label);
-      var note = $('map-room-note');
-      if (here.length === 1) {
-        $('map-room-name').textContent = here[0].title;
-        note.textContent = (here[0].artist || '') + (here[0].year ? ' · ' + here[0].year : '');
-        note.style.fontSize = '17px';
-      } else if (here.length) {
-        $('map-room-name').textContent = here.length + ' works in this room';
-        var names = here.slice(0, 3).map(function (a) { return a.title; }).join(' · ');
-        var extra = here.length - 3;
-        note.textContent = names + (extra > 0 ? ' + ' + extra + ' more' : '');
-        note.style.fontSize = '14px';
-      } else {
-        $('map-room-name').textContent = label;
-        note.style.fontSize = '17px';
-      }
+      $('map-room-name').textContent = here.length
+        ? 'Listen to ' + here.length + (here.length === 1 ? ' work' : ' works')
+        : 'No Frank picks here yet.';
       if (here.length) {
         info.dataset.key = key;
         info.dataset.solo = here.length === 1 ? here[0].id : '';
@@ -1527,10 +1536,8 @@
         info.style.borderTop = '1px solid rgba(' + prgb + ',.18)';
         $('map-room-floor').style.color = 'rgba(' + prgb + ',.62)';
         $('map-room-name').style.color = 'rgba(' + prgb + ',1)';
-        $('map-room-note').style.color = 'rgba(' + prgb + ',.86)';
         $('map-info-arrow').style.color = '#111111';   // always black, regardless of combo
       } else {
-        $('map-room-note').textContent = 'No Frank picks here yet.';
         delete info.dataset.key;
         delete info.dataset.solo;
         info.classList.remove('tappable');
@@ -1541,9 +1548,8 @@
         info.style.borderTop = '1px solid #2f2a22';
         $('map-room-floor').style.color = 'rgba(220,213,198,.5)';
         $('map-room-name').style.color = '#dcd5c6';
-        $('map-room-note').style.color = 'rgba(220,213,198,.68)';
       }
-      info.style.display = 'block';
+      info.style.display = 'flex';
     }
     function applyMapFilter() {
       var info = $('map-info');

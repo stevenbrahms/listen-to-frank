@@ -72,6 +72,7 @@
   {
     "id": "opus-217-1890",
     "title": "OPUS 217. AGAINST THE ENAMEL OF A BACKGROUND RHYTHMIC WITH BEATS AND ANGLES, TONES, AND TINTS, PORTRAIT OF M. FÉLIX FÉNÉON IN 1890",
+    "listTitle": "PORTRAIT OF FÉLIX FÉNÉON",
     "artist": "PAUL SIGNAC",
     "year": "1890",
     "color": "#D4820A",
@@ -182,7 +183,9 @@
   {
     "id": "self-portrait-with-two-flowers-1907",
     "title": "SELF-PORTRAIT WITH TWO FLOWERS IN HER RAISED LEFT HAND",
+    "listTitle": "SELF-PORTRAIT WITH TWO FLOWERS",
     "artist": "PAULA MODERSOHN-BECKER",
+    "listArtist": "P. MODERSOHN-BECKER",
     "year": "1907",
     "color": "#9E6965",
     "audioUrl": "audio/self-portrait-with-two-flowers-in-her-raised-left-hand_paula-modersohn-becker_1907.mp3",
@@ -352,6 +355,7 @@
   {
     "id": "gare-montparnasse-1914",
     "title": "GARE MONTPARNASSE (THE MELANCHOLY OF DEPARTURE)",
+    "listTitle": "GARE MONTPARNASSE",
     "artist": "GIORGIO DE CHIRICO",
     "year": "1914",
     "color": "#6B7E6F",
@@ -382,6 +386,7 @@
   {
     "id": "painterly-realism-of-a-boy-with-a-knapsack-1915",
     "title": "PAINTERLY REALISM OF A BOY WITH A KNAPSACK",
+    "listTitle": "BOY WITH A KNAPSACK",
     "artist": "KAZIMIR MALEVICH",
     "year": "1915",
     "color": "#E5DCC6",
@@ -402,6 +407,7 @@
   {
     "id": "from-the-viaduct-125th-street-new-york-1916",
     "title": "FROM THE VIADUCT, 125TH STREET, NEW YORK",
+    "listTitle": "FROM THE VIADUCT",
     "artist": "PAUL STRAND",
     "year": "1916",
     "color": "#4B4743",
@@ -512,6 +518,7 @@
   {
     "id": "composition-with-red-blue-black-yellow-and-gray-1921",
     "title": "COMPOSITION WITH RED, BLUE, BLACK, YELLOW, AND GRAY",
+    "listTitle": "COMPOSITION WITH RED, BLUE, BLACK…",
     "artist": "PIET MONDRIAN",
     "year": "1921",
     "color": "#AD523F",
@@ -542,6 +549,7 @@
   {
     "id": "two-children-are-threatened-by-a-nightingale-1924",
     "title": "TWO CHILDREN ARE THREATENED BY A NIGHTINGALE",
+    "listTitle": "TWO CHILDREN ARE THREATENED…",
     "artist": "MAX ERNST",
     "year": "1924",
     "color": "#0A7A9B",
@@ -673,6 +681,7 @@
     "id": "barcelona-chair-1929",
     "title": "BARCELONA CHAIR",
     "artist": "LUDWIG MIES VAN DER ROHE",
+    "listArtist": "MIES VAN DER ROHE",
     "year": "1929",
     "color": "#C4A882",
     "audioUrl": "audio/barcelona-chair_ludwig-mies-van-der-rohe_1929.mp3",
@@ -802,6 +811,7 @@
   {
     "id": "composition-in-white-black-and-red-1936",
     "title": "COMPOSITION IN WHITE, BLACK, AND RED",
+    "listTitle": "COMPOSITION IN WHITE, BLACK, RED",
     "artist": "PIET MONDRIAN",
     "year": "1936",
     "color": "#E8E4DC",
@@ -1212,6 +1222,7 @@
   {
     "id": "bicycle-wheel-1951",
     "title": "BICYCLE WHEEL (THIRD VERSION, AFTER LOST ORIGINAL OF 1913)",
+    "listTitle": "BICYCLE WHEEL",
     "artist": "MARCEL DUCHAMP",
     "year": "1951",
     "color": "#E3E3E5",
@@ -1313,6 +1324,7 @@
     "id": "braun-sk4-record-player-1956",
     "title": "BRAUN SK4 RECORD PLAYER",
     "artist": "DIETER RAMS & HANS GUGELOT",
+    "listArtist": "RAMS & GUGELOT",
     "year": "1956",
     "color": "#B9905A",
     "audioUrl": "audio/braun-sk4-record-player_dieter-rams_1956.mp3",
@@ -1372,6 +1384,7 @@
   {
     "id": "no-37-no-19-slate-blue-and-brown-on-plum-1958",
     "title": "NO. 37/NO. 19 (SLATE BLUE AND BROWN ON PLUM)",
+    "listTitle": "NO. 37/NO. 19",
     "artist": "MARK ROTHKO",
     "year": "1958",
     "color": "#6B4E63",
@@ -1502,6 +1515,7 @@
   {
     "id": "child-with-toy-hand-grenade-1962",
     "title": "CHILD WITH A TOY HAND GRENADE IN CENTRAL PARK, N.Y.C.",
+    "listTitle": "CHILD WITH A TOY HAND GRENADE",
     "artist": "DIANE ARBUS",
     "year": "1962",
     "color": "#F59E0B",
@@ -1633,6 +1647,7 @@
     "id": "armchair-1964",
     "title": "ARMCHAIR",
     "artist": "GUNNAR AAGAARD ANDERSEN",
+    "listArtist": "G. AAGAARD ANDERSEN",
     "year": "1964",
     "color": "#6B5443",
     "audioUrl": "audio/armchair_gunnar-aagaard-andersen_1964.mp3",
@@ -1833,6 +1848,7 @@
     "id": "anonymous-sculpture-1970",
     "title": "ANONYMOUS SCULPTURE",
     "artist": "BERND BECHER, HILLA BECHER",
+    "listArtist": "BERND & HILLA BECHER",
     "year": "1963–1970",
     "color": "#CFC9C3",
     "audioUrl": "audio/anonymous-sculpture_bernd-becher-&-hilla-becher_1970.mp3",
@@ -1913,6 +1929,7 @@
     "id": "green-violin-1974",
     "title": "GREEN VIOLIN (GRÜNE GEIGE)",
     "artist": "JOSEPH BEUYS WITH HENNING CHRISTIANSEN",
+    "listArtist": "BEUYS & CHRISTIANSEN",
     "year": "1974",
     "color": "#226F54",
     "audioUrl": "audio/green-violin_joseph-beuys-with-henning-christiansen_1974.mp3",
@@ -2012,6 +2029,7 @@
   {
     "id": "government-approved-home-fallout-shelter-snack-bar-1983-2023",
     "title": "GOVERNMENT APPROVED HOME FALLOUT SHELTER SNACK BAR",
+    "listTitle": "GOVERNMENT APPROVED SNACK BAR",
     "artist": "MICHAEL SMITH",
     "year": "1983/2023",
     "color": "#8B8B00",
@@ -2042,6 +2060,7 @@
   {
     "id": "paradox-of-praxis-1-sometimes-making-something-leads-to-nothing-1997",
     "title": "PARADOX OF PRAXIS 1 (SOMETIMES MAKING SOMETHING LEADS TO NOTHING)",
+    "listTitle": "PARADOX OF PRAXIS 1",
     "artist": "FRANCIS ALŸS",
     "year": "1997",
     "color": "#06B6D4",
@@ -2062,6 +2081,7 @@
   {
     "id": "broken-bands-of-color-in-four-directions-2004",
     "title": "WALL DRAWING #1144, BROKEN BANDS OF COLOR IN FOUR DIRECTIONS",
+    "listTitle": "WALL DRAWING #1144",
     "artist": "SOL LEWITT",
     "year": "2004",
     "color": "#E85D3A",
@@ -2143,6 +2163,7 @@
     "id": "being-human-2019",
     "title": "BEING HUMAN",
     "artist": "CHRISTOPHER KULENDRAN THOMAS",
+    "listArtist": "C. KULENDRAN THOMAS",
     "year": "2019",
     "color": "#C25155",
     "audioUrl": "audio/being-human_christopher-kulendran-thomas_2019.mp3",
