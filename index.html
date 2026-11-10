@@ -585,6 +585,14 @@
     var activeFloor = null;
     var currentScreen = 0;
     var HOME_TITLE = 'Listen to Frank — a free, unofficial audio guide to MoMA';
+    // Proper-case tab titles come from titles.json (written by build-stubs.py);
+    // until it loads, or if it's missing, the tab keeps the site title.
+    var TAB_TITLES = null;
+    function setWorkTitle(a) {
+      var apply = function () { if (currentScreen === 2 && current === a && TAB_TITLES && TAB_TITLES[a.id]) document.title = TAB_TITLES[a.id] + ' | Listen to Frank'; };
+      if (TAB_TITLES) return apply();
+      fetch('titles.json').then(function (r) { return r.ok ? r.json() : {}; }).then(function (t) { TAB_TITLES = t || {}; apply(); }).catch(function () { TAB_TITLES = {}; });
+    }
     var trackEnded = false;   // true once a track finishes → hides the Now Playing bar
     var txOpen = false;
     var booted = false;
@@ -1111,7 +1119,7 @@
       // Browser tab title follows the player (2026-11). On a /w/ page the page's own
       // search title is kept for its own work, so search results don't change.
       var onOwnPage = current && location.pathname === '/w/' + current.id + '.html';
-      if (n === 2 && current && !onOwnPage) document.title = (current.title || '') + (current.artist ? ' by ' + current.artist : '') + ' | Listen to Frank';
+      if (n === 2 && current && !onOwnPage) setWorkTitle(current);
       else if (n !== 2 && !onOwnPage) document.title = HOME_TITLE;
       // a11y: keyboard / screen-reader focus follows the screen change (never
       // at boot, never shows a ring: hidden screens' tabindex=-1 + CSS above).
