@@ -50,6 +50,19 @@
   <meta name="twitter:description" content="A free, unofficial audio guide to MoMA. 200+ works: a little history, a little gossip, a few things to look for. Not affiliated. Frank just really likes it here.">
   <meta name="twitter:image" content="https://www.listentofrank.art/og-cover.png">
 
+  <!-- Structured data for search engines + AI answer engines (2026-11 schema pass,
+       3_Website/SCHEMA_AEO_PASS_2026-11.md). Invisible. The @ids match the ones
+       build-stubs.py writes into every /w/ page; work pages strip this block when
+       they load the app, so it describes the home page only. MoMA appears only as
+       the museum the guide is ABOUT, never as publisher: Frank is unofficial. -->
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+    {"@type":"WebSite","@id":"https://www.listentofrank.art/#website","url":"https://www.listentofrank.art/","name":"Listen to Frank","alternateName":"listentofrank.art","description":"A free, unofficial audio guide to MoMA. 200+ works: a little history, a little gossip, a few things to look for. Not affiliated.","inLanguage":"en","publisher":{"@id":"https://www.listentofrank.art/#org"}},
+    {"@type":"WebPage","@id":"https://www.listentofrank.art/#home","url":"https://www.listentofrank.art/","name":"Listen to Frank — a free, unofficial audio guide to MoMA","isPartOf":{"@id":"https://www.listentofrank.art/#website"},"about":{"@id":"https://www.listentofrank.art/#guide"},"primaryImageOfPage":"https://www.listentofrank.art/og-cover.png","inLanguage":"en"},
+    {"@type":"Organization","@id":"https://www.listentofrank.art/#org","name":"Listen to Frank","url":"https://www.listentofrank.art/","logo":{"@type":"ImageObject","url":"https://www.listentofrank.art/icon-512.png","width":512,"height":512},"description":"An independent, unofficial audio guide to the Museum of Modern Art (MoMA) in New York. Not affiliated with or endorsed by MoMA.","sameAs":["https://www.instagram.com/listen_to_frank/","https://www.tiktok.com/@listentofrank.art"]},
+    {"@type":"CreativeWorkSeries","@id":"https://www.listentofrank.art/#guide","name":"Listen to Frank","description":"An independent, unofficial audio guide to the Museum of Modern Art (MoMA) in New York. Not affiliated with or endorsed by MoMA.","url":"https://www.listentofrank.art/","inLanguage":"en","isAccessibleForFree":true,"publisher":{"@id":"https://www.listentofrank.art/#org"},"about":{"@id":"https://www.listentofrank.art/#moma"},"audience":{"@type":"Audience","audienceType":"MoMA visitors"}},
+    {"@type":"Museum","@id":"https://www.listentofrank.art/#moma","name":"The Museum of Modern Art","alternateName":"MoMA","url":"https://www.moma.org/","sameAs":"https://www.wikidata.org/wiki/Q188740","address":{"@type":"PostalAddress","streetAddress":"11 West 53 Street","addressLocality":"New York","addressRegion":"NY","postalCode":"10019","addressCountry":"US"}}
+  ]}</script>
+
   <!-- Inter is self-hosted (same Google Fonts v20 files, SIL OFL, fonts/inter/LICENSE.txt):
        no request to Google on page load (privacy) and no render-blocking third-party CSS (speed). -->
   <link rel="preload" href="fonts/inter/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
