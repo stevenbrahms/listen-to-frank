@@ -12,7 +12,7 @@
  *      iOS will refuse to play a cached MP3 that doesn't honor Range.
  */
 
-const CACHE_VERSION = 'frank-v533';
+const CACHE_VERSION = 'frank-v534';
 // The audio cache is deliberately NOT tied to CACHE_VERSION. mp3s never change
 // content under one filename except when a take is re-recorded — so ordinary
 // deploys must not throw away ~340MB of cached audio on every phone. Bump
@@ -31,16 +31,19 @@ const SHELL_URLS = [
   '/icon-192.png',
   '/icon-512.png',
   '/kawaracaps.otf',
+  // self-hosted Inter (2026-11 compliance pass) — latin + latin-ext cover every
+  // title on the site; the other subsets are cached the first time they're used
+  '/fonts/inter/inter-latin.woff2',
+  '/fonts/inter/inter-latin-ext.woff2',
   '/entry/manifest.json',
   '/drawings/manifest.json',
   // entry-cover drawings (the first thing every visitor sees — keep offline)
   '/drawings/dance-i-henri-matisse-1909_line.png',
-  '/drawings/gold-marilyn-monroe_andy-warhol_1962.png',
-  '/drawings/flag_jasper-johns_1954-55.png',
+  // cover-size copies (2026-11: ~3x their cover size, ~220 KB lighter)
+  '/drawings-cover/gold-marilyn-monroe_andy-warhol_1962.png',
+  '/drawings-cover/flag_jasper-johns_1954-55.png',
+  '/drawings-cover/le-voyage-dans-la-lune_georges-melies_1902.png',
   '/drawings-cover/guitar_pablo-picasso_1914.png',
-  // percent-encoded NFD ("e" + combining accent) to byte-match the repo
-  // filename — GitHub Pages is unicode-normalization-sensitive
-  '/drawings/le-voyage-dans-la-lune_georges-me%CC%81lie%CC%80s_1902.png',
   // (desktop margin drawings are NOT pre-cached since 2026-10-13: phones
   // never show them, and the museum visit is a phone visit)
 ];

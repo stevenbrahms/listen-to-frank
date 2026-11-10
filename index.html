@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#0f0e0b">
   <script>
     // First-paint chrome. iOS Safari samples the page color at FIRST PAINT and
@@ -50,11 +50,39 @@
   <meta name="twitter:description" content="A free, unofficial audio guide to MoMA. 200+ works: a little history, a little gossip, a few things to look for. Not affiliated. Frank just really likes it here.">
   <meta name="twitter:image" content="https://www.listentofrank.art/og-cover.png">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Inter is self-hosted (same Google Fonts v20 files, SIL OFL, fonts/inter/LICENSE.txt):
+       no request to Google on page load (privacy) and no render-blocking third-party CSS (speed). -->
+  <link rel="preload" href="fonts/inter/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 
   <style>
+    /* cyrillic-ext */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 300; font-display: swap; src: url('fonts/inter/inter-cyrillic-ext.woff2') format('woff2'); unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+    /* cyrillic */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 300; font-display: swap; src: url('fonts/inter/inter-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    /* greek-ext */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 300; font-display: swap; src: url('fonts/inter/inter-greek-ext.woff2') format('woff2'); unicode-range: U+1F00-1FFF; }
+    /* greek */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 300; font-display: swap; src: url('fonts/inter/inter-greek.woff2') format('woff2'); unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF; }
+    /* vietnamese */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 300; font-display: swap; src: url('fonts/inter/inter-vietnamese.woff2') format('woff2'); unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB; }
+    /* latin-ext */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 300; font-display: swap; src: url('fonts/inter/inter-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    /* latin */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 300; font-display: swap; src: url('fonts/inter/inter-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    /* cyrillic-ext */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('fonts/inter/inter-cyrillic-ext.woff2') format('woff2'); unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+    /* cyrillic */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('fonts/inter/inter-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    /* greek-ext */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('fonts/inter/inter-greek-ext.woff2') format('woff2'); unicode-range: U+1F00-1FFF; }
+    /* greek */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('fonts/inter/inter-greek.woff2') format('woff2'); unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF; }
+    /* vietnamese */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('fonts/inter/inter-vietnamese.woff2') format('woff2'); unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB; }
+    /* latin-ext */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('fonts/inter/inter-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    /* latin */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('fonts/inter/inter-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    /* cyrillic-ext */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('fonts/inter/inter-cyrillic-ext.woff2') format('woff2'); unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+    /* cyrillic */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('fonts/inter/inter-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    /* greek-ext */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('fonts/inter/inter-greek-ext.woff2') format('woff2'); unicode-range: U+1F00-1FFF; }
+    /* greek */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('fonts/inter/inter-greek.woff2') format('woff2'); unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF; }
+    /* vietnamese */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('fonts/inter/inter-vietnamese.woff2') format('woff2'); unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB; }
+    /* latin-ext */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('fonts/inter/inter-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    /* latin */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('fonts/inter/inter-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    /* cyrillic-ext */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url('fonts/inter/inter-cyrillic-ext.woff2') format('woff2'); unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+    /* cyrillic */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url('fonts/inter/inter-cyrillic.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+    /* greek-ext */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url('fonts/inter/inter-greek-ext.woff2') format('woff2'); unicode-range: U+1F00-1FFF; }
+    /* greek */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url('fonts/inter/inter-greek.woff2') format('woff2'); unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF; }
+    /* vietnamese */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url('fonts/inter/inter-vietnamese.woff2') format('woff2'); unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB; }
+    /* latin-ext */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url('fonts/inter/inter-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    /* latin */ @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url('fonts/inter/inter-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
     @font-face {
       font-family: 'KawaraCaps';
       src: url('kawaracaps.otf') format('opentype');
@@ -133,7 +161,7 @@
                  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .row-artist { color: rgba(220,213,198,.6); font-size: 16.5px; margin: 0 0 2px; letter-spacing: .5px; transition: color .3s; }
     .row-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-    .row-year, .row-gallery { color: rgba(220,213,198,.5); font-size: 16.5px; letter-spacing: .5px; white-space: nowrap; }
+    .row-year, .row-gallery { color: rgba(220,213,198,.55); font-size: 16.5px; letter-spacing: .5px; white-space: nowrap; }
     .row-year { min-width: 0; overflow: hidden; text-overflow: ellipsis; }   /* backstop: a future long date cuts, never wraps */
     .row-hook { color: rgba(220,213,198,.68); font-size: 20px; margin: 0; line-height: 1.6; font-style: italic; font-weight: 300; }
     @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
@@ -164,8 +192,8 @@
     .search-row { display: flex; gap: 8px; align-items: stretch; }
     .search-field { position: relative; flex: 1; min-width: 0; display: flex; }
     .search-input { flex: 1; min-width: 0; background: #16140f; border: 0.5px solid #322d24; color: rgba(220,213,198,.92); font-size: 20px; font-family: 'Inter', sans-serif; padding: 13px 40px 13px 14px; outline: none; border-radius: 2px; }
-    .search-input::placeholder { color: rgba(220,213,198,.42); }
-    .search-input:focus { border-color: #5a5347; }
+    .search-input::placeholder { color: rgba(220,213,198,.55); }
+    .search-input:focus { border-color: rgba(220,213,198,.55); }
     .clear-btn { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; padding: 0; background: transparent; border: 0; color: rgba(220,213,198,.45); display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 50%; transition: transform .14s ease, color .18s ease; }
     .clear-btn:active { transform: translateY(-50%) scale(.85); }
     .chips { display: flex; gap: 6px; padding: 9px 0 1px; justify-content: space-between; }
@@ -192,7 +220,7 @@
     #np-thumb .swatch { width: 46px; height: 64px; opacity: .9; }
     #np-text { flex: 1; min-width: 0; }
     #np-title { color: rgba(220,213,198,.98); font-size: 19px; letter-spacing: 1px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    #np-artist { color: rgba(220,213,198,.62); font-size: 16.5px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #np-artist { color: rgba(220,213,198,.86); font-size: 16.5px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #np-toggle { flex-shrink: 0; width: 52px; height: 52px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     #np-close { flex-shrink: 0; width: 34px; height: 34px; margin-left: -2px; border: none; background: transparent; color: rgba(220,213,198,.6); font-size: 32.5px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
     #np-close:active { opacity: .5; }
@@ -201,7 +229,7 @@
     #app.np-on #map-info { margin-bottom: 88px; padding-bottom: 14px !important; }
     /* When the selected room has picks, the whole panel is the tap target. */
     #map-info { flex-direction: column; justify-content: center; }
-    #player-where.off { color: rgba(220,213,198,.6) !important; font-weight: 400 !important; }
+    #player-where.off { color: rgba(220,213,198,.86) !important; font-weight: 400 !important; }
     #player-where.tap { cursor: pointer; }
     #map-info.tappable { cursor: pointer; transition: background .15s ease; }
     #map-info.tappable:active { background: #16140f; }
@@ -249,6 +277,10 @@
       #tx-btn:hover { border-color: rgba(220,213,198,.7); color: #dcd5c6; }
       .search-input:hover { border-color: #4a443a; }
     }
+    /* a11y (2026-11 compliance pass): screen-reader-only text + no ring on
+       screens that receive focus programmatically when you change screens. */
+    .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    .screen[tabindex="-1"]:focus { outline: none; }
     @media (prefers-reduced-motion: reduce) {
       *, .screen, #now-playing, .row, .thumb img { transition: none !important; animation: none !important; }
       .screen { transform: none !important; }
@@ -344,7 +376,7 @@
   </style>
 </head>
 <body>
-  <div id="app">
+  <div id="app" role="main">
 
     <!-- ── SCREEN 0: ENTRY ── -->
     <!-- "Book cover" treatment (Picador/Bolaño reference): a flat paper color,
@@ -353,14 +385,14 @@
          the bottom. One of three covers (cream/yellow/pink) is dealt per visit
          by renderEntryCover(); the 390x800 canvas is scaled to the viewport by
          scaleEntryCover(). -->
-    <div class="screen on" id="S0" style="background:#ffbf00;cursor:pointer;">
+    <div class="screen on" id="S0" style="background:#ffbf00;cursor:pointer;" role="button" tabindex="0">
       <div style="position:absolute;inset:0;overflow:hidden;">
         <div id="cover" style="position:absolute;left:50%;top:50%;width:390px;height:800px;transform:translate(-50%,-50%);"></div>
       </div>
     </div>
 
     <!-- ── SCREEN 1: GALLERY ── -->
-    <div class="screen" id="S1" style="background:#0f0e0b;">
+    <div class="screen" id="S1" tabindex="-1" style="background:#0f0e0b;">
       <div id="gallery-head" style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;background:#0f0e0b;">
         <div id="gallery-topbar" style="display:flex;align-items:center;justify-content:flex-end;padding:0 16px 0;margin-bottom:2px;">
           <button class="icon-btn" id="about-btn" title="About" aria-label="About Listen to Frank" style="background:none;border:none;color:rgba(220,213,198,.7);cursor:pointer;padding:2px;display:flex;">
@@ -371,14 +403,14 @@
           <p id="gallery-word" class="kawara-logo home-logo" title="Reset" role="button" tabindex="0">LISTEN TO FRANK</p>
           <div class="search-row">
             <div class="search-field">
-              <input class="search-input" id="search-input" type="text" placeholder="gallery · artist · title" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+              <input class="search-input" id="search-input" type="text" aria-label="Search by gallery number, artist or title" placeholder="gallery · artist · title" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
               <button class="clear-btn" id="clear-btn" type="button" title="Clear search" aria-label="Clear search" style="display:none;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg>
               </button>
             </div>
           </div>
           <div id="floor-group">
-          <div id="floor-label" style="font-size:11.5px;letter-spacing:.22em;color:rgba(220,213,198,.42);padding:10px 2px 0;">FLOOR</div>
+          <div id="floor-label" style="font-size:11.5px;letter-spacing:.22em;color:rgba(220,213,198,.55);padding:10px 2px 0;">FLOOR</div>
           <div class="chips" style="padding-top:5px;">
             <div style="display:flex;gap:5px;">
               <button class="chip" data-floor="1">1</button>
@@ -397,31 +429,31 @@
       <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
         <div id="first-visit-hint" style="display:none;align-items:baseline;gap:12px;padding:13px 0 11px;border-bottom:0.5px solid #27231c;">
           <span style="flex:1;color:rgba(220,213,198,.55);font-size:15.5px;line-height:1.55;font-style:italic;">Standing in MoMA? Type in the gallery number. Or just wander.</span>
-          <button id="hint-close" style="background:none;border:none;color:rgba(220,213,198,.4);font-size:20px;line-height:1;cursor:pointer;padding:0 2px;" aria-label="Dismiss">&times;</button>
+          <button id="hint-close" style="background:none;border:none;color:rgba(220,213,198,.55);font-size:20px;line-height:1;cursor:pointer;padding:0 2px;" aria-label="Dismiss tip">&times;</button>
         </div>
-        <div id="play-something" style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:0.5px solid #27231c;cursor:pointer;">
+        <div id="play-something" role="button" tabindex="0" style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:0.5px solid #27231c;cursor:pointer;">
           <span style="color:rgba(220,213,198,.6);font-size:16.5px;letter-spacing:2px;">PLAY SOMETHING</span>
           <span style="color:rgba(220,213,198,.5);display:inline-flex;align-items:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></span>
         </div>
-        <p id="count-line" style="display:none;color:rgba(220,213,198,.4);font-size:14px;letter-spacing:1.5px;padding:16px 0 0;margin:0;text-transform:uppercase;"></p>
+        <p id="count-line" style="display:none;color:rgba(220,213,198,.55);font-size:14px;letter-spacing:1.5px;padding:16px 0 0;margin:0;text-transform:uppercase;"></p>
         <div id="gallery-list"></div>
-        <p id="no-results" style="display:none;color:rgba(220,213,198,.5);font-size:17.5px;padding:20px 0;font-style:italic;">nothing here yet — try an artist, a title, a gallery number or a floor.</p>
+        <p id="no-results" style="display:none;color:rgba(220,213,198,.55);font-size:17.5px;padding:20px 0;font-style:italic;">nothing here yet — try an artist, a title, a gallery number or a floor.</p>
       </div>
     </div>
 
     <!-- ── SCREEN 2: PLAYER ── -->
-    <div class="screen" id="S2">
+    <div class="screen" id="S2" tabindex="-1">
       <div id="player-bg" style="background:#1A2F4E;position:relative;height:100%;display:flex;flex-direction:column;">
         <img id="player-ghost" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:.09;pointer-events:none;z-index:0;" />
         <div class="pcol" style="padding:max(16px,env(safe-area-inset-top)) 16px 0;flex-shrink:0;position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;">
-          <button id="player-back" style="background:transparent;border:none;color:rgba(220,213,198,.7);font-size:15px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:9px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="5" y1="12" x2="20" y2="12" vector-effect="non-scaling-stroke"/><polyline points="11,6 5,12 11,18" vector-effect="non-scaling-stroke"/></svg>back</button>
+          <button id="player-back" style="background:transparent;border:none;color:rgba(220,213,198,.86);font-size:15px;letter-spacing:2px;cursor:pointer;padding:6px 0;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:9px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="5" y1="12" x2="20" y2="12" vector-effect="non-scaling-stroke"/><polyline points="11,6 5,12 11,18" vector-effect="non-scaling-stroke"/></svg>back</button>
         </div>
         <div class="pcol" style="flex:1;padding:20px 16px 0;position:relative;z-index:2;display:flex;flex-direction:column;overflow:hidden;">
           <div style="flex-shrink:0;">
-            <p id="player-title" style="color:#dcd5c6;font-size:41.5px;line-height:1.2;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
+            <p id="player-title" role="heading" aria-level="1" style="color:#dcd5c6;font-size:41.5px;line-height:1.2;font-weight:normal;margin:0;font-family:'KawaraCaps',sans-serif;letter-spacing:2px;text-transform:uppercase;">—</p>
             <p id="player-artist" style="color:#dcd5c6;font-size:20px;margin:13px 0 0;letter-spacing:1px;"></p>
             <p id="player-where" style="color:#dcd5c6;font-size:14px;font-weight:500;margin:12px 0 0;letter-spacing:.2em;text-transform:uppercase;"></p>
-            <p id="player-hook" style="color:rgba(220,213,198,.78);font-size:22.5px;margin:18px 0 0;line-height:1.7;font-weight:300;font-style:italic;display:none;"></p>
+            <p id="player-hook" style="color:rgba(220,213,198,.86);font-size:22.5px;margin:18px 0 0;line-height:1.7;font-weight:300;font-style:italic;display:none;"></p>
           </div>
           <div id="tx-area" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-top:16px;display:none;">
             <p id="tx-text" style="color:rgba(220,213,198,.86);font-size:22.5px;line-height:1.85;margin:0;font-weight:300;"></p>
@@ -430,7 +462,7 @@
         </div>
         <div id="player-controls" style="background:#0f0e0b;padding:16px 16px max(28px,env(safe-area-inset-bottom));flex-shrink:0;position:relative;z-index:2;">
           <div class="pcol">
-          <div id="prog-track" style="height:4px;background:rgba(220,213,198,.22);margin-bottom:8px;overflow:hidden;cursor:pointer;border-radius:2px;">
+          <div id="prog-track" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" aria-valuetext="0:00 of 0:00" style="height:4px;background:rgba(220,213,198,.22);margin-bottom:8px;overflow:hidden;cursor:pointer;border-radius:2px;">
             <div id="prog-bar" style="height:100%;width:0%;background:rgba(220,213,198,.92);"></div>
           </div>
           <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
@@ -439,20 +471,20 @@
           </div>
           <div id="audio-error" style="display:none;color:#dcd5c6;font-size:15px;text-align:center;border:1px solid rgba(220,213,198,.5);padding:7px;margin-bottom:12px;letter-spacing:.03em;"></div>
           <div style="display:flex;justify-content:center;align-items:center;gap:38px;margin-bottom:16px;">
-            <button id="btn-back10" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.85;position:relative;" title="back 10s">
+            <button id="btn-back10" aria-label="Back 10 seconds" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:1;position:relative;" title="back 10s">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dcd5c6" stroke-width="1.75"><polygon points="19 20 9 12 19 4 19 20" vector-effect="non-scaling-stroke"/><line x1="5" y1="19" x2="5" y2="5" vector-effect="non-scaling-stroke"/></svg>
               <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(220,213,198,.85);">10</span>
             </button>
             <button id="btn-play" aria-label="Play" style="width:56px;height:56px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;">
               <svg id="play-ico" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#dcd5c6" stroke-width="1.75" stroke-linejoin="miter"><polygon points="6,4 6,20 19.86,12" vector-effect="non-scaling-stroke"/></svg>
             </button>
-            <button id="btn-fwd30" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:.85;position:relative;" title="forward 30s">
+            <button id="btn-fwd30" aria-label="Forward 30 seconds" style="background:transparent;border:none;cursor:pointer;padding:0;opacity:1;position:relative;" title="forward 30s">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dcd5c6" stroke-width="1.75"><polygon points="5 4 15 12 5 20 5 4" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/></svg>
               <span style="position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(220,213,198,.85);">30</span>
             </button>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <button id="tx-btn" style="background:transparent;border:1px solid rgba(220,213,198,.4);border-radius:2px;color:rgba(220,213,198,.75);font-size:15px;letter-spacing:1.5px;cursor:pointer;padding:8px 15px;font-family:'Inter',sans-serif;">read along</button>
+            <button id="tx-btn" aria-expanded="false" aria-controls="tx-area" style="background:transparent;border:1px solid rgba(220,213,198,.4);border-radius:2px;color:rgba(220,213,198,.75);font-size:15px;letter-spacing:1.5px;cursor:pointer;padding:8px 15px;font-family:'Inter',sans-serif;">read along</button>
             <button id="share-btn" aria-label="Share this work" style="background:transparent;border:none;color:rgba(220,213,198,.6);cursor:pointer;padding:4px;" title="Share">
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             </button>
@@ -466,7 +498,7 @@
     <!-- Shares the session's entry "issue" combo (applyAboutCombo): page = bg color,
          a full-width masthead band carries the wordmark, body text auto-picks light
          or dark for legibility against the ground. -->
-    <div class="screen" id="S3" style="background:#0f0e0b;">
+    <div class="screen" id="S3" tabindex="-1" style="background:#0f0e0b;">
       <div style="flex-shrink:0;">
         <div id="about-band" style="position:relative;padding:calc(env(safe-area-inset-top, 0px) + 15px) 16px 16px;margin-bottom:30px;background:#0f0e0b;">
           <div class="pcol" style="display:flex;align-items:center;justify-content:flex-start;">
@@ -487,28 +519,28 @@
         <div style="margin-bottom:40px;">
           <p class="about-label" style="color:rgba(220,213,198,.5);font-size:15px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">FOLLOW FRANK</p>
           <div style="display:flex;flex-wrap:wrap;gap:10px;">
-            <a class="about-social" href="https://www.instagram.com/listen_to_frank/" target="_blank" rel="noopener" data-goatcounter-click="out/instagram" style="color:rgba(220,213,198,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(220,213,198,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">Instagram<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="6" y1="18" x2="18" y2="6" vector-effect="non-scaling-stroke"/><polyline points="8,6 18,6 18,16" vector-effect="non-scaling-stroke"/></svg></a>
-            <a class="about-social" href="https://www.tiktok.com/@listentofrank.art" target="_blank" rel="noopener" data-goatcounter-click="out/tiktok" style="color:rgba(220,213,198,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(220,213,198,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">TikTok<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="6" y1="18" x2="18" y2="6" vector-effect="non-scaling-stroke"/><polyline points="8,6 18,6 18,16" vector-effect="non-scaling-stroke"/></svg></a>
+            <a class="about-social" href="https://www.instagram.com/listen_to_frank/" target="_blank" rel="noopener" aria-label="Instagram (opens in a new tab)" data-goatcounter-click="out/instagram" style="color:rgba(220,213,198,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(220,213,198,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">Instagram<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="6" y1="18" x2="18" y2="6" vector-effect="non-scaling-stroke"/><polyline points="8,6 18,6 18,16" vector-effect="non-scaling-stroke"/></svg></a>
+            <a class="about-social" href="https://www.tiktok.com/@listentofrank.art" target="_blank" rel="noopener" aria-label="TikTok (opens in a new tab)" data-goatcounter-click="out/tiktok" style="color:rgba(220,213,198,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(220,213,198,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">TikTok<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="6" y1="18" x2="18" y2="6" vector-effect="non-scaling-stroke"/><polyline points="8,6 18,6 18,16" vector-effect="non-scaling-stroke"/></svg></a>
           </div>
         </div>
         <div>
           <p id="about-label" style="color:rgba(220,213,198,.5);font-size:15px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">SAY SOMETHING</p>
           <a id="about-email" href="mailto:hello@listentofrank.art" style="color:rgba(220,213,198,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(220,213,198,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">hello@listentofrank.art<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></a>
         </div>
-        <p id="about-legal" style="color:rgba(220,213,198,.5);font-size:12.5px;line-height:1.65;margin:52px 0 0;max-width:34em;">Listen to Frank is an independent project. It isn't affiliated with, endorsed by or sponsored by The Museum of Modern Art; "MoMA" is only used to say where the art is. The line drawings are made after the works, for commentary. If you hold rights to anything here and want it changed or removed, use the email above and it'll be handled quickly. &copy; 2026 Listen to Frank.</p>
+        <p id="about-legal" style="color:rgba(220,213,198,.5);font-size:12.5px;line-height:1.65;margin:52px 0 0;max-width:34em;">Listen to Frank is an independent project. It isn't affiliated with, endorsed by or sponsored by The Museum of Modern Art; "MoMA" is only used to say where the art is. The line drawings are made after the works, for commentary. If you hold rights to anything here and want it changed or removed, use the email above and it'll be handled quickly.<br><br>Privacy: no cookies, no ads, no accounts, no tracking you around the web. We count visits and plays with GoatCounter, which doesn't store IP addresses or anything that identifies you. Your phone keeps your listening history, where you paused and any saved audio. That stays on your phone, and clearing this site's data removes it. If you email us, we use your address only to write back. We don't sell or share personal information. Updated November 2026.<br><br>Accessibility: Frank should work with a keyboard, a screen reader and zoom, and every talk has a read-along transcript. If something gets in your way, tell us at hello@listentofrank.art and we'll fix it.<br><br>&copy; 2026 Listen to Frank.</p>
         </div>
       </div>
     </div>
 
     <!-- ── SCREEN 4: MAP ── -->
-    <div class="screen" id="S4" style="background:#0f0e0b;">
+    <div class="screen" id="S4" tabindex="-1" style="background:#0f0e0b;">
       <div style="flex-shrink:0;padding:max(10px,env(safe-area-inset-top)) 0 0;background:#0f0e0b;">
         <div style="display:flex;align-items:center;justify-content:flex-end;padding:0 16px 0;margin-bottom:12px;">
           <button id="map-close" aria-label="Close map" style="background:transparent;border:none;color:rgba(220,213,198,.55);cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
         </div>
-        <div style="font-size:11.5px;letter-spacing:.22em;color:rgba(220,213,198,.42);padding:0 16px 6px;">FLOOR</div>
+        <div style="font-size:11.5px;letter-spacing:.22em;color:rgba(220,213,198,.55);padding:0 16px 6px;">FLOOR</div>
         <div id="floor-tabs" style="display:flex;gap:6px;padding:0 16px;"></div>
-        <div id="floor-theme-label" style="padding:7px 16px;font-size:14px;color:rgba(220,213,198,.5);letter-spacing:.2em;text-transform:uppercase;"></div>
+        <div id="floor-theme-label" style="padding:7px 16px;font-size:14px;color:rgba(220,213,198,.55);letter-spacing:.2em;text-transform:uppercase;"></div>
       </div>
       <div id="map-container" class="scrollpad" style="flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:8px 10px 0;"></div>
       <div id="map-info" style="display:none;padding:14px 16px max(16px,env(safe-area-inset-bottom));border-top:1px solid #2f2a22;flex-shrink:0;background:#0f0e0b;" role="button" tabindex="0">
@@ -526,15 +558,16 @@
          tap to return to the player. -->
     <div id="now-playing">
       <div id="np-thumb"></div>
-      <div id="np-text">
+      <div id="np-text" role="button" tabindex="0" aria-label="Back to the player">
         <div id="np-title"></div>
         <div id="np-artist"></div>
       </div>
       <button id="np-toggle" type="button" aria-label="Play or pause"></button>
-      <button id="np-close" type="button" aria-label="Dismiss" title="Dismiss"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
+      <button id="np-close" type="button" aria-label="Stop and close" title="Dismiss"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
     </div>
 
-    <audio id="audio" preload="auto" playsinline></audio>
+    <audio id="audio" preload="metadata" playsinline></audio>
+    <div id="sr-status" class="sr-only" role="status" aria-live="polite"></div>
   </div>
 
   <script>
@@ -551,6 +584,7 @@
     var current = null;
     var activeFloor = null;
     var currentScreen = 0;
+    var HOME_TITLE = 'Listen to Frank — a free, unofficial audio guide to MoMA';
     var trackEnded = false;   // true once a track finishes → hides the Now Playing bar
     var txOpen = false;
     var booted = false;
@@ -582,11 +616,11 @@
         // Duchamp's Fountain, which MoMA doesn't own.
         art: [
           { src: 'drawings/dance-i-henri-matisse-1909_line.png',                 css: 'width:326px;left:32px;top:256px;transform:rotate(-2deg);' },
-          // NB: percent-encoded NFD ("e" + combining accent) to byte-match the
-          // repo filename — GitHub Pages is unicode-normalization-sensitive.
-          { src: 'drawings/le-voyage-dans-la-lune_georges-me%CC%81lie%CC%80s_1902.png', css: 'width:84px;left:10px;top:146px;transform:rotate(-4deg);' },
-          { src: 'drawings/flag_jasper-johns_1954-55.png',                       css: 'width:92px;right:4px;top:147px;transform:rotate(4deg);' },
-          { src: 'drawings/gold-marilyn-monroe_andy-warhol_1962.png',            css: 'width:118px;left:26px;bottom:116px;transform:rotate(-4deg);' },
+          // Moon, flag + Marilyn use cover-size copies in drawings-cover/ (2026-11,
+          // ~3x their size here; the moon copy's name is plain ASCII, no NFD issue).
+          { src: 'drawings-cover/le-voyage-dans-la-lune_georges-melies_1902.png', css: 'width:84px;left:10px;top:146px;transform:rotate(-4deg);' },
+          { src: 'drawings-cover/flag_jasper-johns_1954-55.png',                 css: 'width:92px;right:4px;top:147px;transform:rotate(4deg);' },
+          { src: 'drawings-cover/gold-marilyn-monroe_andy-warhol_1962.png',      css: 'width:118px;left:26px;bottom:116px;transform:rotate(-4deg);' },
           // cover-only copy with thickened strokes (the original's lines are so
           // fine they read at ~1/4 px here); its own page keeps drawings/…
           { src: 'drawings-cover/guitar_pablo-picasso_1914.png',                css: 'width:64px;right:42px;bottom:112px;transform:rotate(-10deg);' },
@@ -805,14 +839,15 @@
     // a new drawing without a thumb yet still renders.
     function thumbUrl(a) {
       var u = drawingUrl(a);
-      return u ? u.replace(/^drawings\//, 'drawings-thumbs/') : '';
+      return u ? u.replace(/^drawings\//, 'drawings-thumbs/').replace(/\.png$/i, '.webp') : '';
     }
     function thumbWithFallback(a, full) {
       var img = document.createElement('img');
       img.alt = '';
       img.loading = 'lazy';
       img.onerror = function () {
-        if (full && img.src.indexOf('drawings-thumbs/') >= 0) img.src = full;
+        if (/drawings-thumbs\/.*\.webp$/i.test(img.src)) img.src = img.src.replace(/\.webp$/i, '.png');   // no WebP thumb yet → PNG thumb
+        else if (full && img.src.indexOf('drawings-thumbs/') >= 0) img.src = full;
         else img.replaceWith(makeSwatch(a));
       };
       img.src = thumbUrl(a);
@@ -895,6 +930,9 @@
       row.appendChild(text);
       row.appendChild(dot);
       row.addEventListener('click', function () { openArtwork(a.id); });
+      row.setAttribute('role', 'link'); row.tabIndex = 0;
+      var gb = a._floor != null ? galleryBadge(a) : ''; row.setAttribute('aria-label', [a.title, a.artist, listYear(a), /^\d/.test(gb) ? 'Gallery ' + gb : gb].filter(Boolean).join(', '));
+      row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openArtwork(a.id); } });
       return row;
     }
     function renderGallery() {
@@ -1014,6 +1052,10 @@
       cl.style.display = fuzzy || ((raw || activeFloor != null) && shown > 1) ? 'block' : 'none';
       var clr = $('clear-btn');
       if (clr) clr.style.display = ($('search-input').value || '') ? 'flex' : 'none';
+      document.querySelectorAll('.chip[data-floor]').forEach(function (c) {
+        c.setAttribute('aria-label', 'Floor ' + c.dataset.floor); c.setAttribute('aria-pressed', c.classList.contains('active') ? 'true' : 'false');
+      });
+      if (raw || activeFloor != null) srSay(shown ? (cl.style.display === 'block' ? cl.textContent : shown === 1 ? '1 work' : shown + ' works') : 'Nothing here yet', 600);
     }
     // Search and the floor chips are either/or: one clears the other so they
     // never combine into a contradictory (empty) result.
@@ -1066,6 +1108,19 @@
       if (n === 1) { applyHeard(); applyFilters(); }
       if (n === 4) initMap();
       updateNowPlaying();
+      // Browser tab title follows the player (2026-11). On a /w/ page the page's own
+      // search title is kept for its own work, so search results don't change.
+      var onOwnPage = current && location.pathname === '/w/' + current.id + '.html';
+      if (n === 2 && current && !onOwnPage) document.title = (current.title || '') + (current.artist ? ' by ' + current.artist : '') + ' | Listen to Frank';
+      else if (n !== 2 && !onOwnPage) document.title = HOME_TITLE;
+      // a11y: keyboard / screen-reader focus follows the screen change (never
+      // at boot, never shows a ring: hidden screens' tabindex=-1 + CSS above).
+      // (deferred: a screen can't take focus until its visibility transition starts)
+      if (booted && n !== 0) setTimeout(function () {
+        var to = $('S' + n), ae = document.activeElement;
+        if (currentScreen !== n || !to || (ae && to.contains(ae)) || (ae && n !== 2 && $('now-playing').contains(ae))) return;
+        try { to.focus({ preventScroll: true }); } catch (e) {}
+      }, 60);
     }
 
     // ── Player ────────────────────────────────────────────────────────────
@@ -1158,8 +1213,7 @@
       // the white title + line-drawing ghost stay legible.
       var overlay = Math.max(0, Math.min(0.78, (lum - 0.38) * 1.25));
       if (overlay < 0.03) return color;
-      var a = overlay.toFixed(2);
-      return 'linear-gradient(rgba(0,0,0,' + a + '),rgba(0,0,0,' + a + ')), ' + color;
+      return npFlatColor(color);   // same legibility floor as the player (2026-11)
     }
     // Flat-hex equivalent of npBackground (theme-color can't take gradients).
     function npFlatColor(color) {
@@ -1170,7 +1224,19 @@
       var lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
       var k = 1 - Math.max(0, Math.min(0.78, (lum - 0.38) * 1.25));
       var to2 = function (n) { var s = Math.round(n).toString(16); return s.length < 2 ? '0' + s : s; };
-      return '#' + to2(r * k) + to2(g * k) + to2(b * k);
+      // Legibility floor (2026-11 compliance pass, owner-approved): keep darkening
+      // until the bone text (at its faintest, 86%) reads at WCAG AA 4.5:1.
+      r *= k; g *= k; b *= k;
+      for (var i = 0; i < 40 && boneContrast(r, g, b, 0.86) < 4.52; i++) { r *= 0.97; g *= 0.97; b *= 0.97; }
+      return '#' + to2(r) + to2(g) + to2(b);
+    }
+    function relLum(r, g, b) {
+      var f = function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+      return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+    }
+    function boneContrast(r, g, b, alpha) {   // bone #dcd5c6 at `alpha` over (r,g,b)
+      var L1 = relLum(220 * alpha + r * (1 - alpha), 213 * alpha + g * (1 - alpha), 198 * alpha + b * (1 - alpha)), L2 = relLum(r, g, b);
+      return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
     }
     // Bottom band of the player (controls) = a fixed darker step of the TOP tone,
     // so every work reads as the same two-tone: work color up top, same hue but
@@ -1197,6 +1263,7 @@
       var np = $('now-playing'); if (!np) return;
       var show = !!current && !trackEnded && currentScreen !== 0 && currentScreen !== 2;
       np.classList.toggle('show', show);
+      np.inert = !show; if (show) np.removeAttribute('aria-hidden'); else np.setAttribute('aria-hidden', 'true');
       var app = document.getElementById('app'), wasOn = app.classList.contains('np-on');
       app.classList.toggle('np-on', show);
       if (wasOn !== show && currentScreen === 4 && mapFloor) renderFloorMap(mapFloor);   // map fit reserves room for this bar
@@ -1241,16 +1308,17 @@
         $('player-spacer').style.display = 'none';
         $('player-title').style.fontSize = '25px';
         $('player-hook').style.display = 'none';
-        var b = $('tx-btn'); b.textContent = 'close'; b.style.color = 'rgba(220,213,198,.65)'; b.style.borderColor = 'rgba(220,213,198,.3)';
+        var b = $('tx-btn'); b.setAttribute('aria-expanded', 'true'); b.textContent = 'close'; b.style.color = 'rgba(220,213,198,.85)'; b.style.borderColor = 'rgba(220,213,198,.3)';
       } else { closeTx(); }
     }
     function closeTx() {
       txOpen = false;
+      $('tx-btn').setAttribute('aria-expanded', 'false');
       $('tx-area').style.display = 'none';
       $('player-spacer').style.display = 'flex';
       $('player-title').style.fontSize = '41.5px';
       if (current && current.hook) $('player-hook').style.display = 'block';
-      var b = $('tx-btn'); b.textContent = 'read along'; b.style.color = 'rgba(220,213,198,.5)'; b.style.borderColor = 'rgba(220,213,198,.18)';
+      var b = $('tx-btn'); b.textContent = 'read along'; b.style.color = 'rgba(220,213,198,.85)'; b.style.borderColor = 'rgba(220,213,198,.18)';
     }
 
     // The transcript's opening line — mirrors hook() in build-stubs.py so the
@@ -1294,7 +1362,7 @@
       if (navigator.share) { navigator.share(data).catch(function () {}); }
       else if (navigator.clipboard) {
         navigator.clipboard.writeText(url).then(function () {
-          var b = $('share-btn'), o = b.style.color; b.style.color = 'rgba(220,213,198,.85)';
+          var b = $('share-btn'), o = b.style.color; b.style.color = 'rgba(220,213,198,.85)'; srSay('Link copied');
           setTimeout(function () { b.style.color = o; }, 1200);
         }).catch(function () { prompt('Copy link:', url); });
       } else { prompt('Copy link:', url); }
@@ -1554,7 +1622,7 @@
       mapFloor = f; selectedRoom = null;
       for (var i = 1; i <= 6; i++) {
         var b = $('ft' + i);
-        if (b) b.classList.toggle('active', i === f);
+        if (b) { b.classList.toggle('active', i === f); b.setAttribute('aria-pressed', i === f ? 'true' : 'false'); b.setAttribute('aria-label', 'Floor ' + i); }
       }
       var fd = FLOOR_DATA[f];
       $('floor-theme-label').textContent = fd ? fd.theme : '';
@@ -1610,7 +1678,13 @@
         var fz = vert ? 7 : w < 32 ? 5.5 : w < 50 ? 6.5 : 7;
         var clickable = !isNav && !noContent;
         var g = document.createElementNS(SVGNS, 'g');
-        if (clickable) { g.setAttribute('data-room-id', r.id); g.style.cursor = 'pointer'; }
+        if (clickable) {
+          g.setAttribute('data-room-id', r.id); g.style.cursor = 'pointer';
+          var nHere = isContent ? ARTS.filter(function (a) { return a.gallery === roomKey(r); }).length : 0;
+          var rl = (r.label || r.id).replace('\n', ' ');
+          g.setAttribute('role', 'button'); g.setAttribute('tabindex', '0');
+          g.setAttribute('aria-label', (/^\d/.test(rl) ? 'Gallery ' + rl : rl) + (nHere ? ', ' + nHere + (nHere === 1 ? ' work' : ' works') : '') + (isSel ? ', selected' : ''));
+        }
         var rect = document.createElementNS(SVGNS, 'rect');
         rect.setAttribute('x', x); rect.setAttribute('y', y); rect.setAttribute('width', w); rect.setAttribute('height', h);
         rect.setAttribute('fill', isSel ? BRIGHT : 'transparent');
@@ -1831,7 +1905,48 @@
       }, { passive: true });
 
       window.addEventListener('hashchange', route);
+
+      // ── a11y keyboard wiring (2026-11 compliance pass) ──
+      var activate = function (el, fn) { el.addEventListener('keydown', function (e) { if (e.target === el && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); fn(); } }); };
+      activate($('S0'), function () { $('S0').click(); });
+      activate($('play-something'), function () { $('play-something').click(); });
+      activate($('np-text'), function () { if (current) openArtwork(current.id); });
+      $('map-container').addEventListener('keydown', function (e) {
+        var g = e.target && e.target.getAttribute && e.target.getAttribute('data-room-id');
+        if (!g || !(e.key === 'Enter' || e.key === ' ')) return;
+        e.preventDefault(); selectRoom(g, mapFloor);
+        var again = document.querySelector('#map-container [data-room-id="' + g + '"]'); if (again) again.focus();
+      });
+      $('prog-track').addEventListener('keydown', function (e) {
+        if (!audio.duration) return;
+        var t = audio.currentTime || 0, d = audio.duration;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') t += 5;
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') t -= 5;
+        else if (e.key === 'PageUp') t += 30; else if (e.key === 'PageDown') t -= 10;
+        else if (e.key === 'Home') t = 0; else if (e.key === 'End') t = d - 1;
+        else return;
+        e.preventDefault(); audio.currentTime = Math.max(0, Math.min(d - 0.25, t));
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (currentScreen === 2) window.location.hash = '';
+        else if (currentScreen === 3) go(1);
+        else if (currentScreen === 4) $('map-close').click();
+      });
     }
+    // Screen-reader announcements (visually hidden live region).
+    var srT = null;
+    function srSay(msg, delay) {
+      var el = $('sr-status'); if (!el) return;
+      clearTimeout(srT);
+      srT = setTimeout(function () { el.textContent = ''; setTimeout(function () { el.textContent = msg; }, 30); }, delay || 0);
+    }
+    function mmss(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + ('0' + (t % 60)).slice(-2); }
+    audio.addEventListener('timeupdate', function () {
+      var pt = $('prog-track'); if (!pt || !audio.duration) return;
+      pt.setAttribute('aria-valuemax', Math.round(audio.duration)); pt.setAttribute('aria-valuenow', Math.round(audio.currentTime || 0));
+      pt.setAttribute('aria-valuetext', mmss(audio.currentTime) + ' of ' + mmss(audio.duration));
+    });
 
     // The list opens on Frank's headliners, then runs by date (the
     // artworks.json order). Owner's pick, 2026-10-25. Bird in Space is in the
@@ -1895,6 +2010,7 @@
               toast.textContent = 'refreshing…';
               sw.postMessage({ type: 'skip-waiting' });
             };
+            toast.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toast.onclick(); } };
           }
           // an update may already be waiting from a previous visit…
           offer(reg.waiting);
