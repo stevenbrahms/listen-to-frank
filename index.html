@@ -164,6 +164,7 @@
 
     /* Gallery rows */
     .row { display: flex; gap: 14px; align-items: center; padding: 13px 0; border-bottom: 0.5px solid #181510; cursor: pointer; transition: opacity .12s ease, transform .12s ease, background .18s ease; position: relative; }
+    a.row { color: inherit; text-decoration: none; -webkit-touch-callout: none; }   /* rows are links (2026-11-11): look and long-press unchanged */
     .row:active { opacity: .4; transform: scale(0.985); }
     .row.hidden { display: none; }
     .thumb { flex-shrink: 0; width: 90px; height: 128px; display: flex; align-items: center; justify-content: center; }
@@ -985,7 +986,10 @@
       return ('' + (a.year || '')).replace(/(\d)-(\d)/g, '$1–$2');
     }
     function buildRow(a) {
-      var row = document.createElement('div');
+      // A real link to the work's own page (2026-11-11), so Google can follow the
+      // gallery to every work; a plain tap still plays it here, in the app.
+      var row = document.createElement('a');
+      row.href = '/w/' + encodeURIComponent(a.id) + '.html';
       row.className = 'row';
       row.dataset.id = a.id;
 
@@ -1040,8 +1044,10 @@
       row.appendChild(thumb);
       row.appendChild(text);
       row.appendChild(dot);
-      row.addEventListener('click', function () { openArtwork(a.id); });
-      row.setAttribute('role', 'link'); row.tabIndex = 0;
+      row.addEventListener('click', function (e) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button > 0) return;   // new tab / window: let the browser follow the link
+        e.preventDefault(); openArtwork(a.id);
+      });
       var gb = a._floor != null ? galleryBadge(a) : ''; row.setAttribute('aria-label', [a.title, a.artist, listYear(a), /^\d/.test(gb) ? 'Gallery ' + gb : gb].filter(Boolean).join(', '));
       row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openArtwork(a.id); } });
       return row;
