@@ -4,6 +4,8 @@
 
 Each work has its own page with Frank's audio, the full transcript, the artist and year, and the MoMA gallery where the work hangs. Gallery numbers are checked against moma.org twice a month, but works move: moma.org is the authority on what is on view today. Free, no app or sign-up; it runs in a phone browser.
 
+- [Visiting MoMA with Frank](https://www.listentofrank.art/visit.html): is MoMA worth it, a two-hour route by gallery number, finding one work, and how the free guide works.
+
 ## Floor 1
 
 - [Wall Drawing #1144, Broken Bands of Color in Four Directions](https://www.listentofrank.art/w/broken-bands-of-color-in-four-directions-2004.html): Sol LeWitt, 2004. Audio 1:51.

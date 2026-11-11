@@ -131,7 +131,8 @@
     }
     .screen.on { opacity: 1; visibility: visible; z-index: 2; transform: translateY(0); }
     /* Entry, Player & About break out of the column to fill the whole screen. */
-    #S0, #S2, #S3 { position: fixed; inset: 0; }
+    #S0, #S2, #S3, #S5 { position: fixed; inset: 0; }
+    #visit-art { display: none; }
     /* Deep-link sessions never show the entry cover (its color must not be the
        first paint iOS samples for the status bar). go(0) lifts the class. */
     html.deeplink #S0 { display: none !important; }
@@ -352,7 +353,13 @@
 
       /* About — left-justified colophon on full-bleed paper, featured
          drawing hung in the empty space at right (black ink via invert). */
-      #S3 .pcol { max-width: none; margin: 0; }
+      #S3 .pcol, #S5 .pcol { max-width: none; margin: 0; }
+      #visit-band { padding: calc(env(safe-area-inset-top, 0px) + 26px) 64px 16px !important; }
+      #S5 .scrollpad { padding: 4px 64px 60px !important; }
+      #S5 .about-body { max-width: 560px; }
+      #visit-art { display: block; position: absolute; right: 64px; top: 50%;
+                   width: 380px; transform: translateY(-50%) rotate(-2deg);
+                   filter: invert(1); pointer-events: none; z-index: 1; }
       #about-band { padding: calc(env(safe-area-inset-top, 0px) + 26px) 64px 16px !important; }
       #S3 .scrollpad { padding: 4px 64px 60px !important; }
       #S3 .about-body { max-width: 560px; }
@@ -530,6 +537,10 @@
         <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Nothing here is made up. It's all true, just buried. I pick the stories. AI helps with the research and the drafts. I check the facts and record every word. Spot a mistake? Tell me and I'll fix it.</p>
         <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 44px;font-weight:300;">Not affiliated with MoMA. Frank just really likes it here.</p>
         <div style="margin-bottom:40px;">
+          <p class="about-label" style="color:rgba(220,213,198,.5);font-size:15px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">PLANNING A VISIT?</p>
+          <a href="#visit" id="about-visit" class="about-social" style="color:rgba(220,213,198,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(220,213,198,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">Visiting MoMA with Frank<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter" aria-hidden="true"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></a>
+        </div>
+        <div style="margin-bottom:40px;">
           <p class="about-label" style="color:rgba(220,213,198,.5);font-size:15px;margin:0 0 12px;letter-spacing:1.5px;font-weight:500;">FOLLOW FRANK</p>
           <div style="display:flex;flex-wrap:wrap;gap:10px;">
             <a class="about-social" href="https://www.instagram.com/listen_to_frank/" target="_blank" rel="noopener" aria-label="Instagram (opens in a new tab)" data-goatcounter-click="out/instagram" style="color:rgba(220,213,198,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(220,213,198,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">Instagram<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="6" y1="18" x2="18" y2="6" vector-effect="non-scaling-stroke"/><polyline points="8,6 18,6 18,16" vector-effect="non-scaling-stroke"/></svg></a>
@@ -541,6 +552,59 @@
           <a id="about-email" href="mailto:hello@listentofrank.art" style="color:rgba(220,213,198,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(220,213,198,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">hello@listentofrank.art<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></a>
         </div>
         <p id="about-legal" style="color:rgba(220,213,198,.5);font-size:12.5px;line-height:1.65;margin:52px 0 0;max-width:34em;">Listen to Frank is an independent project. It isn't affiliated with, endorsed by or sponsored by The Museum of Modern Art; "MoMA" is only used to say where the art is. The line drawings are made after the works, for commentary. If you hold rights to anything here and want it changed or removed, use the email above and it'll be handled quickly.<br><br>Privacy: no cookies, no ads, no accounts, no tracking you around the web. We count visits and plays with GoatCounter, which doesn't store IP addresses or anything that identifies you. Your phone keeps your listening history, where you paused and any saved audio. That stays on your phone, and clearing this site's data removes it. If you email us, we use your address only to write back. We don't sell or share personal information. Updated November 2026.<br><br>Accessibility: Frank should work with a keyboard, a screen reader and zoom, and every talk has a read-along transcript. If something gets in your way, tell us at hello@listentofrank.art and we'll fix it.<br><br>&copy; 2026 Listen to Frank.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── SCREEN 5: VISITING MOMA (owner-approved 2026-11-11). /visit.html is
+         generated from the block between the VISIT markers (build-stubs.py):
+         edit the words HERE, then rerun build-stubs. ── -->
+    <div class="screen" id="S5" tabindex="-1" style="background:#0f0e0b;">
+      <div style="flex-shrink:0;">
+        <div id="visit-band" style="position:relative;padding:calc(env(safe-area-inset-top, 0px) + 15px) 16px 16px;margin-bottom:30px;background:transparent;">
+          <div class="pcol" style="display:flex;align-items:center;justify-content:flex-start;">
+          <p id="visit-word" class="kawara-logo home-logo" style="color:#111111;opacity:.95;" title="Back to gallery" role="button" tabindex="0">LISTEN TO FRANK</p>
+          <button id="visit-close" aria-label="Close Visiting MoMA" style="margin-left:auto;flex-shrink:0;background:transparent;border:none;color:#111111;cursor:pointer;padding:2px;line-height:1;display:flex;align-items:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="5" y1="5" x2="19" y2="19" vector-effect="non-scaling-stroke"/><line x1="19" y1="5" x2="5" y2="19" vector-effect="non-scaling-stroke"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <img id="visit-art" alt="" aria-hidden="true">
+      <div class="scrollpad" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 48px;">
+        <div class="pcol">
+        <h1 class="about-body" style="color:rgba(220,213,198,.8);font-size:26px;line-height:1.35;margin:0 0 34px;font-weight:500;">Visiting MoMA with Frank</h1>
+        <!-- VISIT:START -->
+        <div class="visit-qa" style="margin:0 0 30px;">
+          <h2 class="about-label" style="color:rgba(220,213,198,.5);font-size:15px;margin:0 0 10px;letter-spacing:1.5px;font-weight:500;">IS MOMA WORTH IT?</h2>
+          <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Yeah. Most of the big names in modern art are in this one building. Frank's biased. He's not wrong.</p>
+        </div>
+        <div class="visit-qa" style="margin:0 0 30px;">
+          <h2 class="about-label" style="color:rgba(220,213,198,.5);font-size:15px;margin:0 0 10px;letter-spacing:1.5px;font-weight:500;">WHAT DOES FRANK TELL YOU?</h2>
+          <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">The stuff you don't usually hear. Not the textbook version. The weird little stories behind the work.</p>
+          <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Somebody had to dust Monet's pond. Gallery 515.</p>
+          <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">A machine built to destroy itself, in MoMA's garden. The piano caught fire. Gallery 405.</p>
+          <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Before Jasper Johns painted his flag, he destroyed almost everything he'd made. Gallery 408.</p>
+        </div>
+        <div class="visit-qa" style="margin:0 0 30px;">
+          <h2 class="about-label" style="color:rgba(220,213,198,.5);font-size:15px;margin:0 0 10px;letter-spacing:1.5px;font-weight:500;">CAN YOU DO MOMA IN TWO HOURS?</h2>
+          <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Yeah. Go straight up to Floor 5, that's the 1880s to the 1940s: Van Gogh in 501, Picasso in 502, Matisse in 506, Monet in 515. Then down to Floor 4 for Rothko in 403, Pollock in 405 and Warhol in 412.</p>
+          <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Frank's got over six hours of stories across the museum, <span data-visit="floor5">76</span> of them on Floor 5 alone. So don't try to hear them all. Play the ones that stop you.</p>
+        </div>
+        <div class="visit-qa" style="margin:0 0 30px;">
+          <h2 class="about-label" style="color:rgba(220,213,198,.5);font-size:15px;margin:0 0 10px;letter-spacing:1.5px;font-weight:500;">LOOKING FOR ONE WORK IN PARTICULAR?</h2>
+          <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Type the title or the artist in the search box. Frank tells you the floor and the gallery number, and his story's right there.</p>
+          <p style="margin:-4px 0 20px;"><a href="#search" id="visit-search" class="about-social" style="color:rgba(220,213,198,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(220,213,198,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">Search the guide<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter" aria-hidden="true"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></a></p>
+        </div>
+        <div class="visit-qa" style="margin:0 0 30px;">
+          <h2 class="about-label" style="color:rgba(220,213,198,.5);font-size:15px;margin:0 0 10px;letter-spacing:1.5px;font-weight:500;">IS THERE A FREE AUDIO GUIDE?</h2>
+          <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Yeah, this one. Free, unofficial, no app, no sign-up. It just runs in your phone's browser. MoMA has its own official audio too. That's theirs. This is Frank.</p>
+        </div>
+        <div class="visit-qa" style="margin:0 0 30px;">
+          <h2 class="about-label" style="color:rgba(220,213,198,.5);font-size:15px;margin:0 0 10px;letter-spacing:1.5px;font-weight:500;">HOW DOES IT WORK?</h2>
+          <p class="about-body" style="color:rgba(220,213,198,.8);font-size:20px;line-height:1.85;margin:0 0 20px;font-weight:300;">Find the gallery number by the door. Type it in. Frank's probably got something in that room. Bring headphones.</p>
+        </div>
+        <!-- VISIT:END -->
+        <p style="margin:12px 0 0;"><a href="#" id="visit-all" class="about-social" style="color:rgba(220,213,198,.62);font-size:17.5px;text-decoration:none;border:0.5px solid rgba(220,213,198,.28);padding:9px 16px;display:inline-flex;align-items:center;gap:10px;">See all <span data-visit="works">216</span> works<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="miter" aria-hidden="true"><line x1="4" y1="12" x2="19" y2="12" vector-effect="non-scaling-stroke"/><polyline points="13,6 19,12 13,18" vector-effect="non-scaling-stroke"/></svg></a></p>
         </div>
       </div>
     </div>
@@ -598,6 +662,9 @@
     var activeFloor = null;
     var currentScreen = 0;
     var HOME_TITLE = 'Listen to Frank — a free, unofficial audio guide to MoMA';
+    var VISIT_TITLE = 'Visiting MoMA: is it worth it, a two-hour route, a free audio guide | Listen to Frank';   // = /visit.html's <title> (build-stubs reads this line)
+    var visitFrom = 1;   // where the Visiting screen's × goes back to
+    var BOOT_TITLE = document.title;   // the page's own title (a /w/ page's search title)
     // Proper-case tab titles come from titles.json (written by build-stubs.py);
     // until it loads, or if it's missing, the tab keeps the site title.
     var TAB_TITLES = null;
@@ -731,6 +798,29 @@
     }
     renderEntryCover();
     applyAboutCombo();   // About echoes the same issue palette
+    function applyVisitCombo() {
+      var c = ACTIVE_COMBO; if (!c) return;
+      var S5 = $('S5'); if (!S5) return;
+      S5.style.background = c.aboutBg || c.bg;
+      var rgb = c.tapRGB;
+      S5.querySelectorAll('.about-body').forEach(function (e) { e.style.color = 'rgba(' + rgb + ',.86)'; });
+      S5.querySelectorAll('.about-label').forEach(function (e) { e.style.color = 'rgba(' + rgb + ',.8)'; });
+      document.querySelectorAll('#S5 .about-social, #about-visit').forEach(function (e) { e.style.color = 'rgba(' + rgb + ',.82)'; e.style.borderColor = 'rgba(' + rgb + ',.4)'; });
+    }
+    applyVisitCombo();
+    // Desktop only: a different line drawing hangs beside the page each visit.
+    function pickVisitArt() {
+      var art = $('visit-art');
+      if (!art || art.getAttribute('src') || !(window.matchMedia && window.matchMedia('(min-width: 1100px)').matches)) return;
+      var f = Object.keys(DRAWINGS).map(function (k) { return DRAWINGS[k]; });
+      if (f.length) art.src = f[Math.floor(Math.random() * f.length)];
+    }
+    // The counts on the Visiting screen follow the catalogue.
+    function fillVisitCounts() {
+      var n5 = ARTS.filter(function (a) { return /^5\d\d$/.test(String(a.gallery || '').trim()); }).length;
+      document.querySelectorAll('[data-visit="works"]').forEach(function (e) { e.textContent = ARTS.length; });
+      document.querySelectorAll('[data-visit="floor5"]').forEach(function (e) { e.textContent = n5; });
+    }
     window.addEventListener('resize', function () {
       scaleEntryCover(); hydrateCover();
       if (currentScreen === 4 && mapFloor) renderFloorMap(mapFloor);   // re-fit (and maybe re-turn) the map
@@ -1115,24 +1205,27 @@
     }
 
     function go(n) {
-      for (var i = 0; i <= 4; i++) {
+      for (var i = 0; i <= 5; i++) {
         var s = $('S' + i);
         if (s) s.classList.toggle('on', i === n);
       }
       currentScreen = n;
       if (n === 0) { document.documentElement.classList.remove('deeplink'); hydrateCover(); }
       if (n === 0) setChrome((ACTIVE_COMBO && ACTIVE_COMBO.bg) || '#0f0e0b');
-      else if (n === 3) setChrome((ACTIVE_COMBO && (ACTIVE_COMBO.aboutBg || ACTIVE_COMBO.bg)) || '#0f0e0b');
+      else if (n === 3 || n === 5) setChrome((ACTIVE_COMBO && (ACTIVE_COMBO.aboutBg || ACTIVE_COMBO.bg)) || '#0f0e0b');
       else if (n === 2 && current) setChrome(npBottomColor(current.color));   // player only: tint the browser chrome (incl. the bottom Safari toolbar) to the DARKER player tone, so it matches the player controls instead of glowing the bright top color as a 3rd shade
       else setChrome('#0f0e0b');
       if (n !== 2) closeTx();
       if (n === 1) { applyHeard(); applyFilters(); }
       if (n === 4) initMap();
+      if (n === 5) pickVisitArt();
       updateNowPlaying();
       // Browser tab title follows the player (2026-11). On a /w/ page the page's own
       // search title is kept for its own work, so search results don't change.
       var onOwnPage = current && location.pathname === '/w/' + current.id + '.html';
       if (n === 2 && current && !onOwnPage) setWorkTitle(current);
+      else if (n === 5) document.title = VISIT_TITLE;
+      else if (document.title === VISIT_TITLE && onOwnPage) document.title = BOOT_TITLE;   // back to a /w/ page's own title
       else if (n !== 2 && !onOwnPage) document.title = HOME_TITLE;
       // a11y: keyboard / screen-reader focus follows the screen change (never
       // at boot, never shows a ring: hidden screens' tabindex=-1 + CSS above).
@@ -1828,6 +1921,7 @@
     // ── Routing ───────────────────────────────────────────────────────────
     function route() {
       var hash = decodeURIComponent(window.location.hash.slice(1));
+      if (hash === 'visit') { if (currentScreen !== 5) visitFrom = currentScreen === 3 ? 3 : 1; go(5); return; }
       if (hash) {
         var a = BY_ID[hash];
         if (a && !a.isAbout) { showPlayer(a); return; }
@@ -1874,6 +1968,15 @@
       });
       $('about-btn').addEventListener('click', function () { go(3); });
       $('about-close').addEventListener('click', function () { go(1); });
+      function leaveVisit(to) { history.replaceState(null, '', location.pathname + location.search); go(to); }
+      $('visit-close').addEventListener('click', function () { leaveVisit(visitFrom); });
+      // (on /w/ and /visit.html pages <base href="/"> would turn "#visit" into a reload of "/")
+      $('about-visit').addEventListener('click', function (e) { e.preventDefault(); window.location.hash = 'visit'; });
+      $('visit-all').addEventListener('click', function (e) { e.preventDefault(); leaveVisit(1); });
+      $('visit-search').addEventListener('click', function (e) {
+        e.preventDefault(); leaveVisit(1);
+        setTimeout(function () { var q = $('search-input'); if (q) q.focus(); }, 350);
+      });
       $('map-close').addEventListener('click', function () {
         var back = mapReturn; mapReturn = null;
         if (back) openArtwork(back); else go(1);   // came from a work? go back to it
@@ -1989,6 +2092,7 @@
       if (aboutArt) BY_ID[aboutArt.id] = aboutArt;
 
       renderGallery();
+      fillVisitCounts();
       applyHeard();
       applyFilters();
       wireUI();
@@ -1996,7 +2100,8 @@
       booted = true;
 
       var hash = decodeURIComponent(window.location.hash.slice(1));
-      if (hash && BY_ID[hash] && !BY_ID[hash].isAbout) showPlayer(BY_ID[hash]);
+      if (hash === 'visit') go(5);
+      else if (hash && BY_ID[hash] && !BY_ID[hash].isAbout) showPlayer(BY_ID[hash]);
       else go(wantIn ? 1 : 0);
     }
 
